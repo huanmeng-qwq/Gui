@@ -1,17 +1,16 @@
 package me.huanmeng.opensource.page;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 2023/3/17<br>
+ * Gui<br>
+ *
+ * @author huanmeng_qwq
+ */
 public class Pagination<T> {
-
-    @Getter
-    @Setter
     private List<T> content;
-    @Getter
     private final int elementsPerPage;
 
     public Pagination(List<T> content, int elementsPerPage) {
@@ -59,5 +58,15 @@ public class Pagination<T> {
         if (!this.content.contains(element)) this.content.add(element);
     }
 
+    public List<T> getContent() {
+        return content;
+    }
 
+    public void setContent(List<T> content) {
+        this.content = content;
+    }
+
+    public int getElementsPerPage() {
+        return elementsPerPage;
+    }
 }

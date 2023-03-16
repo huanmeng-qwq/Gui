@@ -5,8 +5,8 @@ import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.gui.slot.Slots;
 
 /**
- * 2022/6/17<br>
- * VioLeaft<br>
+ * 2023/3/17<br>
+ * Gui<br>
  *
  * @author huanmeng_qwq
  */

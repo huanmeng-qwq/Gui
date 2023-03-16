@@ -12,8 +12,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
+/**
+ * 2023/3/17<br>
+ * Gui<br>
+ *
+ * @author huanmeng_qwq
+ */
 public interface Slots {
-
     PatternLineSlots PATTERN_LINE_DEFAULT = Slots.patternLine((line -> {
         List<String> list = new ArrayList<>(line);
         if (line <= 2) {

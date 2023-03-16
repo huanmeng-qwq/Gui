@@ -14,6 +14,12 @@ import org.bukkit.potion.PotionEffect
 import java.util.*
 import kotlin.random.Random
 
+/**
+ * 2023/3/17<br>
+ * Gui<br>
+ *
+ * @author huanmeng_qwq
+ */
 open class ItemBuilder : Cloneable {
     private var `is`: ItemStack
 

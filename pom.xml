@@ -46,11 +46,6 @@
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
         <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-
-        <repository>
             <id>maven-central</id>
             <url>https://repo1.maven.org/maven2/</url>
         </repository>
@@ -66,6 +61,8 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/libs/spigot-api-1.8.8-R0.1-20160205.005117-39.jar</systemPath>
         </dependency>
     </dependencies>
 

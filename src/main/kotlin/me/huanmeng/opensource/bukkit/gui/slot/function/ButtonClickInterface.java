@@ -9,6 +9,12 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 
+/**
+ * 2023/3/17<br>
+ * Gui<br>
+ *
+ * @author huanmeng_qwq
+ */
 @FunctionalInterface
 public interface ButtonClickInterface {
     Result onClick(Slot slot, Button button, Player player, ClickType click, InventoryAction action, InventoryType.SlotType slotType, int slotKey, int hotBarKey, InventoryClickEvent e);
