@@ -142,9 +142,9 @@
                 <version>1.8.10</version>
                 <executions>
                     <execution>
-                        <phase>pre-site</phase>
+                        <id>kotlin-javadoc</id>
+                        <phase>compile</phase>
                         <goals>
-                            <goal>dokka</goal>
                             <goal>javadoc</goal>
                             <goal>javadocJar</goal>
                         </goals>
