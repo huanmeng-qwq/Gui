@@ -1,6 +1,5 @@
-package me.huanmeng.limemc.bukkit.util.item
+package me.huanmeng.opensource.bukkit.util.item
 
-import me.huanmeng.opensource.bukkit.util.item.ItemBuilder
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag

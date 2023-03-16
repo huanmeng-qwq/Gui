@@ -1,6 +1,6 @@
 package me.huanmeng.opensource.bukkit.gui.button.editor.itemstack.enchant
 
-import me.huanmeng.limemc.bukkit.util.item.ItemUtil.getEnchLv
+import me.huanmeng.opensource.bukkit.util.item.ItemUtil.getEnchLv
 import me.huanmeng.opensource.bukkit.gui.AbstractGui
 import me.huanmeng.opensource.bukkit.gui.HGui
 import me.huanmeng.opensource.bukkit.gui.button.Button

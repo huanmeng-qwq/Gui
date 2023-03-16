@@ -1,6 +1,6 @@
 package me.huanmeng.opensource.bukkit.gui.impl;
 
-import me.huanmeng.limemc.bukkit.util.item.ItemUtil;
+import me.huanmeng.opensource.bukkit.util.item.ItemUtil;
 import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

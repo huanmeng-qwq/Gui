@@ -1,6 +1,6 @@
 package me.huanmeng.opensource.bukkit.gui.button.editor.itemstack.flag
 
-import me.huanmeng.limemc.bukkit.util.item.ItemUtil.hasFlag
+import me.huanmeng.opensource.bukkit.util.item.ItemUtil.hasFlag
 import me.huanmeng.opensource.bukkit.gui.AbstractGui
 import me.huanmeng.opensource.bukkit.gui.HGui
 import me.huanmeng.opensource.bukkit.gui.button.Button
