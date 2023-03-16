@@ -40,6 +40,23 @@
         </repository>
     </distributionManagement>
 
+    <url>https://github.com/huanmeng-qwq/Gui</url>
+    <description>Bukkit Gui</description>
+
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>huanmeng-qwq</name>
+            <url>https://github.com/huanmeng-qwq</url>
+            <email>huanmeng@huanmmeng-qwq.com</email>
+        </developer>
+    </developers>
+
     <repositories>
         <repository>
             <id>oss-repo</id>
@@ -98,7 +115,6 @@
                 </configuration>
             </plugin>
 
-<!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -120,19 +136,17 @@
                     </execution>
                 </executions>
             </plugin>
--->
             <plugin>
                 <groupId>org.jetbrains.dokka</groupId>
                 <artifactId>dokka-maven-plugin</artifactId>
                 <version>1.8.10</version>
-                <configuration>
-                    <classifier>javadoc</classifier>
-                </configuration>
                 <executions>
                     <execution>
                         <phase>pre-site</phase>
                         <goals>
                             <goal>dokka</goal>
+                            <goal>javadoc</goal>
+                            <goal>javadocJar</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -189,7 +203,7 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <classifier>dokka</classifier>
+                            <classifier>javadoc</classifier>
                             <classesDirectory>${project.build.directory}/dokka</classesDirectory>
                             <skipIfEmpty>true</skipIfEmpty>
                         </configuration>
