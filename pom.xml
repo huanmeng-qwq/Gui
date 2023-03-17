@@ -4,13 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>Bukkit-Gui</artifactId>
-    <groupId>com.huanmeng-qwq</groupId>
-    <version>1.0</version>
-    <packaging>jar</packaging>
-
-    <name>Gui</name>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.code.style>official</kotlin.code.style>
@@ -21,6 +14,16 @@
         <kotlin.version>1.7.21</kotlin.version>
         <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
     </properties>
+
+    <artifactId>Bukkit-Gui</artifactId>
+    <groupId>com.huanmeng-qwq</groupId>
+    <version>1.1</version>
+
+    <name>Gui</name>
+    <url>https://github.com/huanmeng-qwq/Gui</url>
+    <description>Bukkit Gui</description>
+
+    <packaging>jar</packaging>
 
     <scm>
         <connection>scm:git:git@github.com:huanmeng-qwq/Gui.git</connection>
@@ -40,15 +43,13 @@
         </repository>
     </distributionManagement>
 
-    <url>https://github.com/huanmeng-qwq/Gui</url>
-    <description>Bukkit Gui</description>
-
     <licenses>
         <license>
             <name>MIT</name>
             <url>https://opensource.org/licenses/MIT</url>
         </license>
     </licenses>
+
     <developers>
         <developer>
             <name>huanmeng-qwq</name>
@@ -114,28 +115,6 @@
                     <nowarn>true</nowarn>
                 </configuration>
             </plugin>
-
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-javadoc-plugin</artifactId>-->
-<!--                <version>3.4.1</version>-->
-<!--                <configuration>-->
-<!--                    <classifier>javadoc</classifier>-->
-<!--                    <detectJavaApiLink>false</detectJavaApiLink>-->
-<!--                    <encoding>UTF-8</encoding>-->
-<!--                    <charset>UTF-8</charset>-->
-<!--                    <docencoding>UTF-8</docencoding>-->
-<!--                    <locale>zh_CN</locale>-->
-<!--                </configuration>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>attach-javadocs</id>-->
-<!--                        <goals>-->
-<!--                            <goal>jar</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
             <plugin>
                 <groupId>org.jetbrains.dokka</groupId>
                 <artifactId>dokka-maven-plugin</artifactId>
