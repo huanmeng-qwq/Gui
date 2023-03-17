@@ -1,6 +1,7 @@
 package me.huanmeng.opensource.bukkit.gui;
 
 import com.google.common.base.Preconditions;
+import me.huanmeng.opensource.bukkit.gui.event.InventorySwitchEvent;
 import me.huanmeng.opensource.bukkit.gui.holder.GuiHolder;
 import me.huanmeng.opensource.bukkit.scheduler.SchedulerAsync;
 import me.huanmeng.opensource.bukkit.scheduler.SchedulerSync;
@@ -9,10 +10,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.*;
+import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -84,8 +83,32 @@ public class GuiManager implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent e) {
+    public void onClick(InventoryClickEvent e) {
+        if (!(e.getWhoClicked() instanceof Player)) {
+            return;
+        }
         Player player = (Player) e.getWhoClicked();
+        onInventoryClick(e, player);
+        if (e instanceof InventorySwitchEvent) {
+            return;
+        }
+        // 玩家在自己背包里面改尝试切换物品栏(0-9)的物品
+        if (e.getClick() == ClickType.NUMBER_KEY && (Objects.equals(e.getClickedInventory(), e.getWhoClicked().getInventory())
+                || e.getClickedInventory() instanceof CraftingInventory)
+        ) {
+            InventorySwitchEvent event = new InventorySwitchEvent(e.getView(), InventoryType.SlotType.OUTSIDE, e.getHotbarButton(), ClickType.UNKNOWN, e.getAction(), e.getHotbarButton());
+            event.setCurrentItem(player.getInventory().getItem(e.getHotbarButton()));
+            onInventoryClick(event, player);
+            if (event.disable()) {
+                return;
+            }
+            if (event.isCancelled()) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    protected void onInventoryClick(InventoryClickEvent e, Player player) {
         UUID uuid = player.getUniqueId();
         if (!isOpenGui(uuid)) {
             return;
@@ -101,6 +124,12 @@ public class GuiManager implements Listener {
 
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent e) {
+        if (e.getInventory() == null) {
+            return;
+        }
+        if (!(e.getWhoClicked() instanceof Player)) {
+            return;
+        }
         Player player = (Player) e.getWhoClicked();
         UUID uuid = player.getUniqueId();
         if (!isOpenGui(uuid)) {
@@ -111,6 +140,12 @@ public class GuiManager implements Listener {
 
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent e) {
+        if (null == e.getInventory()) {
+            return;
+        }
+        if (!(e.getPlayer() instanceof Player)) {
+            return;
+        }
         Player player = (Player) e.getPlayer();
         UUID uuid = player.getUniqueId();
         if (userNextOpenGui.containsKey(uuid)) {
@@ -121,6 +156,12 @@ public class GuiManager implements Listener {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {
+        if (e.getInventory() == null) {
+            return;
+        }
+        if (!(e.getPlayer() instanceof Player)) {
+            return;
+        }
         Player player = (Player) e.getPlayer();
         UUID uuid = player.getUniqueId();
         AbstractGui<?> gui = getUserOpenGui(uuid);
@@ -132,7 +173,7 @@ public class GuiManager implements Listener {
     public void refreshGui(Player player) {
         UUID uuid = player.getUniqueId();
         if (isOpenGui(uuid)) {
-            // 当更换gui后应该刷新所以按钮的显示。
+            // 当更换gui后应该刷新所有按钮的显示。
             Runnable refreshRunnable = () -> getUserOpenGui(uuid).refresh(true);
             if (Bukkit.isPrimaryThread()) {
                 refreshRunnable.run();
