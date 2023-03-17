@@ -5,7 +5,7 @@ import me.huanmeng.opensource.bukkit.gui.slot.impl.slots.ArraySlots;
 import me.huanmeng.opensource.bukkit.gui.slot.impl.slots.ExcludeSlots;
 import me.huanmeng.opensource.bukkit.gui.slot.impl.slots.PatternLineSlots;
 import me.huanmeng.opensource.bukkit.gui.slot.impl.slots.PatternSlots;
-import org.apache.commons.lang.math.IntRange;
+import me.huanmeng.opensource.bukkit.util.MathUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,7 +77,7 @@ public interface Slots {
     }
 
     static Slots range(int min, int max) {
-        return of(new IntRange(min, max).toArray());
+        return of(MathUtil.range(min, max));
     }
 
     static Slots exclude(int... slots) {

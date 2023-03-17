@@ -74,7 +74,7 @@ class EnchantEditor(player: Player, private val itemBuilder: ItemBuilder, privat
         gui.line(4)
         gui.title("编辑附魔")
         val emptyButton = EmptyButton {
-            ItemBuilder(Material.STAINED_GLASS_PANE, 1, 7).setName("").build()
+            ItemBuilder(Material.GLASS, 1, 7).setName("").build()
         }
         gui.draw()[Slots.pattern(pattern, 'x')] = emptyButton
         gui.draw().set(Slot.ofGame(1, 4), Button.of({

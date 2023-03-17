@@ -5,7 +5,7 @@ import me.huanmeng.opensource.bukkit.gui.GuiButton;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.gui.slot.Slots;
-import org.apache.commons.lang.math.IntRange;
+import me.huanmeng.opensource.bukkit.util.MathUtil;
 
 import java.util.List;
 
@@ -27,10 +27,10 @@ public class GuiDraw<G extends AbstractGui<G>> {
     }
 
     public GuiDraw<G> vertical(int x1, int y1, int x2, int y2, Button button) {
-        IntRange xRange = new IntRange(x1, x2);
-        IntRange yRange = new IntRange(y1, y2);
-        for (int x : xRange.toArray()) {
-            for (int y : yRange.toArray()) {
+        int[] xRange = MathUtil.range(x1, x2);
+        int[] yRange = MathUtil.range(y1, y2);
+        for (int x : xRange) {
+            for (int y : yRange) {
                 set(x, y, button);
             }
         }

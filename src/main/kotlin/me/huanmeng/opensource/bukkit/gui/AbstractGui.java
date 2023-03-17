@@ -1,6 +1,5 @@
 package me.huanmeng.opensource.bukkit.gui;
 
-import me.huanmeng.opensource.bukkit.util.item.ItemUtil;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.draw.GuiDraw;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
@@ -12,6 +11,7 @@ import me.huanmeng.opensource.bukkit.gui.interfaces.GuiTick;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.gui.slot.Slots;
 import me.huanmeng.opensource.bukkit.tick.TickManager;
+import me.huanmeng.opensource.bukkit.util.item.ItemUtil;
 import me.huanmeng.opensource.scheduler.Scheduler;
 import me.huanmeng.opensource.scheduler.Schedulers;
 import org.bukkit.Material;
@@ -51,7 +51,7 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
      */
     protected boolean cancelClickOther = true;
     /**
-     * 是否取消点击{@link InventoryView}下面部分的{@link Inventory}
+     * 是否取消点击{@link InventoryView}下面部分的{@link Inventory}或切换副手
      */
     protected boolean cancelClickBottom = true;
     /**

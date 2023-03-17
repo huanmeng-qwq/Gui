@@ -142,7 +142,7 @@ class LoreEditor(
             return@guiClick true
         }
         val emptyButton = EmptyButton {
-            ItemBuilder(Material.STAINED_GLASS_PANE, 1, 7).setName("").build()
+            ItemBuilder(Material.GLASS, 1, 7).setName("").build()
         }
         val strings = Slots.PATTERN_LINE_DEFAULT.patternFun().apply(5)
         strings[strings.size - 1] = "-aaaaaaa-"

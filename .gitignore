@@ -33,3 +33,7 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Project ###
+src/main/kotlin/me/huanmeng/opensource/bukkit/gui/Test.java
+src/main/resources/plugin.yml

@@ -51,7 +51,7 @@ object ItemUtil {
 
     @JvmStatic
     fun hasFlag0(itemStack: ItemStack, itemFlag: ItemFlag): Boolean {
-        return itemStack.itemMeta.hasItemFlag(itemFlag)
+        return itemStack.itemMeta!!.hasItemFlag(itemFlag)
     }
 
     @JvmStatic
@@ -72,7 +72,7 @@ object ItemUtil {
             return emptyList()
         }
         if (hasItemMeta() || itemMeta != null) {
-            return itemMeta.lore ?: emptyList()
+            return itemMeta!!.lore ?: emptyList()
         }
         return emptyList()
     }

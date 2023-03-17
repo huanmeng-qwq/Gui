@@ -92,12 +92,25 @@ public class GuiManager implements Listener {
         if (e instanceof InventorySwitchEvent) {
             return;
         }
-        // 玩家在自己背包里面改尝试切换物品栏(0-9)的物品
-        if (e.getClick() == ClickType.NUMBER_KEY && (Objects.equals(e.getClickedInventory(), e.getWhoClicked().getInventory())
+        // 玩家在自己背包里面改尝试切换物品栏(0-9)的物品 或切换物品至副手
+        boolean swapOffhand = e.getClick().name().equals("SWAP_OFFHAND") || e.getClick().name().equals("HOTBAR_MOVE_AND_READD");
+        if ((e.getClick() == ClickType.NUMBER_KEY || swapOffhand) && (Objects.equals(e.getClickedInventory(), e.getWhoClicked().getInventory())
                 || e.getClickedInventory() instanceof CraftingInventory)
         ) {
-            InventorySwitchEvent event = new InventorySwitchEvent(e.getView(), InventoryType.SlotType.OUTSIDE, e.getHotbarButton(), ClickType.UNKNOWN, e.getAction(), e.getHotbarButton());
-            event.setCurrentItem(player.getInventory().getItem(e.getHotbarButton()));
+            ClickType switchClickType = ClickType.UNKNOWN;
+            if (swapOffhand) {
+                switchClickType = e.getClick();
+            }
+            int slot = e.getHotbarButton();
+            if (swapOffhand) {
+                slot = e.getRawSlot();
+            }
+            InventorySwitchEvent event = new InventorySwitchEvent(e.getView(), InventoryType.SlotType.OUTSIDE, slot, switchClickType, e.getAction(), e.getHotbarButton());
+            if (e.getClick() == ClickType.NUMBER_KEY) {
+                event.setCurrentItem(player.getInventory().getItem(slot));
+            } else if (swapOffhand) {
+                event.setCurrentItem(e.getCurrentItem());
+            }
             onInventoryClick(event, player);
             if (event.disable()) {
                 return;
@@ -105,6 +118,9 @@ public class GuiManager implements Listener {
             if (event.isCancelled()) {
                 e.setCancelled(true);
             }
+        }
+        if (swapOffhand) {
+            player.getInventory().setItemInOffHand(player.getInventory().getItemInOffHand());
         }
     }
 
@@ -115,6 +131,7 @@ public class GuiManager implements Listener {
         }
         try {
             getUserOpenGui(uuid).onClick(e);
+            e.setCancelled(true);
         } catch (Exception ex) {
             ex.printStackTrace();
             player.closeInventory();

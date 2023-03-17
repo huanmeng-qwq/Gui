@@ -151,7 +151,7 @@ class ItemStackEditor(
         run {
             gui.draw()[Slots.pattern(pattern, 'e')] = listOf(
                 ClickButton({
-                    ItemBuilder(Material.ENCHANTMENT_TABLE).setName(
+                    ItemBuilder(Material.LEGACY_ENCHANTMENT_TABLE).setName(
                         "§b编辑附魔"
                     ).build()
                 },
