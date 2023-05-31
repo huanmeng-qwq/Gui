@@ -7,6 +7,6 @@
 <dependency>
     <groupId>com.huanmeng-qwq</groupId>
     <artifactId>Bukkit-Gui</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
 </dependency>
 ```
