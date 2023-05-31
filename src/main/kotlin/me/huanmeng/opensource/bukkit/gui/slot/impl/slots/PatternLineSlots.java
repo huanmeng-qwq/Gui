@@ -5,7 +5,6 @@ import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.gui.slot.Slots;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +30,13 @@ public class PatternLineSlots implements Slots {
 
     @Override
     @NonNull
-    public <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NotNull G gui) {
+    public <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NonNull G gui) {
         String[] pattern = patternFun.apply(gui.size() / 9);
         return applySlots(pattern, this.chars);
     }
 
-    @NotNull
-    protected static @NonNull Slot[] applySlots(@NonNull String[] pattern, @NonNull List<Character> chars2) {
+    @NonNull
+    protected static Slot[] applySlots(@NonNull String[] pattern, @NonNull List<Character> chars2) {
         List<Slot> list = new ArrayList<>(pattern.length);
         for (int y = 0; y < pattern.length; y++) {
             String line = pattern[y];

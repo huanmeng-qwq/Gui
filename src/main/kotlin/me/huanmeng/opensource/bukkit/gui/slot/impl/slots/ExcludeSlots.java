@@ -33,7 +33,7 @@ public class ExcludeSlots implements Slots {
     }
 
     @Override
-    public <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NotNull G gui) {
+    public <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NonNull G gui) {
         List<Integer> list = null;
         if (slots != null) {
             list = Arrays.stream(slots.slots(gui)).map(Slot::getIndex).collect(Collectors.toList());

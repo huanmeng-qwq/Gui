@@ -1,6 +1,8 @@
 package me.huanmeng.opensource.bukkit.gui.impl;
 
+import me.huanmeng.opensource.bukkit.component.ComponentConvert;
 import me.huanmeng.opensource.bukkit.gui.AbstractGui;
+import me.huanmeng.opensource.bukkit.gui.GuiManager;
 import me.huanmeng.opensource.bukkit.util.item.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -51,7 +53,8 @@ public class GuiCustom extends AbstractGui<@NonNull GuiCustom> {
     @Override
     @NonNull
     protected Inventory build(@NonNull InventoryHolder holder) {
-        return Bukkit.createInventory(holder, line * 9, title);
+        ComponentConvert componentConvert = GuiManager.instance().componentConvert();
+        return Bukkit.createInventory(holder, line * 9, componentConvert.convert(player, title));
     }
 
     @Override

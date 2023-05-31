@@ -57,7 +57,7 @@ public final class GuiButton {
         return slot;
     }
 
-    public void setSlot(@NotNull Slot slot) {
+    public void setSlot(@NonNull Slot slot) {
         this.slot = slot;
     }
 

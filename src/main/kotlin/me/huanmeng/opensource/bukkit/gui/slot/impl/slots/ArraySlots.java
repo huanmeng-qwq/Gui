@@ -21,7 +21,7 @@ public class ArraySlots implements Slots {
     }
 
     @Override
-    public <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NotNull G gui) {
+    public <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NonNull G gui) {
         return slots;
     }
 }

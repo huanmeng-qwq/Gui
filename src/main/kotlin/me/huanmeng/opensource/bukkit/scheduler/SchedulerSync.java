@@ -3,7 +3,7 @@ package me.huanmeng.opensource.bukkit.scheduler;
 import me.huanmeng.opensource.bukkit.gui.GuiManager;
 import me.huanmeng.opensource.scheduler.Scheduler;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -16,9 +16,9 @@ import java.util.function.Consumer;
  */
 public class SchedulerSync implements Scheduler {
 
-    @NotNull
+    @NonNull
     @Override
-    public Task run(@NotNull Runnable runnable) {
+    public Task run(@NonNull Runnable runnable) {
         BukkitTaskImpl task = new BukkitTaskImpl(new BukkitRunnable() {
             @Override
             public void run() {
@@ -29,9 +29,9 @@ public class SchedulerSync implements Scheduler {
         return task;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Task runRepeating(@NotNull Runnable runnable, long perTick, long timeTick) {
+    public Task runRepeating(@NonNull Runnable runnable, long perTick, long timeTick) {
         BukkitTaskImpl task = new BukkitTaskImpl(new BukkitRunnable() {
             @Override
             public void run() {
@@ -42,9 +42,9 @@ public class SchedulerSync implements Scheduler {
         return task;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Task runRepeating(@NotNull Consumer<Task> consumer, long perTick, long timeTick) {
+    public Task runRepeating(@NonNull Consumer<Task> consumer, long perTick, long timeTick) {
         BukkitTaskImpl task = new BukkitTaskImpl(null) {
             // 没法直接调用self 所以选择了这种
             {
@@ -60,9 +60,9 @@ public class SchedulerSync implements Scheduler {
         return task;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Task runLater(@NotNull Runnable runnable, long laterTick) {
+    public Task runLater(@NonNull Runnable runnable, long laterTick) {
         BukkitTaskImpl task = new BukkitTaskImpl(new BukkitRunnable() {
             @Override
             public void run() {

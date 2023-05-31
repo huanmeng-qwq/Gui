@@ -9,7 +9,6 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * 2023/3/17<br>
@@ -19,9 +18,9 @@ import org.jetbrains.annotations.NotNull;
  */
 @FunctionalInterface
 public interface ButtonSimpleClickInterface extends ButtonClickInterface {
-    @NotNull
+    @NonNull
     @Override
-    default Result onClick(@NotNull Slot slot, @NotNull Button button, @NotNull Player player, @NotNull ClickType click, @NotNull InventoryAction action, @NotNull InventoryType.SlotType slotType, int slotKey, int hotBarKey, @NotNull InventoryClickEvent e) {
+    default Result onClick(@NonNull Slot slot, @NonNull Button button, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey, @NonNull InventoryClickEvent e) {
         return onPlayerClick(button, player);
     }
 

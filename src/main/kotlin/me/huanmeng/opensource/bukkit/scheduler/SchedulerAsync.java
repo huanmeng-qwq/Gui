@@ -17,9 +17,8 @@ import java.util.function.Consumer;
  */
 public class SchedulerAsync implements Scheduler {
 
-    @NotNull
-    @Override
     @NonNull
+    @Override
     public Task run(@NonNull Runnable runnable) {
         BukkitTaskImpl task = new BukkitTaskImpl(new BukkitRunnable() {
             @Override
@@ -31,9 +30,8 @@ public class SchedulerAsync implements Scheduler {
         return task;
     }
 
-    @NotNull
-    @Override
     @NonNull
+    @Override
     public Task runRepeating(@NonNull Runnable runnable, long perTick, long timeTick) {
         BukkitTaskImpl task = new BukkitTaskImpl(new BukkitRunnable() {
             @Override
@@ -45,9 +43,9 @@ public class SchedulerAsync implements Scheduler {
         return task;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Task runRepeating(@NotNull Consumer<Task> consumer, long perTick, long timeTick) {
+    public Task runRepeating(@NonNull Consumer<Task> consumer, long perTick, long timeTick) {
         BukkitTaskImpl task = new BukkitTaskImpl(null) {
             // 没法直接调用self 所以选择了这种
             {
@@ -63,9 +61,9 @@ public class SchedulerAsync implements Scheduler {
         return task;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Task runLater(@NotNull Runnable runnable, long laterTick) {
+    public Task runLater(@NonNull Runnable runnable, long laterTick) {
         BukkitTaskImpl task = new BukkitTaskImpl(new BukkitRunnable() {
             @Override
             public void run() {

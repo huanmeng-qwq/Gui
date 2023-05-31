@@ -60,7 +60,7 @@ public class GuiPage extends GuiCustom {
         return buttons;
     }
 
-    @NotNull
+    @NonNull
     @Override
     protected GuiPage self() {
         return this;

@@ -1,12 +1,17 @@
 package me.huanmeng.opensource.bukkit.gui;
 
 import com.google.common.base.Preconditions;
+import me.huanmeng.opensource.bukkit.component.ComponentConvert;
 import me.huanmeng.opensource.bukkit.gui.event.InventorySwitchEvent;
 import me.huanmeng.opensource.bukkit.gui.holder.GuiHolder;
 import me.huanmeng.opensource.bukkit.scheduler.SchedulerAsync;
 import me.huanmeng.opensource.bukkit.scheduler.SchedulerSync;
 import me.huanmeng.opensource.scheduler.Schedulers;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,6 +40,10 @@ public class GuiManager implements Listener {
     private final JavaPlugin plugin;
 
     private static GuiManager instance;
+    @NonNull
+    private final BukkitAudiences audiences;
+    @NonNull
+    private ComponentConvert componentConvert = ComponentConvert.getDefault();
 
     @NonNull
     public static GuiManager instance() {
@@ -46,6 +55,7 @@ public class GuiManager implements Listener {
         Preconditions.checkNotNull(plugin, "plugin is null");
         GuiManager.instance = this;
         this.plugin = plugin;
+        this.audiences = BukkitAudiences.create(plugin);
         Schedulers.setSync(new SchedulerSync());
         Schedulers.setAsync(new SchedulerAsync());
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -229,5 +239,40 @@ public class GuiManager implements Listener {
     @NonNull
     public JavaPlugin plugin() {
         return plugin;
+    }
+
+    @NonNull
+    public BukkitAudiences audiences() {
+        return audiences;
+    }
+
+    /**
+     * 发送消息
+     *
+     * @param receiver 接收者
+     * @param messages 消息
+     */
+    public static void sendMessage(CommandSender receiver, Component... messages) {
+        if (receiver instanceof Player) {
+            for (Component message : messages) {
+                instance().audiences().player((Player) receiver).sendMessage(message);
+            }
+        } else if (receiver instanceof ConsoleCommandSender) {
+            for (Component message : messages) {
+                instance().audiences().console().sendMessage(message);
+            }
+        }
+    }
+
+    /**
+     * @param componentConvert
+     */
+    public void setComponentConvert(@NonNull ComponentConvert componentConvert) {
+        this.componentConvert = componentConvert;
+    }
+
+    @NonNull
+    public ComponentConvert componentConvert() {
+        return componentConvert;
     }
 }

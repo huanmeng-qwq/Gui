@@ -10,7 +10,6 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * 2023/3/17<br>
@@ -43,14 +42,14 @@ public class SlotInterface extends SlotImpl {
         this.buttonPlaceInterface = buttonPlaceInterface;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Result onClick(@NotNull Button button, @NotNull Player player, @NotNull ClickType click, @NotNull InventoryAction action, @NotNull InventoryType.SlotType slotType, int slot, int hotBarKey, @NotNull InventoryClickEvent e) {
+    public Result onClick(@NonNull Button button, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slot, int hotBarKey, @NonNull InventoryClickEvent e) {
         return clickInterface.onClick(this, button, player, click, action, slotType, slot, hotBarKey, e);
     }
 
     @Override
-    public boolean tryPlace(@NotNull Button button, @NotNull Player player) {
+    public boolean tryPlace(@NonNull Button button, @NonNull Player player) {
         return buttonPlaceInterface.tryPlace(this, button, player);
     }
 }

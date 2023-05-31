@@ -1,5 +1,7 @@
 package me.huanmeng.opensource.bukkit.util.item
 
+import me.huanmeng.opensource.bukkit.component.ComponentConvert
+import net.kyori.adventure.text.Component
 import org.bukkit.ChatColor
 import org.bukkit.Color
 import org.bukkit.DyeColor
@@ -13,7 +15,6 @@ import org.bukkit.map.MapView
 import org.bukkit.potion.PotionEffect
 import java.lang.invoke.MethodHandle
 import java.lang.invoke.MethodHandles
-import java.util.*
 import kotlin.random.Random
 
 /**
@@ -84,6 +85,18 @@ open class ItemBuilder : Cloneable {
         }
         `is`.itemMeta = im
         return this
+    }
+
+    open fun setName(component: Component): ItemBuilder {
+        return setName(ComponentConvert.getDefault().convert(component))
+    }
+
+    open fun addLore(lores: List<Component>): ItemBuilder {
+        return this.apply {
+            addLore(
+                *lores.map { ComponentConvert.getDefault().convert(it) }.toTypedArray()
+            )
+        }
     }
 
     open fun setNameUnColor(name: String?): ItemBuilder {

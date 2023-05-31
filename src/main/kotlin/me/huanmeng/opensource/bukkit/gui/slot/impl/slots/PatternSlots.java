@@ -30,7 +30,7 @@ public class PatternSlots implements Slots {
 
     @Override
     @NonNull
-    public <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NotNull G gui) {
+    public <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NonNull G gui) {
         return PatternLineSlots.applySlots(pattern, this.chars);
     }
 }

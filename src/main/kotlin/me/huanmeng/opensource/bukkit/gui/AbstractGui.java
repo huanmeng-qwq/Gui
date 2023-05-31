@@ -14,6 +14,7 @@ import me.huanmeng.opensource.bukkit.tick.TickManager;
 import me.huanmeng.opensource.bukkit.util.item.ItemUtil;
 import me.huanmeng.opensource.scheduler.Scheduler;
 import me.huanmeng.opensource.scheduler.Schedulers;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -40,7 +41,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     @NonNull
     protected Player player;
     @NonNull
-    protected String title = "Chest";
+    protected Component title = Component.text("Chest");
     //默认优先级
     @NonNull
     protected Set<GuiButton> buttons = new HashSet<>(10);
@@ -99,7 +100,8 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
 
     protected Scheduler.@Nullable Task tickTask;
     @NonNull
-    protected Function<@NonNull HumanEntity, @Nullable String> errorMessage = p -> "§c无法处理您的点击请求，请联系管理员。";
+    protected Function<@NonNull HumanEntity, @Nullable Component> errorMessage =
+            p -> Component.text("§c无法处理您的点击请求，请联系管理员。");
 
     /**
      * 设置目标玩家
@@ -111,7 +113,16 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     /**
      * 设置title与size
      */
+    @Deprecated
     protected void init(@NonNull String title, int itemSize) {
+        this.title = Component.text(title);
+        this.size = itemSize;
+    }
+
+    /**
+     * 设置title与size
+     */
+    protected void init(@NonNull Component title, int itemSize) {
         this.title = title;
         this.size = itemSize;
     }
@@ -200,7 +211,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     @NonNull
-    public G errorMessage(@NonNull Function<@NonNull HumanEntity, @Nullable String> errorMessage) {
+    public G errorMessage(@NonNull Function<@NonNull HumanEntity, @Nullable Component> errorMessage) {
         this.errorMessage = errorMessage;
         return self();
     }
@@ -488,9 +499,9 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
                 }
             }
         } else {
-            String message = errorMessage.apply(e.getWhoClicked());
+            Component message = errorMessage.apply(e.getWhoClicked());
             if (message != null) {
-                e.getWhoClicked().sendMessage(message);
+                GuiManager.sendMessage(e.getWhoClicked(), message);
             } else {
                 // 如果apply得到的是null?
                 e.getWhoClicked().sendMessage("A inventory error occurred, please contact the administrator.");
@@ -523,6 +534,11 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
 
     @NonNull
     public G title(@NonNull String title) {
+        return title(Component.text(title));
+    }
+
+    @NonNull
+    public G title(@NonNull Component title) {
         this.title = title;
         // 已经打开了? 那就先执行close后的操作然后再重新构建一个inventory打开
         if (!close) {
