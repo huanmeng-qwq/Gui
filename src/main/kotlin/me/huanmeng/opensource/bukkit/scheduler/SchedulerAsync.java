@@ -3,7 +3,10 @@ package me.huanmeng.opensource.bukkit.scheduler;
 import me.huanmeng.opensource.bukkit.gui.GuiManager;
 import me.huanmeng.opensource.scheduler.Scheduler;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -14,32 +17,37 @@ import java.util.function.Consumer;
  */
 public class SchedulerAsync implements Scheduler {
 
+    @NotNull
     @Override
-    public Task run(Runnable runnable) {
+    @NonNull
+    public Task run(@NonNull Runnable runnable) {
         BukkitTaskImpl task = new BukkitTaskImpl(new BukkitRunnable() {
             @Override
             public void run() {
                 runnable.run();
             }
         });
-        task.runnable().runTaskAsynchronously(GuiManager.instance().plugin());
+        Objects.requireNonNull(task.runnable()).runTaskAsynchronously(GuiManager.instance().plugin());
         return task;
     }
 
+    @NotNull
     @Override
-    public Task runRepeating(Runnable runnable, long perTick, long timeTick) {
+    @NonNull
+    public Task runRepeating(@NonNull Runnable runnable, long perTick, long timeTick) {
         BukkitTaskImpl task = new BukkitTaskImpl(new BukkitRunnable() {
             @Override
             public void run() {
                 runnable.run();
             }
         });
-        task.runnable().runTaskTimerAsynchronously(GuiManager.instance().plugin(), perTick, timeTick);
+        Objects.requireNonNull(task.runnable()).runTaskTimerAsynchronously(GuiManager.instance().plugin(), perTick, timeTick);
         return task;
     }
 
+    @NotNull
     @Override
-    public Task runRepeating(Consumer<Task> consumer, long perTick, long timeTick) {
+    public Task runRepeating(@NotNull Consumer<Task> consumer, long perTick, long timeTick) {
         BukkitTaskImpl task = new BukkitTaskImpl(null) {
             // 没法直接调用self 所以选择了这种
             {
@@ -51,19 +59,20 @@ public class SchedulerAsync implements Scheduler {
                 });
             }
         };
-        task.runnable().runTaskTimerAsynchronously(GuiManager.instance().plugin(), perTick, timeTick);
+        Objects.requireNonNull(task.runnable()).runTaskTimerAsynchronously(GuiManager.instance().plugin(), perTick, timeTick);
         return task;
     }
 
+    @NotNull
     @Override
-    public Task runLater(Runnable runnable, long laterTick) {
+    public Task runLater(@NotNull Runnable runnable, long laterTick) {
         BukkitTaskImpl task = new BukkitTaskImpl(new BukkitRunnable() {
             @Override
             public void run() {
                 runnable.run();
             }
         });
-        task.runnable().runTaskLaterAsynchronously(GuiManager.instance().plugin(), laterTick);
+        Objects.requireNonNull(task.runnable()).runTaskLaterAsynchronously(GuiManager.instance().plugin(), laterTick);
         return task;
     }
 

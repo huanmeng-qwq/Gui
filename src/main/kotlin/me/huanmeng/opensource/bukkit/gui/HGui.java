@@ -2,6 +2,8 @@ package me.huanmeng.opensource.bukkit.gui;
 
 import me.huanmeng.opensource.bukkit.gui.impl.GuiCustom;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -17,17 +19,20 @@ import java.lang.invoke.MethodType;
  */
 @SuppressWarnings({"rawtypes", "unused"})
 public abstract class HGui {
+    @Nullable
     private HGui from;
+    @NonNull
     protected final PackageGuiContext context;
     protected boolean allowBack;
 
+    @NonNull
     private final MethodHandle constructorHandle;
 
-    public HGui(Player player) {
+    public HGui(@NonNull Player player) {
         this(player, false);
     }
 
-    public HGui(Player player, boolean allowBack) {
+    public HGui(@NonNull Player player, boolean allowBack) {
         this.context = new PackageGuiContext(player);
         this.allowBack = allowBack;
         try {
@@ -38,6 +43,7 @@ public abstract class HGui {
         }
     }
 
+    @Nullable
     protected abstract AbstractGui<? super GuiCustom> gui();
 
     public final void open() {
@@ -66,6 +72,7 @@ public abstract class HGui {
 
     }
 
+    @Nullable
     protected HGui from() {
         return from;
     }

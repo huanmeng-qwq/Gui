@@ -9,6 +9,8 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 2023/3/17<br>
@@ -16,35 +18,39 @@ import org.bukkit.event.inventory.InventoryType;
  *
  * @author huanmeng_qwq
  */
+@SuppressWarnings("unused")
 public class SlotInterface extends SlotImpl {
+    @NonNull
     private final ButtonClickInterface clickInterface;
+    @NonNull
     private final ButtonPlaceInterface buttonPlaceInterface;
 
-    public SlotInterface(int index, ButtonClickInterface clickInterface, ButtonPlaceInterface buttonPlaceInterface) {
+    public SlotInterface(int index, @NonNull ButtonClickInterface clickInterface, @NonNull ButtonPlaceInterface buttonPlaceInterface) {
         super(index);
         this.clickInterface = clickInterface;
         this.buttonPlaceInterface = buttonPlaceInterface;
     }
 
-    public SlotInterface(int index, ButtonClickInterface clickInterface) {
+    public SlotInterface(int index, @NonNull ButtonClickInterface clickInterface) {
         super(index);
         this.clickInterface = clickInterface;
         this.buttonPlaceInterface = (slot, player, button) -> true;
     }
 
-    public SlotInterface(int index, ButtonPlaceInterface buttonPlaceInterface) {
+    public SlotInterface(int index, @NonNull ButtonPlaceInterface buttonPlaceInterface) {
         super(index);
         this.clickInterface = (slot, button, player, click, action, slotType, slotKey, hotBarKey, e) -> button.onClick(slot, player, click, action, slotType, slotKey, hotBarKey, e);
         this.buttonPlaceInterface = buttonPlaceInterface;
     }
 
+    @NotNull
     @Override
-    public Result onClick(Button button, Player player, ClickType click, InventoryAction action, InventoryType.SlotType slotType, int slot, int hotBarKey, InventoryClickEvent e) {
+    public Result onClick(@NotNull Button button, @NotNull Player player, @NotNull ClickType click, @NotNull InventoryAction action, @NotNull InventoryType.SlotType slotType, int slot, int hotBarKey, @NotNull InventoryClickEvent e) {
         return clickInterface.onClick(this, button, player, click, action, slotType, slot, hotBarKey, e);
     }
 
     @Override
-    public boolean tryPlace(Button button, Player player) {
+    public boolean tryPlace(@NotNull Button button, @NotNull Player player) {
         return buttonPlaceInterface.tryPlace(this, button, player);
     }
 }

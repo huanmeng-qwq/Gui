@@ -5,6 +5,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * 2023/3/17<br>
@@ -25,5 +26,6 @@ public interface GuiEmptyItemClick {
      * @param e         事件
      * @return 是否cancel事件
      */
-    boolean onClickEmptyButton(Player player, int slot, ClickType clickType, InventoryAction action, InventoryType.SlotType slotType, int hotBar, InventoryClickEvent e);
+    boolean onClickEmptyButton(@NonNull Player player, int slot, @NonNull ClickType clickType, @NonNull InventoryAction action,
+                               InventoryType.@NonNull SlotType slotType, int hotBar, @NonNull InventoryClickEvent e);
 }

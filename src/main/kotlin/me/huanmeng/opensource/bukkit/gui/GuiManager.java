@@ -15,6 +15,8 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Map;
 import java.util.Objects;
@@ -29,15 +31,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @SuppressWarnings("unused")
 public class GuiManager implements Listener {
+    @NonNull
     private final JavaPlugin plugin;
 
     private static GuiManager instance;
 
+    @NonNull
     public static GuiManager instance() {
         return instance;
     }
 
-    public GuiManager(JavaPlugin plugin) {
+    public GuiManager(@NonNull JavaPlugin plugin) {
         Preconditions.checkArgument(instance == null, "instance is not null");
         Preconditions.checkNotNull(plugin, "plugin is null");
         GuiManager.instance = this;
@@ -47,22 +51,25 @@ public class GuiManager implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
+    @NonNull
     private final Map<UUID, AbstractGui<?>> userOpenGui = new ConcurrentHashMap<>();
+    @NonNull
     final Map<UUID, AbstractGui<?>> userNextOpenGui = new ConcurrentHashMap<>();
 
-    public void setUserOpenGui(UUID uuid, AbstractGui<?> gui) {
+    public void setUserOpenGui(@NonNull UUID uuid, @NonNull AbstractGui<?> gui) {
         userOpenGui.put(uuid, gui);
     }
 
-    public void removeUserOpenGui(UUID uuid) {
+    public void removeUserOpenGui(@NonNull UUID uuid) {
         userOpenGui.remove(uuid);
     }
 
-    public AbstractGui<?> getUserOpenGui(UUID uuid) {
+    @Nullable
+    public AbstractGui<?> getUserOpenGui(@NonNull UUID uuid) {
         return userOpenGui.get(uuid);
     }
 
-    public boolean check(UUID uuid, Inventory inventory) {
+    public boolean check(@NonNull UUID uuid, @NonNull Inventory inventory) {
         Preconditions.checkNotNull(uuid, "uuid is null");
         Preconditions.checkNotNull(inventory, "inventory is null");
         InventoryHolder holder = inventory.getHolder();
@@ -73,17 +80,17 @@ public class GuiManager implements Listener {
         if (gui == null) {
             return false;
         }
-        Inventory inv = gui.getInventory();
+        @NonNull Inventory inv = gui.getInventory();
         holder = inv.getHolder();
         Preconditions.checkNotNull(holder, "holder is null");
         return Objects.equals(holder.getInventory(), inventory);
     }
 
-    public boolean isOpenGui(UUID user) {
+    public boolean isOpenGui(@NonNull UUID user) {
         return userOpenGui.containsKey(user);
     }
 
-    public boolean isOpenGui(UUID user, AbstractGui<?> gui) {
+    public boolean isOpenGui(@NonNull UUID user, @NonNull AbstractGui<?> gui) {
         return Objects.equals(getUserOpenGui(user), gui);
     }
 
@@ -129,13 +136,16 @@ public class GuiManager implements Listener {
         }
     }
 
-    protected void onInventoryClick(InventoryClickEvent e, Player player) {
+    protected void onInventoryClick(@NonNull InventoryClickEvent e, @NonNull Player player) {
         UUID uuid = player.getUniqueId();
         if (!isOpenGui(uuid)) {
             return;
         }
         try {
-            getUserOpenGui(uuid).onClick(e);
+            AbstractGui<?> gui = getUserOpenGui(uuid);
+            if (gui != null) {
+                gui.onClick(e);
+            }
             e.setCancelled(true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -158,7 +168,10 @@ public class GuiManager implements Listener {
         if (!isOpenGui(uuid)) {
             return;
         }
-        getUserOpenGui(uuid).onDarg(e);
+        AbstractGui<?> gui = getUserOpenGui(uuid);
+        if (gui != null) {
+            gui.onDarg(e);
+        }
     }
 
     @EventHandler
@@ -195,11 +208,16 @@ public class GuiManager implements Listener {
         }
     }
 
-    public void refreshGui(Player player) {
+    public void refreshGui(@NonNull Player player) {
         UUID uuid = player.getUniqueId();
         if (isOpenGui(uuid)) {
             // 当更换gui后应该刷新所有按钮的显示。
-            Runnable refreshRunnable = () -> getUserOpenGui(uuid).refresh(true);
+            Runnable refreshRunnable = () -> {
+                AbstractGui<?> gui = getUserOpenGui(uuid);
+                if (gui != null) {
+                    gui.refresh(true);
+                }
+            };
             if (Bukkit.isPrimaryThread()) {
                 refreshRunnable.run();
             } else {
@@ -208,6 +226,7 @@ public class GuiManager implements Listener {
         }
     }
 
+    @NonNull
     public JavaPlugin plugin() {
         return plugin;
     }

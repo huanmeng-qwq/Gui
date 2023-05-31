@@ -1,12 +1,13 @@
 package me.huanmeng.opensource.bukkit.gui.impl;
 
-import me.huanmeng.opensource.bukkit.util.item.ItemUtil;
 import me.huanmeng.opensource.bukkit.gui.AbstractGui;
+import me.huanmeng.opensource.bukkit.util.item.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * 2023/3/17<br>
@@ -14,19 +15,21 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author huanmeng_qwq
  */
-public class GuiCustom extends AbstractGui<GuiCustom> {
+public class GuiCustom extends AbstractGui<@NonNull GuiCustom> {
     protected int line = 6;
 
-    public GuiCustom(Player player) {
+    public GuiCustom(@NonNull Player player) {
         setPlayer(player);
     }
 
+    @NonNull
     public GuiCustom line(int line) {
         this.line = line;
         return this;
     }
 
     @Override
+    @NonNull
     public GuiCustom openGui() {
         init(title, line * 9);
         Inventory inventory = build(createHolder());
@@ -46,7 +49,8 @@ public class GuiCustom extends AbstractGui<GuiCustom> {
     }
 
     @Override
-    protected Inventory build(InventoryHolder holder) {
+    @NonNull
+    protected Inventory build(@NonNull InventoryHolder holder) {
         return Bukkit.createInventory(holder, line * 9, title);
     }
 
@@ -65,6 +69,7 @@ public class GuiCustom extends AbstractGui<GuiCustom> {
     }
 
     @Override
+    @NonNull
     protected GuiCustom self() {
         return this;
     }

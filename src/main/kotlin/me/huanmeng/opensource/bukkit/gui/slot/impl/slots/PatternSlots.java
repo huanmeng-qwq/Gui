@@ -4,6 +4,8 @@ import com.google.common.primitives.Chars;
 import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.gui.slot.Slots;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,27 +17,20 @@ import java.util.List;
  * @author huanmeng_qwq
  */
 public class PatternSlots implements Slots {
+    @NonNull
     private final String[] pattern;
-    private final List<Character> chars;
+    @NonNull
+    private final List<@NonNull Character> chars;
 
-    public PatternSlots(String[] pattern, char... chars) {
+    public PatternSlots(@NonNull String[] pattern, char... chars) {
         this.pattern = pattern;
         this.chars = new ArrayList<>(chars.length);
         this.chars.addAll(Chars.asList(chars));
     }
 
     @Override
-    public <G extends AbstractGui<G>> Slot[] slots(G gui) {
-        List<Slot> list = new ArrayList<>(pattern.length);
-        for (int y = 0; y < pattern.length; y++) {
-            String line = pattern[y];
-            char[] chars = line.toCharArray();
-            for (int x = 0; x < chars.length; x++) {
-                if (this.chars.contains(chars[x])) {
-                    list.add(Slot.ofBukkit(x, y));
-                }
-            }
-        }
-        return list.toArray(new Slot[0]);
+    @NonNull
+    public <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NotNull G gui) {
+        return PatternLineSlots.applySlots(pattern, this.chars);
     }
 }

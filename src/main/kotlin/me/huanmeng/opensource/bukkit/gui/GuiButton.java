@@ -8,6 +8,9 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -19,10 +22,14 @@ import java.util.Objects;
  */
 public final class GuiButton {
 
+
+    @NonNull
     private Slot slot;
+
+    @NonNull
     private Button button;
 
-    public GuiButton(Slot slot, Button button) {
+    public GuiButton(@NonNull Slot slot, @Nullable Button button) {
         this.slot = slot;
         this.button = button == null ? Button.empty() : button;
     }
@@ -30,7 +37,10 @@ public final class GuiButton {
     /**
      * 点击事件
      */
-    public Result onClick(Player player, ClickType click, InventoryAction action, InventoryType.SlotType slotType, int slotKey, int hotBarKey, InventoryClickEvent e) {
+    @NonNull
+    public Result onClick(@NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action,
+                          InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey,
+                          @NonNull InventoryClickEvent e) {
         return slot.onClick(button, player, click, action, slotType, slotKey, hotBarKey, e);
     }
 
@@ -42,19 +52,21 @@ public final class GuiButton {
         return slot.tryPlace(getButton(), player);
     }
 
+    @NonNull
     public Slot getSlot() {
         return slot;
     }
 
-    public void setSlot(Slot slot) {
+    public void setSlot(@NotNull Slot slot) {
         this.slot = slot;
     }
 
+    @NonNull
     public Button getButton() {
         return button;
     }
 
-    public void setButton(Button button) {
+    public void setButton(@NonNull Button button) {
         this.button = button;
     }
 

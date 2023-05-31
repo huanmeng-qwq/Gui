@@ -3,6 +3,8 @@ package me.huanmeng.opensource.bukkit.gui.slot.impl.slots;
 import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.gui.slot.Slots;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 2023/3/17<br>
@@ -11,14 +13,15 @@ import me.huanmeng.opensource.bukkit.gui.slot.Slots;
  * @author huanmeng_qwq
  */
 public class ArraySlots implements Slots {
+    @NonNull
     private final Slot[] slots;
 
-    public ArraySlots(Slot[] slots) {
+    public ArraySlots(@NonNull Slot[] slots) {
         this.slots = slots;
     }
 
     @Override
-    public <G extends AbstractGui<G>> Slot[] slots(G gui) {
+    public <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NotNull G gui) {
         return slots;
     }
 }

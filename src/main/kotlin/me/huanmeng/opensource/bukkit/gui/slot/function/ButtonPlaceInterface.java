@@ -3,6 +3,7 @@ package me.huanmeng.opensource.bukkit.gui.slot.function;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * 2023/3/17<br>
@@ -20,5 +21,5 @@ public interface ButtonPlaceInterface {
      * @param player 玩家
      * @return 是否成功
      */
-    boolean tryPlace(Slot slot, Button button, Player player);
+    boolean tryPlace(@NonNull Slot slot, @NonNull Button button, @NonNull Player player);
 }

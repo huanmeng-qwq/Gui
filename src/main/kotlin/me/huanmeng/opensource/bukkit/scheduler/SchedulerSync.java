@@ -3,7 +3,9 @@ package me.huanmeng.opensource.bukkit.scheduler;
 import me.huanmeng.opensource.bukkit.gui.GuiManager;
 import me.huanmeng.opensource.scheduler.Scheduler;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -14,32 +16,35 @@ import java.util.function.Consumer;
  */
 public class SchedulerSync implements Scheduler {
 
+    @NotNull
     @Override
-    public Task run(Runnable runnable) {
+    public Task run(@NotNull Runnable runnable) {
         BukkitTaskImpl task = new BukkitTaskImpl(new BukkitRunnable() {
             @Override
             public void run() {
                 runnable.run();
             }
         });
-        task.runnable().runTask(GuiManager.instance().plugin());
+        Objects.requireNonNull(task.runnable()).runTask(GuiManager.instance().plugin());
         return task;
     }
 
+    @NotNull
     @Override
-    public Task runRepeating(Runnable runnable, long perTick, long timeTick) {
+    public Task runRepeating(@NotNull Runnable runnable, long perTick, long timeTick) {
         BukkitTaskImpl task = new BukkitTaskImpl(new BukkitRunnable() {
             @Override
             public void run() {
                 runnable.run();
             }
         });
-        task.runnable().runTaskTimer(GuiManager.instance().plugin(), perTick, timeTick);
+        Objects.requireNonNull(task.runnable()).runTaskTimer(GuiManager.instance().plugin(), perTick, timeTick);
         return task;
     }
 
+    @NotNull
     @Override
-    public Task runRepeating(Consumer<Task> consumer, long perTick, long timeTick) {
+    public Task runRepeating(@NotNull Consumer<Task> consumer, long perTick, long timeTick) {
         BukkitTaskImpl task = new BukkitTaskImpl(null) {
             // 没法直接调用self 所以选择了这种
             {
@@ -51,19 +56,20 @@ public class SchedulerSync implements Scheduler {
                 });
             }
         };
-        task.runnable().runTaskTimer(GuiManager.instance().plugin(), perTick, timeTick);
+        Objects.requireNonNull(task.runnable()).runTaskTimer(GuiManager.instance().plugin(), perTick, timeTick);
         return task;
     }
 
+    @NotNull
     @Override
-    public Task runLater(Runnable runnable, long laterTick) {
+    public Task runLater(@NotNull Runnable runnable, long laterTick) {
         BukkitTaskImpl task = new BukkitTaskImpl(new BukkitRunnable() {
             @Override
             public void run() {
                 runnable.run();
             }
         });
-        task.runnable().runTaskLater(GuiManager.instance().plugin(), laterTick);
+        Objects.requireNonNull(task.runnable()).runTaskLater(GuiManager.instance().plugin(), laterTick);
         return task;
     }
 

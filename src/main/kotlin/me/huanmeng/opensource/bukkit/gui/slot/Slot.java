@@ -1,6 +1,7 @@
 package me.huanmeng.opensource.bukkit.gui.slot;
 
 import me.huanmeng.opensource.bukkit.gui.AbstractGui;
+import me.huanmeng.opensource.bukkit.gui.GuiButton;
 import me.huanmeng.opensource.bukkit.gui.SlotUtil;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
@@ -15,6 +16,9 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Contract;
 
 /**
  * 2023/3/17<br>
@@ -35,20 +39,24 @@ public interface Slot {
      * @return 是否取消事件
      * @see Result
      */
-    default Result onClick(Button button, Player player, ClickType click, InventoryAction action, InventoryType.SlotType slotType, int slot, int hotBarKey, InventoryClickEvent e) {
+    @NonNull
+    default Result onClick(@NonNull Button button, @NonNull Player player, @NonNull ClickType click,
+                           @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slot,
+                           int hotBarKey, @NonNull InventoryClickEvent e) {
         return button.onClick(this, player, click, action, slotType, slot, hotBarKey, e);
     }
 
     /**
      * 是否允许{@link Button}放置在当前Slot上
      */
-    default boolean tryPlace(Button button, Player player) {
+    default boolean tryPlace(@NonNull Button button, @NonNull Player player) {
         return true;
     }
 
     /**
      * 以0开始
      */
+    @Contract(value = "_ -> new", pure = true)
     static Slot of(int i) {
         return new SlotImpl(i);
     }
@@ -56,6 +64,7 @@ public interface Slot {
     /**
      * 以1开始
      */
+    @Contract(value = "_, _ -> new", pure = true)
     static Slot ofGame(int x, int y) {
         return new SlotImpl(SlotUtil.getSlot(y, x));
     }
@@ -63,23 +72,30 @@ public interface Slot {
     /**
      * 以0开始
      */
+    @Contract(value = "_, _ -> new", pure = true)
     static Slot ofBukkit(int x, int y) {
         return new SlotImpl(SlotUtil.getSlot(y + 1, x + 1));
     }
 
+    @Contract(value = "_, _ -> new", pure = true)
     static Slot of(int i, ButtonClickInterface buttonClickInterface) {
         return new SlotInterface(i, buttonClickInterface);
     }
 
+    @Contract(value = "_, !null -> new", pure = true)
     static Slot of(int i, ButtonSimpleClickInterface buttonSimpleClickInterface) {
         return new SlotInterface(i, buttonSimpleClickInterface);
     }
 
+    @Contract(value = "_, !null -> new", pure = true)
     static Slot of(int i, ButtonPlaceInterface placeInterface) {
         return new SlotInterface(i, placeInterface);
     }
 
-    default ItemStack getShowingItem(AbstractGui gui, Player player) {
-        return gui.getButton(getIndex()).getButton().getShowItem(player);
+    @Nullable
+    default ItemStack getShowingItem(@NonNull AbstractGui gui, @NonNull Player player) {
+        GuiButton button = gui.getButton(getIndex());
+        if (button == null) return null;
+        return button.getButton().getShowItem(player);
     }
 }

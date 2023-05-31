@@ -1,5 +1,8 @@
 package me.huanmeng.opensource.page;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,16 +12,18 @@ import java.util.List;
  *
  * @author huanmeng_qwq
  */
-public class Pagination<T> {
-    private List<T> content;
+@SuppressWarnings("unused")
+public class Pagination<@NonNull T> {
+    @NonNull
+    private List<@Nullable T> content;
     private final int elementsPerPage;
 
-    public Pagination(List<T> content, int elementsPerPage) {
+    public Pagination(@NonNull List<@Nullable T> content, int elementsPerPage) {
         this.content = content;
         this.elementsPerPage = elementsPerPage;
     }
 
-    public void printPage(int page, IPaginationExecutor<T> executor) {
+    public void printPage(int page, @NonNull IPaginationExecutor<T> executor) {
         for (T element : getElementsFor(page)) {
             executor.print(element);
         }
@@ -30,7 +35,8 @@ public class Pagination<T> {
      * @param page 页数
      * @return 元素列表
      */
-    public List<T> getElementsFor(int page) {
+    @NonNull
+    public List<@Nullable T> getElementsFor(int page) {
         if (page <= 0 || page > getPages()) return new ArrayList<T>();
 
         int startIndex = (page - 1) * this.elementsPerPage;
@@ -91,7 +97,7 @@ public class Pagination<T> {
      *
      * @param element 元素
      */
-    public void addElement(T element) {
+    public void addElement(@Nullable T element) {
         if (!this.content.contains(element)) this.content.add(element);
     }
 
@@ -100,7 +106,8 @@ public class Pagination<T> {
      *
      * @return 元素列表
      */
-    public List<T> getContent() {
+    @NonNull
+    public List<@Nullable T> getContent() {
         return content;
     }
 
@@ -109,7 +116,7 @@ public class Pagination<T> {
      *
      * @param content 元素列表
      */
-    public void setContent(List<T> content) {
+    public void setContent(@NonNull List<@Nullable T> content) {
         this.content = content;
     }
 

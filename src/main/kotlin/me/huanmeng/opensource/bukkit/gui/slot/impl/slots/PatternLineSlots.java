@@ -4,6 +4,8 @@ import com.google.common.primitives.Chars;
 import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.gui.slot.Slots;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,24 +18,32 @@ import java.util.function.Function;
  * @author huanmeng_qwq
  */
 public class PatternLineSlots implements Slots {
-    private final Function<Integer, String[]> patternFun;
-    private final List<Character> chars;
+    @NonNull
+    private final Function<@NonNull Integer, @NonNull String[]> patternFun;
+    @NonNull
+    private final List<@NonNull Character> chars;
 
-    public PatternLineSlots(Function<Integer, String[]> pattern, char... chars) {
+    public PatternLineSlots(@NonNull Function<@NonNull Integer, @NonNull String[]> pattern, char... chars) {
         this.patternFun = pattern;
         this.chars = new ArrayList<>(chars.length);
         this.chars.addAll(Chars.asList(chars));
     }
 
     @Override
-    public <G extends AbstractGui<G>> Slot[] slots(G gui) {
+    @NonNull
+    public <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NotNull G gui) {
         String[] pattern = patternFun.apply(gui.size() / 9);
+        return applySlots(pattern, this.chars);
+    }
+
+    @NotNull
+    protected static @NonNull Slot[] applySlots(@NonNull String[] pattern, @NonNull List<Character> chars2) {
         List<Slot> list = new ArrayList<>(pattern.length);
         for (int y = 0; y < pattern.length; y++) {
             String line = pattern[y];
             char[] chars = line.toCharArray();
             for (int x = 0; x < chars.length; x++) {
-                if (this.chars.contains(chars[x])) {
+                if (chars2.contains(chars[x])) {
                     list.add(Slot.ofBukkit(x, y));
                 }
             }
@@ -41,7 +51,8 @@ public class PatternLineSlots implements Slots {
         return list.toArray(new Slot[0]);
     }
 
-    public Function<Integer, String[]> patternFun() {
+    @NonNull
+    public Function<@NonNull Integer, @NonNull String[]> patternFun() {
         return patternFun;
     }
 }

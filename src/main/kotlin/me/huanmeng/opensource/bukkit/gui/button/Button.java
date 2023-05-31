@@ -12,6 +12,9 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Contract;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,14 +37,17 @@ public interface Button {
      * @param player 玩家
      * @return 物品
      */
-    ItemStack getShowItem(Player player);
+    @Nullable
+    ItemStack getShowItem(@NonNull Player player);
 
     /**
      * 空按钮
      */
     Button EMPTY = (p) -> null;
 
-    default Result onClick(Slot slot, Player player, ClickType click, InventoryAction action, InventoryType.SlotType slotType, int slotKey, int hotBarKey, InventoryClickEvent e) {
+    @NonNull
+    default Result onClick(@NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action,
+                           InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey, @NonNull InventoryClickEvent e) {
         return Result.CANCEL;
     }
 
@@ -51,6 +57,7 @@ public interface Button {
      * @param item 物品
      * @return {@link Button}
      */
+    @Contract(value = "!null -> new", pure = true)
     static Button of(UserItemInterface item) {
         return new EmptyButton(item);
     }
@@ -62,6 +69,7 @@ public interface Button {
      * @param clickable 点击事件
      * @return {@link Button}
      */
+    @Contract(value = "!null, !null -> new", pure = true)
     static Button of(UserItemInterface item, PlayerClickInterface clickable) {
         return new ClickButton(item, clickable);
     }
@@ -73,6 +81,7 @@ public interface Button {
      * @param clickable 点击事件
      * @return {@link Button}
      */
+    @Contract(value = "!null, !null -> new", pure = true)
     static Button of(UserItemInterface item, PlayerClickCancelInterface clickable) {
         return new ClickButton(item, clickable);
     }
@@ -84,6 +93,7 @@ public interface Button {
      * @param playerSimpleCancelInterface 点击事件
      * @return {@link Button}
      */
+    @Contract(value = "!null, !null -> new", pure = true)
     static Button of(UserItemInterface item, PlayerSimpleCancelInterface playerSimpleCancelInterface) {
         return new ClickButton(item, playerSimpleCancelInterface);
     }
@@ -95,7 +105,8 @@ public interface Button {
      * @param <IMPL> 实现了{@link UserItemInterface}和{@link PlayerClickInterface}的类
      * @return {@link Button}
      */
-    static <IMPL extends UserItemInterface & PlayerClickInterface> Button ofInstance(IMPL impl) {
+    @Contract(value = "!null -> new", pure = true)
+    static <@NonNull IMPL extends UserItemInterface & PlayerClickInterface> Button ofInstance(IMPL impl) {
         return new ClickButton(impl, impl);
     }
 
@@ -106,7 +117,8 @@ public interface Button {
      * @param <IMPL> 实现了{@link UserItemInterface}和{@link PlayerClickInterface}的类
      * @return {@link Button}
      */
-    static <IMPL extends UserItemInterface & PlayerClickInterface> List<Button> ofInstances(Collection<IMPL> impl) {
+    @NonNull
+    static <@NonNull IMPL extends UserItemInterface & PlayerClickInterface> List<Button> ofInstances(@NonNull Collection<@NonNull IMPL> impl) {
         return impl.stream().map(Button::ofInstance).collect(Collectors.toList());
     }
 
@@ -118,7 +130,7 @@ public interface Button {
      * @return {@link Button}
      */
     @SafeVarargs
-    static <IMPL extends UserItemInterface & PlayerClickInterface> List<Button> ofInstancesArray(IMPL... impl) {
+    static <@NonNull IMPL extends UserItemInterface & PlayerClickInterface> List<Button> ofInstancesArray(@NonNull IMPL... impl) {
         return Arrays.stream(impl).map(Button::ofInstance).collect(Collectors.toList());
     }
 
@@ -129,7 +141,8 @@ public interface Button {
      * @param map        映射
      * @return {@link Button}
      */
-    static List<Button> ofItemStacksButton(Collection<ItemStack> itemStacks, Function<ItemStack, Button> map) {
+    @NonNull
+    static List<@Nullable Button> ofItemStacksButton(@NonNull Collection<@Nullable ItemStack> itemStacks, @NonNull Function<@Nullable ItemStack, @Nullable Button> map) {
         return itemStacks.stream().map(map).collect(Collectors.toList());
     }
 
@@ -140,7 +153,8 @@ public interface Button {
      * @param map        映射
      * @return {@link Button}
      */
-    static List<Button> ofItemStacks(Collection<ItemStack> itemStacks, Function<ItemStack, UserItemInterface> map) {
+    @NonNull
+    static List<@NonNull Button> ofItemStacks(@NonNull Collection<@Nullable ItemStack> itemStacks, @NonNull Function<@Nullable ItemStack, @NonNull UserItemInterface> map) {
         return itemStacks.stream().map(map).map(Button::of).collect(Collectors.toList());
     }
 
@@ -150,7 +164,8 @@ public interface Button {
      * @param itemStacks 物品
      * @return {@link Button}
      */
-    static List<Button> ofItemStacks(Collection<ItemStack> itemStacks) {
+    @NonNull
+    static List<@NonNull Button> ofItemStacks(@NonNull Collection<@Nullable ItemStack> itemStacks) {
         return itemStacks.stream().map(e -> (UserItemInterface) player -> e).map(Button::of).collect(Collectors.toList());
     }
 
@@ -162,10 +177,13 @@ public interface Button {
      * @param <IMPL>     实现了{@link UserItemInterface}和{@link PlayerClickInterface}的类
      * @return {@link Button}
      */
-    static <IMPL extends UserItemInterface & PlayerClickInterface> List<Button> ofItemStacksInstances(Collection<ItemStack> itemStacks, Function<ItemStack, IMPL> map) {
+    @NonNull
+    static <@NonNull IMPL extends UserItemInterface & PlayerClickInterface>
+    List<@NonNull Button> ofItemStacksInstances(@NonNull Collection<@Nullable ItemStack> itemStacks, @NonNull Function<@Nullable ItemStack, @NonNull IMPL> map) {
         return itemStacks.stream().map(map).map(Button::ofInstance).collect(Collectors.toList());
     }
 
+    @Contract(value = " -> !null", pure = true)
     static Button empty() {
         return EMPTY;
     }

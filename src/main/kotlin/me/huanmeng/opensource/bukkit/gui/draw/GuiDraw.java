@@ -6,6 +6,8 @@ import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.gui.slot.Slots;
 import me.huanmeng.opensource.bukkit.util.MathUtil;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 
@@ -16,13 +18,16 @@ import java.util.List;
  *
  * @author huanmeng_qwq
  */
-public class GuiDraw<G extends AbstractGui<G>> {
+@SuppressWarnings("unused")
+public class GuiDraw<@NonNull G extends AbstractGui<G>> {
+    @NonNull
     private final G gui;
 
-    public GuiDraw(G gui) {
+    public GuiDraw(@NonNull G gui) {
         this.gui = gui;
     }
 
+    @NonNull
     public G gui() {
         return gui;
     }
@@ -37,7 +42,8 @@ public class GuiDraw<G extends AbstractGui<G>> {
      * @param button 按钮
      * @return this
      */
-    public GuiDraw<G> vertical(int x1, int y1, int x2, int y2, Button button) {
+    @NonNull
+    public GuiDraw<@NonNull G> vertical(int x1, int y1, int x2, int y2, @Nullable Button button) {
         int[] xRange = MathUtil.range(x1, x2);
         int[] yRange = MathUtil.range(y1, y2);
         for (int x : xRange) {
@@ -56,7 +62,8 @@ public class GuiDraw<G extends AbstractGui<G>> {
      * @param button 按钮
      * @return this
      */
-    public GuiDraw<G> set(int x, int y, Button button) {
+    @NonNull
+    public GuiDraw<@NonNull G> set(int x, int y, @Nullable Button button) {
         set(Slot.ofBukkit(x, y), button);
         return this;
     }
@@ -68,7 +75,8 @@ public class GuiDraw<G extends AbstractGui<G>> {
      * @param button 按钮
      * @return this
      */
-    public GuiDraw<G> set(int slot, Button button) {
+    @NonNull
+    public GuiDraw<@NonNull G> set(int slot, @Nullable Button button) {
         set(Slot.of(slot), button);
         return this;
     }
@@ -80,7 +88,8 @@ public class GuiDraw<G extends AbstractGui<G>> {
      * @param button 按钮
      * @return this
      */
-    public GuiDraw<G> set(Slots slots, Button button) {
+    @NonNull
+    public GuiDraw<@NonNull G> set(@NonNull Slots slots, @Nullable Button button) {
         for (Slot slot : slots.slots(gui)) {
             set(slot, button);
         }
@@ -94,7 +103,8 @@ public class GuiDraw<G extends AbstractGui<G>> {
      * @param buttons 按钮
      * @return this
      */
-    public GuiDraw<G> set(Slots slots, List<? extends Button> buttons) {
+    @NonNull
+    public GuiDraw<@NonNull G> set(@NonNull Slots slots, @NonNull List<@Nullable ? extends Button> buttons) {
         Slot[] slotArray = slots.slots(gui);
         for (int i = 0; i < slotArray.length; i++) {
             if (i >= buttons.size()) {
@@ -112,7 +122,8 @@ public class GuiDraw<G extends AbstractGui<G>> {
      * @param button 按钮
      * @return this
      */
-    public GuiDraw<G> set(Slot slot, Button button) {
+    @NonNull
+    public GuiDraw<@NonNull G> set(@NonNull Slot slot, @Nullable Button button) {
         gui.addAttachedButton(new GuiButton(slot, button));
         return this;
     }

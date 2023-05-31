@@ -6,6 +6,7 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * 2023/3/17<br>
@@ -26,5 +27,7 @@ public interface GuiBottomClick {
      * @param e         事件
      * @return 是否cancel事件
      */
-    boolean onClickBottom(Player player, Inventory bottom, ClickType clickType, InventoryAction action, InventoryType.SlotType slotType, int hotBar, InventoryClickEvent e);
+    boolean onClickBottom(@NonNull Player player, @NonNull Inventory bottom, @NonNull ClickType clickType,
+                          @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType,
+                          int hotBar, @NonNull InventoryClickEvent e);
 }

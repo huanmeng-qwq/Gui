@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryType;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * 2023/3/17<br>
@@ -27,5 +28,7 @@ public interface PlayerClickInterface {
      * @param hotBarKey 热键
      * @return {@link Result}
      */
-    Result onClick(Slot slot, Player player, ClickType click, InventoryAction action, InventoryType.SlotType slotType, int slotKey, int hotBarKey);
+    @NonNull
+    Result onClick(@NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action,
+                   InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey);
 }

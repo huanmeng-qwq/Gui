@@ -34,7 +34,7 @@ class LoreEditor(
     var callback: ItemStackCallback? = null
 
 
-    override fun gui(): AbstractGui<in GuiCustom?> {
+    override fun gui(): AbstractGui<in GuiCustom> {
         val list: MutableList<Button> = ArrayList()
         val editor = this
         var delMode = false

@@ -3,6 +3,9 @@ package me.huanmeng.opensource.bukkit.gui.slot.impl.slots;
 import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.gui.slot.Slots;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,7 +17,9 @@ import java.util.stream.Collectors;
  * @author huanmeng_qwq
  */
 public class ExcludeSlots implements Slots {
-    private Set<Integer> excludeSlots;
+    @NonNull
+    private final Set<Integer> excludeSlots;
+    @Nullable
     private Slots slots;
 
     public ExcludeSlots(int[] excludeSlots) {
@@ -22,13 +27,13 @@ public class ExcludeSlots implements Slots {
         this.excludeSlots.addAll(Arrays.stream(excludeSlots).boxed().collect(Collectors.toList()));
     }
 
-    public ExcludeSlots(Slots slots) {
+    public ExcludeSlots(@NonNull Slots slots) {
         this.slots = slots;
         this.excludeSlots = new HashSet<>(10);
     }
 
     @Override
-    public <G extends AbstractGui<G>> Slot[] slots(G gui) {
+    public <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NotNull G gui) {
         List<Integer> list = null;
         if (slots != null) {
             list = Arrays.stream(slots.slots(gui)).map(Slot::getIndex).collect(Collectors.toList());

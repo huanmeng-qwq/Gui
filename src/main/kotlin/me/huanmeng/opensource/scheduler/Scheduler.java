@@ -1,6 +1,7 @@
 package me.huanmeng.opensource.scheduler;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.function.Consumer;
 
@@ -10,12 +11,14 @@ import java.util.function.Consumer;
  *
  * @author huanmeng_qwq
  */
+@SuppressWarnings("unused")
 public interface Scheduler {
     /**
      * 执行
      */
     @CanIgnoreReturnValue
-    Task run(Runnable runnable);
+    @NonNull
+    Task run(@NonNull Runnable runnable);
 
     /**
      * 重复执行
@@ -26,7 +29,8 @@ public interface Scheduler {
      * @return task
      */
     @CanIgnoreReturnValue
-    Task runRepeating(Runnable runnable, long perTick, long timeTick);
+    @NonNull
+    Task runRepeating(@NonNull Runnable runnable, long perTick, long timeTick);
 
     /**
      * 重复执行
@@ -37,7 +41,8 @@ public interface Scheduler {
      * @return task
      */
     @CanIgnoreReturnValue
-    Task runRepeating(Consumer<Task> consumer, long perTick, long timeTick);
+    @NonNull
+    Task runRepeating(@NonNull Consumer<Task> consumer, long perTick, long timeTick);
 
     /**
      * 延迟执行
@@ -47,7 +52,8 @@ public interface Scheduler {
      * @return task
      */
     @CanIgnoreReturnValue
-    Task runLater(Runnable runnable, long laterTick);
+    @NonNull
+    Task runLater(@NonNull Runnable runnable, long laterTick);
 
     /**
      * 是否被禁用

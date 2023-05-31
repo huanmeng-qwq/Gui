@@ -22,6 +22,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -34,17 +36,25 @@ import java.util.function.Function;
  * @author huanmeng_qwq
  */
 @SuppressWarnings("ALL")
-public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
+public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> implements GuiTick {
+    @NonNull
     protected Player player;
+    @NonNull
     protected String title = "Chest";
     //默认优先级
+    @NonNull
     protected Set<GuiButton> buttons = new HashSet<>(10);
     //大于默认(buttons)的优先级
+    @NonNull
     protected Set<GuiButton> attachedButtons = new HashSet<>(10);
     //内部修改优先级最高
+    @NonNull
     protected Set<GuiButton> editButtons = new HashSet<>(10);
+    @Nullable
     protected Inventory cacheInventory;
-    protected Function<Player, AbstractGui<?>> backGuiGetter;
+    @Nullable
+    protected Function<@NonNull Player, @NonNull AbstractGui<?>> backGuiGetter;
+    @Nullable
     protected Runnable backGuiRunner;
     private int size;
     /**
@@ -74,28 +84,34 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
     boolean close = true;
     boolean closing = true;
 
+    @NonNull
     protected List<Consumer<G>> tickles = new ArrayList<>();
     protected int intervalTick = 20 * 5;
     protected boolean tickRefresh = true;
+    @Nullable
     protected GuiClick guiClick;
+    @Nullable
     protected GuiEmptyItemClick guiEmptyItemClick;
+    @Nullable
     protected GuiBottomClick guiBottomClick;
-    protected Consumer<G> whenClose;
+    @Nullable
+    protected Consumer<@NonNull G> whenClose;
 
-    protected Scheduler.Task tickTask;
-    protected Function<HumanEntity, String> errorMessage = p -> "§c无法处理您的点击请求，请联系管理员。";
+    protected Scheduler.@Nullable Task tickTask;
+    @NonNull
+    protected Function<@NonNull HumanEntity, @Nullable String> errorMessage = p -> "§c无法处理您的点击请求，请联系管理员。";
 
     /**
      * 设置目标玩家
      */
-    public void setPlayer(Player player) {
+    public void setPlayer(@NonNull Player player) {
         this.player = player;
     }
 
     /**
      * 设置title与size
      */
-    protected void init(String title, int itemSize) {
+    protected void init(@NonNull String title, int itemSize) {
         this.title = title;
         this.size = itemSize;
     }
@@ -103,12 +119,14 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
     /**
      * 打开{@link Inventory}
      */
+    @NonNull
     public abstract G openGui();
 
     /**
      * 创建一个空的{@link Inventory}
      */
-    protected abstract Inventory build(InventoryHolder holder);
+    @NonNull
+    protected abstract Inventory build(@NonNull InventoryHolder holder);
 
     void onOpen() {
         close = false;
@@ -118,6 +136,7 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
         }
     }
 
+    @NonNull
     public G setTickRefresh(boolean tickRefresh) {
         this.tickRefresh = tickRefresh;
         return self();
@@ -168,17 +187,20 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
         close(false, false);
     }
 
-    public G addTick(Consumer<G> tickle) {
+    @NonNull
+    public G addTick(@NonNull Consumer<G> tickle) {
         tickles.add(tickle);
         return self();
     }
 
+    @NonNull
     public G tick(int tick) {
         this.intervalTick = tick;
         return self();
     }
 
-    public G errorMessage(Function<HumanEntity, String> errorMessage) {
+    @NonNull
+    public G errorMessage(@NonNull Function<@NonNull HumanEntity, @Nullable String> errorMessage) {
         this.errorMessage = errorMessage;
         return self();
     }
@@ -200,6 +222,7 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
     }
 
     @Override
+    @NonNull
     public Scheduler scheduler() {
         return Schedulers.async();
     }
@@ -212,16 +235,19 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
     /**
      * 是否允许返回到当前菜单
      */
-    protected <G extends AbstractGui<G>> boolean isAllowReopenFrom(G gui) {
+    @NonNull
+    protected <G extends AbstractGui<G>> boolean isAllowReopenFrom(@NonNull G gui) {
         return true;
     }
 
+    @NonNull
     protected G precache() {
         GuiManager.instance().userNextOpenGui.put(player.getUniqueId(), this);
         return self();
     }
 
-    protected G cache(Inventory inventory) {
+    @NonNull
+    protected G cache(@NonNull Inventory inventory) {
         this.cacheInventory = inventory;
         //noinspection unchecked
         ((GuiHolder<G>) inventory.getHolder()).setInventory(inventory);
@@ -233,41 +259,48 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
     /**
      * 重新填充所有物品
      */
+    @NonNull
     public G refresh(boolean all) {
         fillItems(cacheInventory, all);
         return self();
     }
 
+    @NonNull
     protected G unCache() {
         GuiManager.instance().removeUserOpenGui(player.getUniqueId());
         return self();
     }
 
+    @NonNull
     protected final InventoryHolder createHolder() {
         return new GuiHolder<>(player, self());
     }
 
+    @NonNull
     protected Set<GuiButton> getFillItems() {
         return buttons;
     }
 
+    @NonNull
     public Set<GuiButton> getAttachedItems() {
         return attachedButtons;
     }
 
-    public G addAttachedButton(GuiButton button) {
+    @NonNull
+    public G addAttachedButton(@NonNull GuiButton button) {
         attachedButtons.remove(button);
         attachedButtons.add(button);
         return self();
     }
 
-    private void setButton(Slot slot, Button button) {
+    private void setButton(@NonNull Slot slot, @Nullable Button button) {
         GuiButton guiButton = new GuiButton(slot, button);
         buttons.remove(guiButton);
         attachedButtons.remove(guiButton);
         editButtons.add(guiButton);
     }
 
+    @Nullable
     public GuiButton getButton(int index) {
         return editButtons
                 .stream()
@@ -288,7 +321,8 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
                 );
     }
 
-    protected G fillItems(Inventory inventory, boolean all) {
+    @NonNull
+    protected G fillItems(@NonNull Inventory inventory, @Nullable boolean all) {
         if (all) {
             inventory.clear();
         }
@@ -327,7 +361,8 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
     /**
      * 刷新指定的物品
      */
-    public G refresh(Slots slots) {
+    @NonNull
+    public G refresh(@NonNull Slots slots) {
         if (cacheInventory == null) {
             return self();
         }
@@ -338,10 +373,11 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
         return self();
     }
 
-    protected final boolean check(GuiButton guiButton) {
+    protected final boolean check(@NonNull GuiButton guiButton) {
         return guiButton.canPlace(player);
     }
 
+    @NonNull
     public Inventory getInventory() {
         return cacheInventory;
     }
@@ -350,14 +386,16 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
         return size;
     }
 
-    public boolean allowClick(Player player, GuiButton button, ClickType clickType, InventoryAction action, InventoryType.SlotType slotType, int slot, int hotBar, InventoryClickEvent e) {
+    public boolean allowClick(@NonNull Player player, @NonNull GuiButton button, @NonNull ClickType clickType,
+                              @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slot, int hotBar,
+                              @NonNull InventoryClickEvent e) {
         if (guiClick != null) {
             return guiClick.allowClick(player, button, clickType, action, slotType, slot, hotBar, e);
         }
         return true;
     }
 
-    public void onClick(InventoryClickEvent e) {
+    public void onClick(@NonNull InventoryClickEvent e) {
         if (disableClick) {
             e.setCancelled(true);
             processingClickEvent = false;
@@ -463,7 +501,7 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
         }
     }
 
-    public void onDarg(InventoryDragEvent e) {
+    public void onDarg(@NonNull InventoryDragEvent e) {
         // 包装成InventoryClickEvent执行
         for (Map.Entry<Integer, ItemStack> entry : e.getNewItems().entrySet()) {
             // fake event
@@ -475,13 +513,16 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
         }
     }
 
+    @NonNull
     public GuiDraw<G> draw() {
         return new GuiDraw<>(self());
     }
 
+    @NonNull
     protected abstract G self();
 
-    public G title(String title) {
+    @NonNull
+    public G title(@NonNull String title) {
         this.title = title;
         // 已经打开了? 那就先执行close后的操作然后再重新构建一个inventory打开
         if (!close) {
@@ -491,34 +532,39 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
         return self();
     }
 
-    public G guiClick(GuiClick guiClick) {
+    @NonNull
+    public G guiClick(@NonNull GuiClick guiClick) {
         this.guiClick = guiClick;
         return self();
     }
 
-    public G whenClose(Consumer<G> consumer) {
+    @NonNull
+    public G whenClose(@NonNull Consumer<@NonNull G> consumer) {
         this.whenClose = consumer;
         return self();
     }
 
-    public G backGui(Function<Player, AbstractGui<?>> parentGuiGetter) {
+    @NonNull
+    public G backGui(@NonNull Function<@NonNull Player, @NonNull AbstractGui<?>> parentGuiGetter) {
         this.backGuiGetter = parentGuiGetter;
         return self();
     }
 
-    public G backRunner(Runnable runner) {
+    @NonNull
+    public G backRunner(@NonNull Runnable runner) {
         backGuiRunner = runner;
         return self();
     }
 
-    public AbstractGui<G> guiEmptyItemClick(GuiEmptyItemClick guiEmptyItemClick) {
+    @NonNull
+    public G guiEmptyItemClick(@NonNull GuiEmptyItemClick guiEmptyItemClick) {
         this.guiEmptyItemClick = guiEmptyItemClick;
-        return this;
+        return self();
     }
 
-    public AbstractGui<G> guiBottomClick(GuiBottomClick guiBottomClick) {
+    public G guiBottomClick(@NonNull GuiBottomClick guiBottomClick) {
         this.guiBottomClick = guiBottomClick;
-        return this;
+        return self();
     }
 
     public void setCancelClickOther(boolean cancelClickOther) {

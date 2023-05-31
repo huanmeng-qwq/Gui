@@ -5,6 +5,7 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * 2023/3/17<br>
@@ -12,14 +13,15 @@ import org.bukkit.inventory.InventoryView;
  *
  * @author huanmeng_qwq
  */
+@SuppressWarnings("unused")
 public class InventorySwitchEvent extends InventoryClickEvent {
     private boolean disable;
 
-    public InventorySwitchEvent(InventoryView view, InventoryType.SlotType type, int slot, ClickType click, InventoryAction action) {
+    public InventorySwitchEvent(@NonNull InventoryView view, InventoryType.@NonNull SlotType type, int slot, @NonNull ClickType click, @NonNull InventoryAction action) {
         super(view, type, slot, click, action);
     }
 
-    public InventorySwitchEvent(InventoryView view, InventoryType.SlotType type, int slot, ClickType click, InventoryAction action, int key) {
+    public InventorySwitchEvent(@NonNull InventoryView view, InventoryType.@NonNull SlotType type, int slot, @NonNull ClickType click, @NonNull InventoryAction action, int key) {
         super(view, type, slot, click, action, key);
     }
 
@@ -27,6 +29,7 @@ public class InventorySwitchEvent extends InventoryClickEvent {
         return disable;
     }
 
+    @NonNull
     public InventorySwitchEvent disable(boolean disable) {
         this.disable = disable;
         return this;

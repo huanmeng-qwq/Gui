@@ -1,7 +1,10 @@
 package me.huanmeng.opensource.bukkit.scheduler;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import me.huanmeng.opensource.scheduler.Scheduler;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * 2023/3/17<br>
@@ -10,24 +13,30 @@ import org.bukkit.scheduler.BukkitRunnable;
  * @author huanmeng_qwq
  */
 public class BukkitTaskImpl implements Scheduler.Task {
-    protected Scheduler.Task self;
+    protected Scheduler.@NonNull Task self;
+    @Nullable
     private BukkitRunnable runnable;
 
-    public BukkitTaskImpl(BukkitRunnable runnable) {
+    public BukkitTaskImpl(@Nullable BukkitRunnable runnable) {
         this.runnable = runnable;
         this.self = this;
     }
 
     @Override
     public void stop() {
-        runnable.cancel();
+        if (runnable != null) {
+            runnable.cancel();
+        }
     }
 
+    @Nullable
     public BukkitRunnable runnable() {
         return runnable;
     }
 
-    public BukkitTaskImpl setRunnable(BukkitRunnable runnable) {
+    @NonNull
+    @CanIgnoreReturnValue
+    public BukkitTaskImpl setRunnable(@NonNull BukkitRunnable runnable) {
         this.runnable = runnable;
         return this;
     }

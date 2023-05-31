@@ -6,6 +6,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * 2023/3/17<br>
@@ -27,5 +28,7 @@ public interface GuiClick {
      * @param e         事件
      * @return 是否允许点击
      */
-    boolean allowClick(Player player, GuiButton button, ClickType clickType, InventoryAction action, InventoryType.SlotType slotType, int slot, int hotBar, InventoryClickEvent e);
+    boolean allowClick(@NonNull Player player, @NonNull GuiButton button, @NonNull ClickType clickType,
+                       @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slot,
+                       int hotBar, @NonNull InventoryClickEvent e);
 }

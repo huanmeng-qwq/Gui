@@ -2,6 +2,7 @@ package me.huanmeng.opensource.bukkit.gui.interfaces;
 
 import me.huanmeng.opensource.bukkit.tick.ITickle;
 import me.huanmeng.opensource.scheduler.Scheduler;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * 2023/3/17<br>
@@ -13,6 +14,7 @@ public interface GuiTick extends ITickle {
     /**
      * 线程
      */
+    @NonNull
     Scheduler scheduler();
 
     /**

@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryType;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * 2023/3/17<br>
@@ -13,10 +14,12 @@ import org.bukkit.event.inventory.InventoryType;
  *
  * @author huanmeng_qwq
  */
+@SuppressWarnings("unused")
 @FunctionalInterface
 public interface PlayerClickCancelUpdateInterface extends PlayerClickInterface {
     @Override
-    default Result onClick(Slot slot, Player player, ClickType click, InventoryAction action, InventoryType.SlotType slotType, int slotKey, int hotBarKey) {
+    @NonNull
+    default Result onClick(@NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey) {
         onPlayerClick(player, click, action, slotType, slotKey, hotBarKey);
         return Result.CANCEL_UPDATE;
     }
@@ -31,5 +34,6 @@ public interface PlayerClickCancelUpdateInterface extends PlayerClickInterface {
      * @param slot      位置
      * @param hotBarKey 热键
      */
-    void onPlayerClick(Player player, ClickType click, InventoryAction action, InventoryType.SlotType slotType, int slot, int hotBarKey);
+    void onPlayerClick(@NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action,
+                       InventoryType.@NonNull SlotType slotType, int slot, int hotBarKey);
 }

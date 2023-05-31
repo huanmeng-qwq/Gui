@@ -1,5 +1,8 @@
 package me.huanmeng.opensource.bukkit.gui;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Collection;
 
 /**
@@ -29,7 +32,7 @@ public class SlotUtil {
      *
      * @param items 集合
      */
-    public static int getLine(Collection<?> items) {
+    public static int getLine(@NonNull Collection<@Nullable ?> items) {
         return getLine(items.size());
     }
 
