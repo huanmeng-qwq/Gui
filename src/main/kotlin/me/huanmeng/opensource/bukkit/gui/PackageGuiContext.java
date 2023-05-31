@@ -8,8 +8,9 @@ import org.bukkit.entity.Player;
  *
  * @author huanmeng_qwq
  */
+@SuppressWarnings("rawtypes")
 public class PackageGuiContext {
-    private Player player;
+    private final Player player;
     private AbstractGui gui;
 
     public PackageGuiContext(Player player) {

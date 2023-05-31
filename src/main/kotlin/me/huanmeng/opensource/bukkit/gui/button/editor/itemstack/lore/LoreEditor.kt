@@ -28,8 +28,8 @@ import kotlin.math.min
 class LoreEditor(
     user: Player,
     private val itemBuilder: ItemBuilder,
-    val edit: ((index: Int, loreEditor: LoreEditor, lores: MutableList<String?>) -> Unit)?,
-    val add: ((index: Int, loreEditor: LoreEditor, lores: MutableList<String?>) -> Unit)?
+    val edit: ((index: Int, loreEditor: LoreEditor, lores: MutableList<String>) -> Unit)?,
+    val add: ((index: Int, loreEditor: LoreEditor, lores: MutableList<String>) -> Unit)?
 ) : HGui(user) {
     var callback: ItemStackCallback? = null
 

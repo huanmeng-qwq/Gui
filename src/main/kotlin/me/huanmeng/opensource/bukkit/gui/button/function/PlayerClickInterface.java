@@ -15,5 +15,17 @@ import org.bukkit.event.inventory.InventoryType;
  */
 @FunctionalInterface
 public interface PlayerClickInterface {
+    /**
+     * 点击事件
+     *
+     * @param slot      位置
+     * @param player    玩家
+     * @param click     点击类型
+     * @param action    点击事件
+     * @param slotType  位置
+     * @param slotKey   pos
+     * @param hotBarKey 热键
+     * @return {@link Result}
+     */
     Result onClick(Slot slot, Player player, ClickType click, InventoryAction action, InventoryType.SlotType slotType, int slotKey, int hotBarKey);
 }

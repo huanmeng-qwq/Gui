@@ -8,6 +8,7 @@ import java.util.Collection;
  *
  * @author huanmeng_qwq
  */
+@SuppressWarnings("unused")
 public class SlotUtil {
     /**
      * 以1开始计算
@@ -21,10 +22,27 @@ public class SlotUtil {
         return (line * 9) - (column == 9 ? 1 : 10 - column);
     }
 
+    /**
+     * 通过集合数量建议行数
+     * <p>
+     * 对{@link #getLine(int)}的封装
+     *
+     * @param items 集合
+     */
     public static int getLine(Collection<?> items) {
-        return (items.size() % 9 == 0 ? items.size() : items.size() + 9) / 9;
+        return getLine(items.size());
     }
 
+    /**
+     * 通过数量建议行数
+     * <p>
+     * 设计该方法的主要目的是用于
+     * 有的时候需要将某个list的内容
+     * 放到gui中, 则可以使用list#size
+     * 经行计算gui所需的行数
+     *
+     * @param size 数量
+     */
     public static int getLine(int size) {
         return (size % 9 == 0 ? size : size + 9) / 9;
     }

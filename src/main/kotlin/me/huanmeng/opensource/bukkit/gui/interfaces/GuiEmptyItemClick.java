@@ -13,5 +13,17 @@ import org.bukkit.event.inventory.InventoryType;
  * @author huanmeng_qwq
  */
 public interface GuiEmptyItemClick {
+    /**
+     * 点击空白按钮时触发
+     *
+     * @param player    玩家
+     * @param slot      位置
+     * @param clickType 点击类型
+     * @param action    点击事件
+     * @param slotType  位置类型
+     * @param hotBar    热键
+     * @param e         事件
+     * @return 是否cancel事件
+     */
     boolean onClickEmptyButton(Player player, int slot, ClickType clickType, InventoryAction action, InventoryType.SlotType slotType, int hotBar, InventoryClickEvent e);
 }

@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Map;
@@ -26,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author huanmeng_qwq
  */
+@SuppressWarnings("unused")
 public class GuiManager implements Listener {
     private final JavaPlugin plugin;
 
@@ -63,7 +65,8 @@ public class GuiManager implements Listener {
     public boolean check(UUID uuid, Inventory inventory) {
         Preconditions.checkNotNull(uuid, "uuid is null");
         Preconditions.checkNotNull(inventory, "inventory is null");
-        if (!(inventory.getHolder() instanceof GuiHolder)) {
+        InventoryHolder holder = inventory.getHolder();
+        if (!(holder instanceof GuiHolder)) {
             return false;
         }
         AbstractGui<?> gui = userOpenGui.get(uuid);
@@ -71,7 +74,9 @@ public class GuiManager implements Listener {
             return false;
         }
         Inventory inv = gui.getInventory();
-        return Objects.equals(inv.getHolder().getInventory(), inventory);
+        holder = inv.getHolder();
+        Preconditions.checkNotNull(holder, "holder is null");
+        return Objects.equals(holder.getInventory(), inventory);
     }
 
     public boolean isOpenGui(UUID user) {
@@ -141,6 +146,7 @@ public class GuiManager implements Listener {
 
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent e) {
+        //noinspection ConstantValue
         if (e.getInventory() == null) {
             return;
         }
@@ -157,6 +163,7 @@ public class GuiManager implements Listener {
 
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent e) {
+        //noinspection ConstantValue
         if (null == e.getInventory()) {
             return;
         }
@@ -173,6 +180,7 @@ public class GuiManager implements Listener {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {
+        //noinspection ConstantValue
         if (e.getInventory() == null) {
             return;
         }

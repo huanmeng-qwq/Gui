@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * 2023/3/17<br>
  * Gui<br>
+ * 点击型按钮
  *
  * @author huanmeng_qwq
  */

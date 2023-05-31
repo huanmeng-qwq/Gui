@@ -21,5 +21,9 @@ public interface PlayerSimpleCancelUpdateInterface extends PlayerClickInterface 
         return Result.CANCEL_UPDATE;
     }
 
+    /**
+     * 点击事件, 将会自动返回{@link Result#CANCEL_UPDATE}
+     * @param player 玩家
+     */
     void onPlayerClick(Player player);
 }

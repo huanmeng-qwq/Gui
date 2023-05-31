@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * 2023/3/17<br>
  * Gui<br>
+ * 仅显示型按钮
  *
  * @author huanmeng_qwq
  */

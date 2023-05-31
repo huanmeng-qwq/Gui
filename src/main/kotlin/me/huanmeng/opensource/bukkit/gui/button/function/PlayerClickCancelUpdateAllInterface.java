@@ -21,5 +21,15 @@ public interface PlayerClickCancelUpdateAllInterface extends PlayerClickInterfac
         return Result.CANCEL_UPDATE_ALL;
     }
 
+    /**
+     * 点击事件, 将会自动返回{@link Result#CANCEL_UPDATE_ALL}
+     *
+     * @param player    玩家
+     * @param click     点击类型
+     * @param action    点击事件
+     * @param slotType  位置
+     * @param slot      位置
+     * @param hotBarKey 热键
+     */
     void onPlayerClick(Player player, ClickType click, InventoryAction action, InventoryType.SlotType slotType, int slot, int hotBarKey);
 }

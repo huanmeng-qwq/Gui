@@ -22,5 +22,12 @@ public interface ButtonSimpleClickInterface extends ButtonClickInterface {
         return onPlayerClick(button, player);
     }
 
+    /**
+     * 点击事件
+     *
+     * @param button 按钮
+     * @param player 玩家
+     * @return {@link Result}
+     */
     Result onPlayerClick(Button button, Player player);
 }

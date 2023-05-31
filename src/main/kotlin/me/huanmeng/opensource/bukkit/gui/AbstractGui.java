@@ -15,6 +15,7 @@ import me.huanmeng.opensource.bukkit.util.item.ItemUtil;
 import me.huanmeng.opensource.scheduler.Scheduler;
 import me.huanmeng.opensource.scheduler.Schedulers;
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
@@ -66,7 +67,12 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
     protected boolean cancelMoveItemToSelf = true;
 
     protected boolean processingClickEvent;
+    /**
+     * 是否禁用点击事件, 为true时将直接取消{@link InventoryClickEvent}事件并不做任何处理 谨慎使用, 否则正常处理
+     */
+    protected boolean disableClick = false;
     boolean close = true;
+    boolean closing = true;
 
     protected List<Consumer<G>> tickles = new ArrayList<>();
     protected int intervalTick = 20 * 5;
@@ -77,6 +83,7 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
     protected Consumer<G> whenClose;
 
     protected Scheduler.Task tickTask;
+    protected Function<HumanEntity, String> errorMessage = p -> "§c无法处理您的点击请求，请联系管理员。";
 
     /**
      * 设置目标玩家
@@ -105,6 +112,7 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
 
     void onOpen() {
         close = false;
+        closing = false;
         if (schedulerTick() > 0) {
             tickTask = TickManager.tick(this, scheduler(), schedulerTick());
         }
@@ -116,7 +124,7 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
     }
 
     /**
-     * 当关闭时
+     * 当关闭时, 调用来之{@link InventoryCloseEvent}
      */
     public void onClose() {
         close = true;
@@ -130,6 +138,8 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
 
     public void close(boolean openParent, boolean ignore) {
         if (processingClickEvent) {
+            // 在处理点击事件时将close方法延迟到下一tick, 因为下一tick的时候当前的点击事件已经处理完毕
+            closing = true;
             Schedulers.sync().runLater(() -> {
                 processingClickEvent = false;
                 close(openParent, ignore);
@@ -165,6 +175,11 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
 
     public G tick(int tick) {
         this.intervalTick = tick;
+        return self();
+    }
+
+    public G errorMessage(Function<HumanEntity, String> errorMessage) {
+        this.errorMessage = errorMessage;
         return self();
     }
 
@@ -216,7 +231,7 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
 
 
     /**
-     * 刷新{@link Inventory}
+     * 重新填充所有物品
      */
     public G refresh(boolean all) {
         fillItems(cacheInventory, all);
@@ -309,6 +324,9 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
         return self();
     }
 
+    /**
+     * 刷新指定的物品
+     */
     public G refresh(Slots slots) {
         if (cacheInventory == null) {
             return self();
@@ -340,6 +358,11 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
     }
 
     public void onClick(InventoryClickEvent e) {
+        if (disableClick) {
+            e.setCancelled(true);
+            processingClickEvent = false;
+            return;
+        }
         processingClickEvent = true;
         Inventory inv = e.getClickedInventory();
         if (inv == null) {
@@ -397,7 +420,7 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
                         break;
                     }
                     case CANCEL_CLOSE: {
-                        player.closeInventory();
+                        close(true, false);
                         break;
                     }
                 }
@@ -427,19 +450,27 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
                 }
             }
         } else {
-            e.getWhoClicked().sendMessage("§c无法处理您的Gui点击请求，请联系管理员。");
+            String message = errorMessage.apply(e.getWhoClicked());
+            if (message != null) {
+                e.getWhoClicked().sendMessage(message);
+            } else {
+                // 如果apply得到的是null?
+                e.getWhoClicked().sendMessage("A inventory error occurred, please contact the administrator.");
+            }
+            // 出现错误, 直接关闭, 不做后续的返回parent之类的处理
             e.getWhoClicked().closeInventory();
             e.setCancelled(true);
         }
     }
 
     public void onDarg(InventoryDragEvent e) {
+        // 包装成InventoryClickEvent执行
         for (Map.Entry<Integer, ItemStack> entry : e.getNewItems().entrySet()) {
+            // fake event
             InventoryClickEvent inventoryClickEvent = new InventoryClickEvent(e.getView(), InventoryType.SlotType.CONTAINER, entry.getKey(), ClickType.LEFT, InventoryAction.UNKNOWN);
             onClick(inventoryClickEvent);
             if (inventoryClickEvent.isCancelled()) {
                 e.setCancelled(true);
-                return;
             }
         }
     }
@@ -452,6 +483,7 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
 
     public G title(String title) {
         this.title = title;
+        // 已经打开了? 那就先执行close后的操作然后再重新构建一个inventory打开
         if (!close) {
             onClose();
             openGui();
@@ -503,5 +535,9 @@ public abstract class AbstractGui<G extends AbstractGui<G>> implements GuiTick {
 
     public void setCancelMoveItemToSelf(boolean cancelMoveItemToSelf) {
         this.cancelMoveItemToSelf = cancelMoveItemToSelf;
+    }
+
+    public void setDisableClick(boolean disableClick) {
+        this.disableClick = disableClick;
     }
 }

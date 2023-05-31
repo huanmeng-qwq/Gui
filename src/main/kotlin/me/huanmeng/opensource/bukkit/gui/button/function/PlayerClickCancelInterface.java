@@ -21,5 +21,14 @@ public interface PlayerClickCancelInterface extends PlayerClickInterface {
         return Result.CANCEL;
     }
 
+    /**
+     * 点击事件, 将会自动返回{@link Result#CANCEL}
+     *
+     * @param player    玩家
+     * @param click     点击类型
+     * @param action    点击事件
+     * @param slot      位置
+     * @param hotBarKey 热键
+     */
     void onPlayerClick(Player player, ClickType click, InventoryAction action, InventoryType.SlotType slotType, int slot, int hotBarKey);
 }

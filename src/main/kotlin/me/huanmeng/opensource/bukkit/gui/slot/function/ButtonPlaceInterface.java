@@ -12,5 +12,13 @@ import org.bukkit.entity.Player;
  */
 @FunctionalInterface
 public interface ButtonPlaceInterface {
+    /**
+     * 尝试放置
+     *
+     * @param slot   位置
+     * @param button 按钮
+     * @param player 玩家
+     * @return 是否成功
+     */
     boolean tryPlace(Slot slot, Button button, Player player);
 }

@@ -1,7 +1,4 @@
 /**
- * 2023/3/17<br>
- * Gui<br>
- *
- * @author huanmeng_qwq
+ * 物品工具类
  */
 package me.huanmeng.opensource.bukkit.util.item;

@@ -1,5 +1,7 @@
 package me.huanmeng.opensource.bukkit.gui.enums;
 
+import me.huanmeng.opensource.bukkit.gui.AbstractGui;
+import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import org.bukkit.event.Cancellable;
 
 /**
@@ -15,8 +17,19 @@ public enum Result {
      */
     CANCEL(true),
 
+    /**
+     * 取消事件并刷新当前{@link Slot}的物品
+     */
     CANCEL_UPDATE(CANCEL),
+    /**
+     * 取消事件并刷新所有的物品
+     */
     CANCEL_UPDATE_ALL(CANCEL),
+    /**
+     * 取消时间并关闭GUI
+     *
+     * @see AbstractGui#close(boolean, boolean)
+     */
     CANCEL_CLOSE(CANCEL),
 
     /**
@@ -25,17 +38,17 @@ public enum Result {
     ALLOW(false),
 
     /**
-     * 移除整个{@link org.bukkit.inventory.ItemStack}
+     * 移除整个{@link org.bukkit.inventory.ItemStack}, 调用{@link AbstractGui#refresh}后数量将重置
      */
     CLEAR(CANCEL),
 
     /**
-     * 物品数量递减
+     * 物品数量递减, 调用{@link AbstractGui#refresh}后数量将重置
      */
     DECREMENT(CANCEL),
 
     /**
-     * 物品数量递增
+     * 物品数量递增, 调用{@link AbstractGui#refresh}后数量将重置
      */
     INCREMENTAL(CANCEL),
 

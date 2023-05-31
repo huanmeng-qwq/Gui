@@ -11,5 +11,11 @@ import org.bukkit.inventory.ItemStack;
  */
 @FunctionalInterface
 public interface UserItemInterface {
+    /**
+     * 获取物品
+     *
+     * @param player 玩家
+     * @return 物品
+     */
     ItemStack get(Player player);
 }

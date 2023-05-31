@@ -1,5 +1,6 @@
 package me.huanmeng.opensource.bukkit.gui.slot;
 
+import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.SlotUtil;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
@@ -13,6 +14,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * 2023/3/17<br>
@@ -20,6 +22,7 @@ import org.bukkit.event.inventory.InventoryType;
  *
  * @author huanmeng_qwq
  */
+@SuppressWarnings("rawtypes")
 public interface Slot {
     /**
      * 位置
@@ -74,5 +77,9 @@ public interface Slot {
 
     static Slot of(int i, ButtonPlaceInterface placeInterface) {
         return new SlotInterface(i, placeInterface);
+    }
+
+    default ItemStack getShowingItem(AbstractGui gui, Player player) {
+        return gui.getButton(getIndex()).getButton().getShowItem(player);
     }
 }

@@ -27,6 +27,9 @@ public final class GuiButton {
         this.button = button == null ? Button.empty() : button;
     }
 
+    /**
+     * 点击事件
+     */
     public Result onClick(Player player, ClickType click, InventoryAction action, InventoryType.SlotType slotType, int slotKey, int hotBarKey, InventoryClickEvent e) {
         return slot.onClick(button, player, click, action, slotType, slotKey, hotBarKey, e);
     }

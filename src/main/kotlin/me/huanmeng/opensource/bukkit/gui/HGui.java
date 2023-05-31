@@ -10,17 +10,18 @@ import java.lang.invoke.MethodType;
 /**
  * 2023/3/17<br>
  * Gui<br>
+ * <p>
+ * 建议的Gui包装类
  *
  * @author huanmeng_qwq
  */
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({"rawtypes", "unused"})
 public abstract class HGui {
     private HGui from;
     protected final PackageGuiContext context;
     protected boolean allowBack;
 
-    private final MethodHandles.Lookup lookup = MethodHandles.lookup();
-    private MethodHandle constructorHandle;
+    private final MethodHandle constructorHandle;
 
     public HGui(Player player) {
         this(player, false);
@@ -30,6 +31,7 @@ public abstract class HGui {
         this.context = new PackageGuiContext(player);
         this.allowBack = allowBack;
         try {
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
             constructorHandle = lookup.findConstructor(getClass(), MethodType.methodType(void.class, Player.class, boolean.class));
         } catch (NoSuchMethodException | IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -48,7 +50,7 @@ public abstract class HGui {
             g.backRunner(() -> {
                 HGui gui;
                 try {
-                    gui = (HGui) constructorHandle.invoke(context.getPlayer(), allowBack);
+                    gui = (HGui) constructorHandle.invokeExact(context.getPlayer(), allowBack);
                     gui.from = HGui.this;
                     gui.open();
                 } catch (Throwable e) {
