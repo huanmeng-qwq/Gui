@@ -38,7 +38,7 @@ public interface Slots {
         return list.toArray(new String[0]);
     }), 'x');
 
-    PatternLineSlots PATTERN_LINE_PAGE_DEFAULT = Slots.patternLine((line -> {
+    PatternLineSlots PATTERN_LINE_PAGE_DEFAULT = Slots.patternLine(line -> {
         List<String> list = new ArrayList<>(line);
         if (line <= 2) {
             list.add("xxxxxxxxx");
@@ -50,7 +50,22 @@ public interface Slots {
         }
         list.add("axxxxxxxa");
         return list.toArray(new String[0]);
-    }), 'x');
+    }, 'x');
+
+    PatternLineSlots GRID = Slots.patternLine(line -> {
+        List<String> list = new ArrayList<>(line);
+        if (line <= 2) {
+            list.add(" x x x x ");
+            list.add(" x x x x ");
+            return list.toArray(new String[0]);
+        }
+        list.add("aaaaaaaaa");
+        for (int i = 0; i < line - 2; i++) {
+            list.add(" x x x x ");
+        }
+        list.add("aaaaaaaaa");
+        return list.toArray(new String[0]);
+    }, 'x');
 
     @NonNull <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NonNull G gui);
 
