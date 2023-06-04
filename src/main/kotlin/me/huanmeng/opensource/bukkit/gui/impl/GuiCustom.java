@@ -37,7 +37,7 @@ public class GuiCustom extends AbstractGui<@NonNull GuiCustom> {
         Inventory inventory = build(createHolder());
         fillItems(inventory, false);
         precache();
-        // 保证用户鼠标上的物品不会便
+        // 确保玩家鼠标上的物品不会变
         ItemStack itemOnCursor = player.getItemOnCursor();
         if (!ItemUtil.isAir(itemOnCursor)) {
             player.setItemOnCursor(null);
