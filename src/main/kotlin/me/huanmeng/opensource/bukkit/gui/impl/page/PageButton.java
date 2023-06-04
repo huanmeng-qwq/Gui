@@ -17,8 +17,8 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -195,7 +195,7 @@ public class PageButton implements Button {
         private Button origin;
         private PageCondition condition;
         private PlayerClickPageButtonInterface playerClickPageButtonInterface;
-        private final Set<@NonNull PageButtonType> types = new HashSet<>(PageButtonTypes.values().length);
+        private final Set<@NonNull PageButtonType> types = new LinkedHashSet<>(PageButtonTypes.values().length);
 
         public Builder(@NonNull GuiPage gui) {
             this.gui = gui;
