@@ -7,7 +7,6 @@ import me.huanmeng.opensource.bukkit.gui.slot.Slots;
 import me.huanmeng.opensource.page.Pagination;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 

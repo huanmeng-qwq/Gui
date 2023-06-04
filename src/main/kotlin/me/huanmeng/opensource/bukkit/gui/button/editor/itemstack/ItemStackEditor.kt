@@ -1,6 +1,5 @@
 package me.huanmeng.opensource.bukkit.gui.button.editor.itemstack
 
-import me.huanmeng.opensource.bukkit.util.item.builder
 import me.huanmeng.opensource.bukkit.gui.AbstractGui
 import me.huanmeng.opensource.bukkit.gui.HGui
 import me.huanmeng.opensource.bukkit.gui.button.ClickButton
@@ -14,6 +13,7 @@ import me.huanmeng.opensource.bukkit.gui.button.function.PlayerSimpleCancelUpdat
 import me.huanmeng.opensource.bukkit.gui.impl.GuiCustom
 import me.huanmeng.opensource.bukkit.gui.slot.Slots
 import me.huanmeng.opensource.bukkit.util.item.ItemBuilder
+import me.huanmeng.opensource.bukkit.util.item.builder
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player

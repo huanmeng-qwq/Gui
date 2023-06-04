@@ -1,6 +1,5 @@
 package me.huanmeng.opensource.bukkit.gui.button.editor.itemstack.lore
 
-import me.huanmeng.opensource.bukkit.util.item.ItemUtil.getLores
 import me.huanmeng.opensource.bukkit.gui.AbstractGui
 import me.huanmeng.opensource.bukkit.gui.HGui
 import me.huanmeng.opensource.bukkit.gui.button.Button
@@ -15,6 +14,7 @@ import me.huanmeng.opensource.bukkit.gui.impl.GuiPage
 import me.huanmeng.opensource.bukkit.gui.slot.Slot
 import me.huanmeng.opensource.bukkit.gui.slot.Slots
 import me.huanmeng.opensource.bukkit.util.item.ItemBuilder
+import me.huanmeng.opensource.bukkit.util.item.ItemUtil.getLores
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import kotlin.math.min

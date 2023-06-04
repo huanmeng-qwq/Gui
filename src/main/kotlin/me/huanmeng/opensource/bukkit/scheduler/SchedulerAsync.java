@@ -4,7 +4,6 @@ import me.huanmeng.opensource.bukkit.gui.GuiManager;
 import me.huanmeng.opensource.scheduler.Scheduler;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.function.Consumer;
