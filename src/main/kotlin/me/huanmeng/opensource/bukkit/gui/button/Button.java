@@ -81,6 +81,18 @@ public interface Button {
      * @param clickable 点击事件
      * @return {@link Button}
      */
+    @Contract(value = "!null, !null, !null -> new", pure = true)
+    static <@NonNull T extends PlayerClickInterface> Button of(UserItemInterface item, Class<T> cls, T clickable) {
+        return new ClickButton(item, clickable);
+    }
+
+    /**
+     * 点击型按钮
+     *
+     * @param item      物品
+     * @param clickable 点击事件
+     * @return {@link Button}
+     */
     @Contract(value = "!null, !null -> new", pure = true)
     static Button of(UserItemInterface item, PlayerClickCancelInterface clickable) {
         return new ClickButton(item, clickable);

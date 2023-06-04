@@ -38,7 +38,7 @@ public enum Result {
     ALLOW(false),
 
     /**
-     * 移除整个{@link org.bukkit.inventory.ItemStack}, 调用{@link AbstractGui#refresh}后数量将重置
+     * 移除整个{@link org.bukkit.inventory.ItemStack}, 调用{@link AbstractGui#refresh}后物品将重置
      */
     CLEAR(CANCEL),
 

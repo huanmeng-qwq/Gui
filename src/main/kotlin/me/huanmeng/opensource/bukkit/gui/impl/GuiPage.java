@@ -2,13 +2,17 @@ package me.huanmeng.opensource.bukkit.gui.impl;
 
 import me.huanmeng.opensource.bukkit.gui.GuiButton;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
+import me.huanmeng.opensource.bukkit.gui.impl.page.PageButton;
+import me.huanmeng.opensource.bukkit.gui.impl.page.PageSetting;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.gui.slot.Slots;
 import me.huanmeng.opensource.page.Pagination;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * 2023/3/17<br>
@@ -29,6 +33,9 @@ public class GuiPage extends GuiCustom {
     protected Pagination<? extends Button> pagination;
     @NonNull
     protected Slots elementSlots;
+
+    @Nullable
+    protected PageSetting pageSetting;
 
     public GuiPage(@NonNull Player player, @NonNull List<? extends Button> allItems, @NonNull Slots elementSlots) {
         this(player, allItems, allItems.size(), elementSlots);
@@ -56,6 +63,15 @@ public class GuiPage extends GuiCustom {
             Slot slot = slots.remove(0);
             buttons.add(new GuiButton(slot, button));
         }
+        if (pageSetting != null) {
+            for (Supplier<PageButton> supplier : pageSetting.pageButtons()) {
+                PageButton pageButton = supplier.get();
+                if (pageButton.condition().isAllow(page, pagination.getMaxPage(), this, pageButton, player)) {
+                    Slot slot = pageButton.slot().apply(line);
+                    buttons.add(new GuiButton(slot, pageButton));
+                }
+            }
+        }
         return buttons;
     }
 
@@ -81,6 +97,12 @@ public class GuiPage extends GuiCustom {
         return this;
     }
 
+    @NonNull
+    public GuiPage pageSetting(@NonNull PageSetting pageSetting) {
+        this.pageSetting = pageSetting;
+        return this;
+    }
+
     public int page() {
         return page;
     }
@@ -89,4 +111,27 @@ public class GuiPage extends GuiCustom {
         return elementsPerPage;
     }
 
+    public void nextPage(int count) {
+        page += count;
+    }
+
+    public void previousPage(int count) {
+        page -= count;
+    }
+
+    public void setToFirstPage() {
+        page = 1;
+    }
+
+    public void setToLastPage() {
+        page = pagination.getMaxPage();
+    }
+
+    public boolean hasPreviousPage() {
+        return pagination.hasLast(page);
+    }
+
+    public boolean hasNextPage() {
+        return pagination.hasNext(page);
+    }
 }
