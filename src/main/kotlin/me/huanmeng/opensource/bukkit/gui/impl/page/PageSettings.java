@@ -30,10 +30,10 @@ public interface PageSettings {
     static PageSetting normal(@NonNull GuiPage gui, @NonNull Button previousButton, @NonNull Button nextButton) {
         return PageSetting.builder()
                 .button(
-                        PageButton.of(gui, previousButton, PageCondition.simple(), PlayerClickPageButtonInterface.simple())
+                        PageButton.of(gui, previousButton, PageCondition.simple(), PlayerClickPageButtonInterface.simple(), PageButtonTypes.PREVIOUS)
                 )
                 .button(
-                        PageButton.of(gui, nextButton, PageCondition.simple(), PlayerClickPageButtonInterface.simple())
+                        PageButton.of(gui, nextButton, PageCondition.simple(), PlayerClickPageButtonInterface.simple(), PageButtonTypes.NEXT)
                 )
                 .build();
     }
