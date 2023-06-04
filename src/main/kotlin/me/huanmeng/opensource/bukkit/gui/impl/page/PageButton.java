@@ -178,6 +178,9 @@ public class PageButton implements Button {
                 }
             }
         }
+        if (!buttonType.hasPage(gui)) {
+            return Result.CANCEL;
+        }
         return playerClickPageButtonInterface.onClick(gui, buttonType, slot, player, click, action, slotType, slotKey, hotBarKey);
     }
 
