@@ -66,9 +66,9 @@ public class GuiPage extends GuiCustom {
         if (pageSetting != null) {
             for (Supplier<PageButton> supplier : pageSetting.pageButtons()) {
                 PageButton pageButton = supplier.get();
+                Slot slot = pageButton.slot().apply(line);
+                editButtons.removeIf(button -> button.getSlot().equals(slot));
                 if (pageButton.condition().isAllow(page, pagination.getMaxPage(), this, pageButton, player)) {
-                    Slot slot = pageButton.slot().apply(line);
-                    editButtons.removeIf(button -> button.getSlot().equals(slot));
                     editButtons.add(new GuiButton(slot, pageButton));
                 }
             }
