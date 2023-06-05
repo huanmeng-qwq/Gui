@@ -109,6 +109,7 @@ public class PageButton implements Button {
      * @param button    按钮
      * @param condition 允许绘制的条件
      * @param click     点击事件
+     * @param types     按钮类型
      * @return {@link Builder}
      */
     @NonNull
@@ -118,6 +119,29 @@ public class PageButton implements Button {
                 .condition(condition)
                 .click(click)
                 .types(types).build();
+    }
+
+    /**
+     * 构建器
+     *
+     * @param gui       gui
+     * @param button    按钮
+     * @param condition 允许绘制的条件
+     * @param click     点击事件
+     * @param slot      通过行数获取对应的槽位
+     * @param types     按钮类型
+     * @return {@link Builder}
+     */
+    @NonNull
+    public static PageButton of(@NonNull GuiPage gui, @NonNull Button button, @NonNull PageCondition condition,
+                                @NonNull PlayerClickPageButtonInterface click,
+                                @Nullable Function<@NonNull Integer, @NonNull Slot> slot, @NonNull PageButtonType... types) {
+        return PageButton.builder(gui)
+                .button(button)
+                .condition(condition)
+                .click(click)
+                .types(types)
+                .slot(slot).build();
     }
 
     /**
@@ -244,7 +268,7 @@ public class PageButton implements Button {
          * 通过行数获取对应的槽位
          */
         @NonNull
-        public Builder slot(@NonNull Function<@NonNull Integer, @NonNull Slot> slot) {
+        public Builder slot(@Nullable Function<@NonNull Integer, @NonNull Slot> slot) {
             this.slot = slot;
             return this;
         }
