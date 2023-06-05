@@ -9,6 +9,7 @@ import me.huanmeng.opensource.bukkit.scheduler.SchedulerSync;
 import me.huanmeng.opensource.scheduler.Schedulers;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -16,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
+import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -45,6 +47,9 @@ public class GuiManager implements Listener {
     @NonNull
     private ComponentConvert componentConvert = ComponentConvert.getDefault();
 
+    @Nullable
+    private Metrics metrics;
+
     @NonNull
     public static GuiManager instance() {
         return instance;
@@ -56,6 +61,9 @@ public class GuiManager implements Listener {
         GuiManager.instance = this;
         this.plugin = plugin;
         this.audiences = BukkitAudiences.create(plugin);
+        if (Boolean.getBoolean("gui.bstats")) {
+            metrics = new Metrics(plugin, 18670);
+        }
         Schedulers.setSync(new SchedulerSync());
         Schedulers.setAsync(new SchedulerAsync());
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -218,6 +226,24 @@ public class GuiManager implements Listener {
         }
     }
 
+    @EventHandler
+    public void onPluginDisabled(PluginDisableEvent e) {
+        if (e.getPlugin() == plugin) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                UUID uuid = player.getUniqueId();
+                if (isOpenGui(uuid)) {
+                    AbstractGui<?> gui = getUserOpenGui(uuid);
+                    if (gui != null) {
+                        gui.close(false, true);
+                    }
+                }
+            }
+            if (metrics != null) {
+                metrics.shutdown();
+            }
+        }
+    }
+
     public void refreshGui(@NonNull Player player) {
         UUID uuid = player.getUniqueId();
         if (isOpenGui(uuid)) {
@@ -265,7 +291,7 @@ public class GuiManager implements Listener {
     }
 
     /**
-     * @param componentConvert
+     * @param componentConvert 转换器
      */
     public void setComponentConvert(@NonNull ComponentConvert componentConvert) {
         this.componentConvert = componentConvert;

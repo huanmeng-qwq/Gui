@@ -166,20 +166,23 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         }
     }
 
-    public void close(boolean openParent, boolean ignore) {
+    public void close(boolean openParent, boolean force) {
+        if (!force && (close || closing)) {
+            return;
+        }
+        closing = true;
         if (processingClickEvent) {
             // 在处理点击事件时将close方法延迟到下一tick, 因为下一tick的时候当前的点击事件已经处理完毕
-            closing = true;
             Schedulers.sync().runLater(() -> {
                 processingClickEvent = false;
-                close(openParent, ignore);
+                close(openParent, force);
             }, 1);
             return;
         }
         if (openParent) {
             if (backGuiGetter != null) {
                 AbstractGui<?> gui = backGuiGetter.apply(player);
-                if (gui.isAllowReopenFrom(self()) || ignore) {
+                if (gui.isAllowReopenFrom(self()) || force) {
                     gui.setPlayer(player);
                     gui.openGui();
                     return;

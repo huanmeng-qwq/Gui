@@ -100,6 +100,13 @@
             <artifactId>adventure-text-serializer-legacy</artifactId>
             <version>4.13.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>3.0.2</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -242,6 +249,13 @@
                             </excludes>
                         </filter>
                     </filters>
+                    <relocations>
+                        <relocation>
+                            <pattern>org.bstats</pattern>
+                            <!-- Replace this with your package! -->
+                            <shadedPattern>me.huanmeng.ext</shadedPattern>
+                        </relocation>
+                    </relocations>
                 </configuration>
             </plugin>
 
