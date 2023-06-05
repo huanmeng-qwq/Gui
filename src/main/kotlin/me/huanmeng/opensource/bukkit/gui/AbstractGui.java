@@ -350,7 +350,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             }
         }
 
-        Set<GuiButton> attachedItems = getAttachedItems();
+        Set<GuiButton> attachedItems = new HashSet<>(getAttachedItems());
         attachedItems.removeAll(editButtons);
         for (GuiButton guiButton : attachedItems) {
             if (check(guiButton)) {
