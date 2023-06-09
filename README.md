@@ -1,6 +1,8 @@
 <!--- @formatter:off --->
 # Gui
 
+<div style="text-align: center;">
+
 ![Version](https://img.shields.io/github/v/release/huanmeng-qwq/Gui?style=plastic)
 ![Servers](https://img.shields.io/bstats/servers/18670?style=flat-square)
 ![Code-Size](https://img.shields.io/github/languages/code-size/huanmeng-qwq/Gui?style=plastic)
@@ -8,6 +10,9 @@
 ![License](https://img.shields.io/github/license/huanmeng-qwq/Gui?style=plastic)
 ![Language](https://img.shields.io/github/languages/top/huanmeng-qwq/Gui?style=plastic)
 ![Last-Commit](https://img.shields.io/github/last-commit/huanmeng-qwq/Gui?style=plastic)
+</div>
+
+Lightweight Inventory API for Bukkit plugins, with 1.7.10 to 1.20 support.
 
 ## Features
 * Works with all versions from 1.7.10 to 1.20
