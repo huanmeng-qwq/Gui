@@ -12,10 +12,10 @@
 ![Last-Commit](https://img.shields.io/github/last-commit/huanmeng-qwq/Gui?style=plastic)
 </div>
 
-Lightweight Inventory API for Bukkit plugins, with 1.7.10 to 1.20 support.
+Lightweight Inventory API for Bukkit plugins, with 1.8.8 to 1.20 support.
 
 ## Features
-* Works with all versions from 1.7.10 to 1.20
+* Works with all versions from 1.8.8 to 1.20
 * Very small (around 3k lines of code with the JavaDoc) and no dependencies
 * Easy to use
 * Kotlin DSL
@@ -86,9 +86,37 @@ shadowJar {
 
 ### Creating a Gui
 
-Just create a `GuiCustom`：
+Just create a `GuiCustom`:
+
+#### Java
+```java
+import me.huanmeng.opensource.bukkit.gui.impl.GuiCustom;
+import me.huanmeng.opensource.bukkit.gui.slot.Slot;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+public class Example {
+    public static void open(Player player) {
+        GuiCustom gui = new GuiCustom(player);
+        // Set the line
+        gui.line(3);
+
+        // Set the title
+        gui.title("Test Gui");
+
+        // Add an apple
+        gui.draw().set(Slot.of(1), Button.of(player-> new ItemStack(Material.APPLE)));
+
+        // Open for player
+        gui.openGui();
+    }
+}
+```
 
 #### Kotlin DSL
+<details>
+<summary>GuiCustom Dsl</summary>
 
 ```kotlin
 import org.bukkit.entity.Player
@@ -109,6 +137,11 @@ fun openGui(player: Player) {
     }
 }
 ```
+</details>
+
+<details>
+
+<summary>GuiPage Dsl</summary>
 
 ```kotlin
 import org.bukkit.entity.Player
@@ -137,34 +170,46 @@ fun openPageGui(player: Player) {
 }
 ```
 
-#### Java
-```java
-import me.huanmeng.opensource.bukkit.gui.impl.GuiCustom;
-import me.huanmeng.opensource.bukkit.gui.slot.Slot;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+</details>
 
-public class Example {
-    public static void open(Player player) {
-        GuiCustom gui = new GuiCustom(player);
-        // Set the line
-        gui.line(3);
+<details>
 
-        // Set the title
-        gui.title("Test Gui");
+<summary>PageSetting Dsl</summary>
 
-        // Add an apple
-        gui.draw().set(Slot.of(1), Button.of(player-> new ItemStack(Material.APPLE)));
-
-        // Open for player
-        gui.openGui();
+```kotlin
+buildPagedGui {
+    pageSetting {
+        buildPageSetting {
+            button {
+                buildPageButton {
+                    types(PageButtonTypes.PREVIOUS)
+                    setButton {
+                        showingItem = buildButtonItem(ItemStack(Material.ARROW))
+                    }
+                    click(PlayerClickPageButtonInterface.simple())
+                }
+            }
+            button {
+                buildPageButton {
+                    types(PageButtonTypes.NEXT)
+                    setButton {
+                        showingItem = buildButtonItem(ItemStack(Material.ARROW))
+                    }
+                    handleClick { _, gui, buttonType ->
+                        buttonType.changePage(gui)
+                    }
+                }
+            }
+        }
     }
+    // Do something...
 }
 ```
 
+</details>
+
 ## Adventure support
 
-For servers on modern [PaperMC](https://papermc.io) versions, FastBoard supports
+For servers on modern [PaperMC](https://papermc.io) versions, The Gui project supports
 using [Adventure](https://github.com/KyoriPowered/adventure) components instead of strings,
 by using the method `gui.title(Component)`.
