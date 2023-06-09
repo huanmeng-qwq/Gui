@@ -13,25 +13,41 @@ import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType.SlotType
 
+/**
+ * 构建[Slot]
+ * @param slot slot index
+ */
 fun buildSlot(slot: Int): Slot {
     return Slot.of(slot)
 }
 
+/**
+ * 构建[Slot]
+ */
 fun buildSlot(lambda: SlotDsl.() -> Unit): Slot {
     val slotsDsl = SlotDsl().apply(lambda)
     val index = requireNotNull(slotsDsl.index) { "index is null" }
     return SlotWrapper(index, slotsDsl)
 }
 
+/**
+ * 构建[Slots]
+ */
 fun buildSlots(vararg slot: Int): Slots {
     return Slots.of(*slot)
 }
 
+/**
+ * 构建 [Slots]
+ */
 fun buildSlots(lambda: SlotsDsl.() -> Unit): Slots {
     val dsl = SlotsDsl().apply(lambda)
     return Slots.of(*dsl.toTypedArray())
 }
 
+/**
+ * 通过行数来决定构建[Slots]
+ */
 fun buildSlotsByLine(lambda: SlotsDsl.(line: Int) -> List<Slot>): Slots {
     val dsl = SlotsDsl()
     return SlotsWrapper { gui, list ->
