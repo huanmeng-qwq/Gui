@@ -16,8 +16,9 @@ Lightweight Inventory API for Bukkit plugins, with 1.7.10 to 1.20 support.
 
 ## Features
 * Works with all versions from 1.7.10 to 1.20
-* Very small (around 2k lines of code with the JavaDoc) and no dependencies
+* Very small (around 3k lines of code with the JavaDoc) and no dependencies
 * Easy to use
+* Kotlin DSL
 * [Adventure](https://github.com/KyoriPowered/adventure) components support
 
 ### Maven
@@ -87,6 +88,56 @@ shadowJar {
 
 Just create a `GuiCustom`：
 
+#### Kotlin DSL
+
+```kotlin
+import org.bukkit.entity.Player
+
+fun openGui(player: Player) {
+    player.openGui {
+        draw {
+            setButton(buildSlot(0)) {
+                var a = 1
+                showingItem = buildButtonItem {
+                    ItemStack(Material.values()[a++])
+                }
+                updateClick {
+                    it.inventory.addItem(showingItem!!.get(it))
+                }
+            }
+        }
+    }
+}
+```
+
+```kotlin
+import org.bukkit.entity.Player
+
+fun openPageGui(player: Player) {
+    buildPagedGui {
+        allItems = buildButtons {
+            for (i in 0..60) {
+                button {
+                    showingItem = buildButtonItem(ItemStack(Material.values()[i]))
+                }
+            }
+        }
+        elementsPerPage = size() - 9
+        elementSlots = buildSlotsByLine { line ->
+            return@buildSlotsByLine buildList {
+                for (i in 0..9 * line) {
+                    add(buildSlot(i))
+                }
+            }
+        }
+        pageSetting {
+            PageSettings.normal(this)
+        }
+    }.openGui(player)
+}
+```
+
+#### Java
 ```java
 import me.huanmeng.opensource.bukkit.gui.impl.GuiCustom;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;

@@ -29,7 +29,7 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
 
       - name: "Central Deploy"
-        run: mvn -B -Possrh deploy --file pom.xml -DskipTests
+        run: mvn -B -Possrh,javadoc deploy --file pom.xml -DskipTests
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USER }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_PASS }}

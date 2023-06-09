@@ -38,7 +38,7 @@ import java.util.function.Function;
  */
 @SuppressWarnings("ALL")
 public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> implements GuiTick {
-    @NonNull
+    @Nullable
     protected Player player;
     @NonNull
     protected Component title = Component.text("Chest");
@@ -108,6 +108,13 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      */
     public void setPlayer(@NonNull Player player) {
         this.player = player;
+    }
+
+    /**
+     * 获取目标玩家
+     */
+    public Player getPlayer() {
+        return player;
     }
 
     /**

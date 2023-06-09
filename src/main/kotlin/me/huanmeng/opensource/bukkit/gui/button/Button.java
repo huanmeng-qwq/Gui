@@ -2,8 +2,8 @@ package me.huanmeng.opensource.bukkit.gui.button;
 
 import me.huanmeng.opensource.bukkit.gui.button.function.PlayerClickCancelInterface;
 import me.huanmeng.opensource.bukkit.gui.button.function.PlayerClickInterface;
+import me.huanmeng.opensource.bukkit.gui.button.function.PlayerItemInterface;
 import me.huanmeng.opensource.bukkit.gui.button.function.PlayerSimpleCancelInterface;
-import me.huanmeng.opensource.bukkit.gui.button.function.UserItemInterface;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import org.bukkit.entity.Player;
@@ -58,7 +58,7 @@ public interface Button {
      * @return {@link Button}
      */
     @Contract(value = "!null -> new", pure = true)
-    static Button of(UserItemInterface item) {
+    static Button of(PlayerItemInterface item) {
         return new EmptyButton(item);
     }
 
@@ -69,8 +69,8 @@ public interface Button {
      * @param clickable 点击事件
      * @return {@link Button}
      */
-    @Contract(value = "!null, !null -> new", pure = true)
-    static Button of(UserItemInterface item, PlayerClickInterface clickable) {
+    @Contract(value = "null, null -> new", pure = true)
+    static Button of(PlayerItemInterface item, PlayerClickInterface clickable) {
         return new ClickButton(item, clickable);
     }
 
@@ -81,8 +81,8 @@ public interface Button {
      * @param clickable 点击事件
      * @return {@link Button}
      */
-    @Contract(value = "!null, !null, !null -> new", pure = true)
-    static <@NonNull T extends PlayerClickInterface> Button of(UserItemInterface item, Class<T> cls, T clickable) {
+    @Contract(value = "null, !null, null -> new", pure = true)
+    static <@NonNull T extends PlayerClickInterface> Button of(PlayerItemInterface item, Class<T> cls, T clickable) {
         return new ClickButton(item, clickable);
     }
 
@@ -93,8 +93,8 @@ public interface Button {
      * @param clickable 点击事件
      * @return {@link Button}
      */
-    @Contract(value = "!null, !null -> new", pure = true)
-    static Button of(UserItemInterface item, PlayerClickCancelInterface clickable) {
+    @Contract(value = "null, null -> new", pure = true)
+    static Button of(PlayerItemInterface item, PlayerClickCancelInterface clickable) {
         return new ClickButton(item, clickable);
     }
 
@@ -105,44 +105,44 @@ public interface Button {
      * @param playerSimpleCancelInterface 点击事件
      * @return {@link Button}
      */
-    @Contract(value = "!null, !null -> new", pure = true)
-    static Button of(UserItemInterface item, PlayerSimpleCancelInterface playerSimpleCancelInterface) {
+    @Contract(value = "null, null -> new", pure = true)
+    static Button of(PlayerItemInterface item, PlayerSimpleCancelInterface playerSimpleCancelInterface) {
         return new ClickButton(item, playerSimpleCancelInterface);
     }
 
     /**
      * 点击型按钮
      *
-     * @param impl   实现了{@link UserItemInterface}和{@link PlayerClickInterface}的类
-     * @param <IMPL> 实现了{@link UserItemInterface}和{@link PlayerClickInterface}的类
+     * @param impl   实现了{@link PlayerItemInterface}和{@link PlayerClickInterface}的类
+     * @param <IMPL> 实现了{@link PlayerItemInterface}和{@link PlayerClickInterface}的类
      * @return {@link Button}
      */
-    @Contract(value = "!null -> new", pure = true)
-    static <@NonNull IMPL extends UserItemInterface & PlayerClickInterface> Button ofInstance(IMPL impl) {
+    @Contract(value = "null -> new", pure = true)
+    static <@NonNull IMPL extends PlayerItemInterface & PlayerClickInterface> Button ofInstance(IMPL impl) {
         return new ClickButton(impl, impl);
     }
 
     /**
      * 点击型按钮
      *
-     * @param impl   实现了{@link UserItemInterface}和{@link PlayerClickInterface}的类
-     * @param <IMPL> 实现了{@link UserItemInterface}和{@link PlayerClickInterface}的类
+     * @param impl   实现了{@link PlayerItemInterface}和{@link PlayerClickInterface}的类
+     * @param <IMPL> 实现了{@link PlayerItemInterface}和{@link PlayerClickInterface}的类
      * @return {@link Button}
      */
     @NonNull
-    static <@NonNull IMPL extends UserItemInterface & PlayerClickInterface> List<Button> ofInstances(@NonNull Collection<@NonNull IMPL> impl) {
+    static <@NonNull IMPL extends PlayerItemInterface & PlayerClickInterface> List<Button> ofInstances(@NonNull Collection<@NonNull IMPL> impl) {
         return impl.stream().map(Button::ofInstance).collect(Collectors.toList());
     }
 
     /**
      * 点击型按钮
      *
-     * @param impl   实现了{@link UserItemInterface}和{@link PlayerClickInterface}的类
-     * @param <IMPL> 实现了{@link UserItemInterface}和{@link PlayerClickInterface}的类
+     * @param impl   实现了{@link PlayerItemInterface}和{@link PlayerClickInterface}的类
+     * @param <IMPL> 实现了{@link PlayerItemInterface}和{@link PlayerClickInterface}的类
      * @return {@link Button}
      */
     @SafeVarargs
-    static <@NonNull IMPL extends UserItemInterface & PlayerClickInterface> List<Button> ofInstancesArray(@NonNull IMPL... impl) {
+    static <@NonNull IMPL extends PlayerItemInterface & PlayerClickInterface> List<Button> ofInstancesArray(@NonNull IMPL... impl) {
         return Arrays.stream(impl).map(Button::ofInstance).collect(Collectors.toList());
     }
 
@@ -166,7 +166,7 @@ public interface Button {
      * @return {@link Button}
      */
     @NonNull
-    static List<@NonNull Button> ofItemStacks(@NonNull Collection<@Nullable ItemStack> itemStacks, @NonNull Function<@Nullable ItemStack, @NonNull UserItemInterface> map) {
+    static List<@NonNull Button> ofItemStacks(@NonNull Collection<@Nullable ItemStack> itemStacks, @NonNull Function<@Nullable ItemStack, @NonNull PlayerItemInterface> map) {
         return itemStacks.stream().map(map).map(Button::of).collect(Collectors.toList());
     }
 
@@ -178,7 +178,7 @@ public interface Button {
      */
     @NonNull
     static List<@NonNull Button> ofItemStacks(@NonNull Collection<@Nullable ItemStack> itemStacks) {
-        return itemStacks.stream().map(e -> (UserItemInterface) player -> e).map(Button::of).collect(Collectors.toList());
+        return itemStacks.stream().map(e -> (PlayerItemInterface) player -> e).map(Button::of).collect(Collectors.toList());
     }
 
     /**
@@ -186,11 +186,11 @@ public interface Button {
      *
      * @param itemStacks 物品
      * @param map        映射
-     * @param <IMPL>     实现了{@link UserItemInterface}和{@link PlayerClickInterface}的类
+     * @param <IMPL>     实现了{@link PlayerItemInterface}和{@link PlayerClickInterface}的类
      * @return {@link Button}
      */
     @NonNull
-    static <@NonNull IMPL extends UserItemInterface & PlayerClickInterface>
+    static <@NonNull IMPL extends PlayerItemInterface & PlayerClickInterface>
     List<@NonNull Button> ofItemStacksInstances(@NonNull Collection<@Nullable ItemStack> itemStacks, @NonNull Function<@Nullable ItemStack, @NonNull IMPL> map) {
         return itemStacks.stream().map(map).map(Button::ofInstance).collect(Collectors.toList());
     }

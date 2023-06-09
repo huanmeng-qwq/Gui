@@ -24,6 +24,9 @@ public class GuiCustom extends AbstractGui<@NonNull GuiCustom> {
         setPlayer(player);
     }
 
+    public GuiCustom() {
+    }
+
     @NonNull
     public GuiCustom line(int line) {
         this.line = line;
@@ -33,6 +36,9 @@ public class GuiCustom extends AbstractGui<@NonNull GuiCustom> {
     @Override
     @NonNull
     public GuiCustom openGui() {
+        if (player == null) {
+            throw new IllegalArgumentException("player is null");
+        }
         init(title, line * 9);
         Inventory inventory = build(createHolder());
         fillItems(inventory, false);
@@ -53,6 +59,9 @@ public class GuiCustom extends AbstractGui<@NonNull GuiCustom> {
     @Override
     @NonNull
     protected Inventory build(@NonNull InventoryHolder holder) {
+        if (player == null) {
+            throw new IllegalArgumentException("player is null");
+        }
         ComponentConvert componentConvert = GuiManager.instance().componentConvert();
         return Bukkit.createInventory(holder, line * 9, componentConvert.convert(player, title));
     }

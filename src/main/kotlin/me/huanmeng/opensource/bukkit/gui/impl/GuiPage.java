@@ -24,14 +24,14 @@ import java.util.function.Supplier;
 public class GuiPage extends GuiCustom {
     protected int page = 1;
 
-    @NonNull
+    @Nullable
     protected List<? extends Button> allItems;
 
     protected int elementsPerPage;
-
-    @NonNull
+    @Nullable
     protected Pagination<? extends Button> pagination;
-    @NonNull
+
+    @Nullable
     protected Slots elementSlots;
 
     @Nullable
@@ -49,13 +49,19 @@ public class GuiPage extends GuiCustom {
         this.elementSlots = elementSlots;
     }
 
+    public GuiPage() {
+    }
+
     @Override
     @NonNull
     protected Set<GuiButton> getFillItems() {
+        if (player == null) {
+            throw new IllegalArgumentException("player is null");
+        }
         buttons.clear();
         Set<GuiButton> buttons = new HashSet<>();
-        List<? extends Button> buttonList = pagination.getElementsFor(page);
-        ArrayList<Slot> slots = new ArrayList<>(Arrays.asList(this.elementSlots.slots(self())));
+        List<? extends Button> buttonList = getPaginationNotNull().getElementsFor(page);
+        ArrayList<Slot> slots = new ArrayList<>(Arrays.asList(Objects.requireNonNull(this.elementSlots).slots(self())));
         for (Button button : buttonList) {
             if (slots.isEmpty()) {
                 break;
@@ -68,7 +74,7 @@ public class GuiPage extends GuiCustom {
                 PageButton pageButton = supplier.get();
                 Slot slot = pageButton.slot().apply(line);
                 editButtons.removeIf(button -> button.getSlot().equals(slot));
-                if (pageButton.condition().isAllow(page, pagination.getMaxPage(), this, pageButton, player)) {
+                if (pageButton.condition().isAllow(page, getPaginationNotNull().getMaxPage(), this, pageButton, player)) {
                     editButtons.add(new GuiButton(slot, pageButton));
                 }
             }
@@ -84,12 +90,12 @@ public class GuiPage extends GuiCustom {
 
     @NonNull
     protected final Pagination<? extends Button> createPagination() {
-        return new Pagination<>(allItems, elementsPerPage);
+        return new Pagination<>(Objects.requireNonNull(allItems), elementsPerPage);
     }
 
     @NonNull
     public Pagination<? extends Button> pagination() {
-        return pagination;
+        return Objects.requireNonNull(pagination);
     }
 
     @NonNull
@@ -125,14 +131,49 @@ public class GuiPage extends GuiCustom {
     }
 
     public void setToLastPage() {
-        page = pagination.getMaxPage();
+        page = getPaginationNotNull().getMaxPage();
     }
 
     public boolean hasPreviousPage() {
-        return pagination.hasLast(page);
+        return getPaginationNotNull().hasLast(page);
+    }
+
+    @NonNull
+    public Pagination<? extends Button> getPaginationNotNull() {
+        if (pagination == null) {
+            pagination = createPagination();
+        }
+        return pagination;
     }
 
     public boolean hasNextPage() {
-        return pagination.hasNext(page);
+        return getPaginationNotNull().hasNext(page);
+    }
+
+    @Nullable
+    public List<? extends Button> getAllItems() {
+        return allItems;
+    }
+
+    public void setAllItems(@Nullable List<? extends Button> allItems) {
+        this.allItems = allItems;
+    }
+
+
+    public void setElementsPerPage(int elementsPerPage) {
+        this.elementsPerPage = elementsPerPage;
+    }
+
+    public int getElementsPerPage() {
+        return this.elementsPerPage;
+    }
+
+    @Nullable
+    public Slots getElementSlots() {
+        return elementSlots;
+    }
+
+    public void setElementSlots(@Nullable Slots elementSlots) {
+        this.elementSlots = elementSlots;
     }
 }
