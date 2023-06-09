@@ -55,7 +55,7 @@ Lightweight Inventory API for Bukkit plugins, with 1.8.8 to 1.20 support.
     <dependency>
         <groupId>com.huanmeng-qwq</groupId>
         <artifactId>Bukkit-Gui</artifactId>
-        <version>1.3.7</version>
+        <version>2.0</version>
     </dependency>
 </dependencies>
 ```
@@ -73,7 +73,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.huanmeng-qwq:Bukkit-Gui:1.3.7'
+    implementation 'com.huanmeng-qwq:Bukkit-Gui:2.0'
 }
 
 shadowJar {
