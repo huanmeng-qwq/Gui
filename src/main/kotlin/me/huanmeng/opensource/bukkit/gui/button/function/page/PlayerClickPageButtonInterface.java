@@ -16,6 +16,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *
  * @author huanmeng_qwq
  */
+@FunctionalInterface
 public interface PlayerClickPageButtonInterface {
     /**
      * 点击事件
