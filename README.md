@@ -88,19 +88,28 @@ shadowJar {
 Just create a `GuiCustom`：
 
 ```java
-GuiCustom gui = new GuiCustom(player);
-        
-// Set the line
-gui.line(3);
+import me.huanmeng.opensource.bukkit.gui.impl.GuiCustom;
+import me.huanmeng.opensource.bukkit.gui.slot.Slot;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-// Set the title
-gui.title("Test Gui");
+public class Example {
+    public static void open(Player player) {
+        GuiCustom gui = new GuiCustom(player);
+        // Set the line
+        gui.line(3);
 
-// Add a apple
-gui.draw().set(Slot.of(1), Button.of(player-> new ItemStack(Material.APPLE)));
+        // Set the title
+        gui.title("Test Gui");
 
-// Open for player
-gui.openGui();
+        // Add an apple
+        gui.draw().set(Slot.of(1), Button.of(player-> new ItemStack(Material.APPLE)));
+
+        // Open for player
+        gui.openGui();
+    }
+}
 ```
 
 ## Adventure support
