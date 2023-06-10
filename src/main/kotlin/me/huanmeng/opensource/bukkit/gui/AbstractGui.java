@@ -612,4 +612,36 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     public void setDisableClick(boolean disableClick) {
         this.disableClick = disableClick;
     }
+
+    public AbstractGui<G> copy() {
+        AbstractGui<G> newed = newGui();
+        return copy(newed);
+    }
+
+    protected abstract AbstractGui<G> newGui();
+
+    protected AbstractGui<G> copy(Object newGui) {
+        AbstractGui<G> gui = (AbstractGui<G>) newGui;
+        gui.player = player;
+        gui.title = title;
+        gui.buttons = buttons;
+        gui.attachedButtons = attachedButtons;
+        gui.editButtons = editButtons;
+        gui.backGuiGetter = backGuiGetter;
+        gui.backGuiRunner = backGuiRunner;
+        gui.cancelClickOther = cancelClickOther;
+        gui.cancelClickBottom = cancelClickBottom;
+        gui.cancelMoveHotBarItemToSelf = cancelMoveHotBarItemToSelf;
+        gui.cancelMoveItemToSelf = cancelMoveItemToSelf;
+        gui.disableClick = disableClick;
+        gui.tickles = tickles;
+        gui.intervalTick = intervalTick;
+        gui.tickRefresh = tickRefresh;
+        gui.guiClick = guiClick;
+        gui.guiEmptyItemClick = guiEmptyItemClick;
+        gui.guiBottomClick = guiBottomClick;
+        gui.whenClose = whenClose;
+        gui.errorMessage = errorMessage;
+        return gui;
+    }
 }

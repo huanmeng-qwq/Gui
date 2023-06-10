@@ -85,4 +85,24 @@ public class GuiCustom extends AbstractGui<@NonNull GuiCustom> {
     protected GuiCustom self() {
         return this;
     }
+
+    @Override
+    public GuiCustom copy() {
+        return (GuiCustom) super.copy();
+    }
+
+    @Override
+    protected GuiCustom newGui() {
+        return new GuiCustom();
+    }
+
+    @Override
+    protected GuiCustom copy(Object newGui) {
+        super.copy(newGui);
+        GuiCustom guiCustom = (GuiCustom) newGui;
+        // GuiCustom
+        guiCustom.line = line;
+        return null;
+    }
+
 }

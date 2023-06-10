@@ -176,4 +176,27 @@ public class GuiPage extends GuiCustom {
     public void setElementSlots(@Nullable Slots elementSlots) {
         this.elementSlots = elementSlots;
     }
+
+    @Override
+    public GuiPage copy() {
+        return (GuiPage) super.copy();
+    }
+
+    @Override
+    protected GuiPage newGui() {
+        return new GuiPage();
+    }
+
+    @Override
+    protected GuiCustom copy(Object newGui) {
+        super.copy(newGui);
+        GuiPage guiPage = (GuiPage) newGui;
+        guiPage.page = page;
+        guiPage.allItems = allItems;
+        guiPage.elementsPerPage = elementsPerPage;
+        guiPage.createPagination();
+        guiPage.elementSlots = elementSlots;
+        guiPage.pageSetting = pageSetting;
+        return guiPage;
+    }
 }
