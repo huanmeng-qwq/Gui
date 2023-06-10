@@ -88,7 +88,7 @@
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-api</artifactId>
-            <version>4.13.1</version>
+            <version>4.10.0</version>
         </dependency>
         <dependency>
             <groupId>net.kyori</groupId>
@@ -98,7 +98,7 @@
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-text-serializer-legacy</artifactId>
-            <version>4.13.1</version>
+            <version>4.14.0</version>
         </dependency>
 
         <dependency>
@@ -245,7 +245,7 @@
                         <relocation>
                             <pattern>org.bstats</pattern>
                             <!-- Replace this with your package! -->
-                            <shadedPattern>me.huanmeng.ext</shadedPattern>
+                            <shadedPattern>me.huanmeng.ext.bstats</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
