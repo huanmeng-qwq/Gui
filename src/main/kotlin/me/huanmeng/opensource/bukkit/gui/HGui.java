@@ -13,7 +13,7 @@ import java.lang.invoke.MethodType;
  * 2023/3/17<br>
  * Gui<br>
  * <p>
- * 建议的Gui包装类
+ * 简易的Gui包装类
  *
  * @author huanmeng_qwq
  */
