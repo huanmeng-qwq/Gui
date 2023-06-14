@@ -12,7 +12,7 @@
 ![Last-Commit](https://img.shields.io/github/last-commit/huanmeng-qwq/Gui?style=plastic)
 </div>
 
-Lightweight Inventory API for Bukkit plugins, with 1.8.8 to 1.20 support.
+Lightweight Inventory API for Bukkit plugins, with 1.8.8 to 1.20.1 support.
 
 ## Features
 * Works with all versions from 1.8.8 to 1.20
