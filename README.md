@@ -15,7 +15,7 @@
 Lightweight Inventory API for Bukkit plugins, with 1.8.8 to 1.20.1 support.
 
 ## Features
-* Works with all versions from 1.8.8 to 1.20
+* Works with all versions from 1.8.8 to 1.20.1
 * Very small (around 3k lines of code with the JavaDoc) and no dependencies
 * Easy to use
 * Kotlin DSL
