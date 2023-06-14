@@ -78,7 +78,7 @@ dependencies {
 
 shadowJar {
     // Replace 'com.yourpackage' with the package of your plugin 
-    relocate 'me.huanmeng.opensource.bukkit.gui', 'com.yourpackage.fastboard'
+    relocate 'me.huanmeng.opensource.bukkit.gui', 'com.yourpackage.gui'
 }
 ```
 
