@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import me.huanmeng.opensource.bukkit.component.ComponentConvert;
 import me.huanmeng.opensource.bukkit.gui.event.InventorySwitchEvent;
 import me.huanmeng.opensource.bukkit.gui.holder.GuiHolder;
+import me.huanmeng.opensource.bukkit.gui.listener.BukkitEventListener;
+import me.huanmeng.opensource.bukkit.gui.listener.ListenerAdapter;
 import me.huanmeng.opensource.bukkit.scheduler.SchedulerAsync;
 import me.huanmeng.opensource.bukkit.scheduler.SchedulerSync;
 import me.huanmeng.opensource.scheduler.Schedulers;
@@ -14,8 +16,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.CraftingInventory;
@@ -37,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author huanmeng_qwq
  */
 @SuppressWarnings("unused")
-public class GuiManager implements Listener {
+public class GuiManager implements ListenerAdapter {
     @NonNull
     private final JavaPlugin plugin;
 
@@ -56,6 +56,10 @@ public class GuiManager implements Listener {
     }
 
     public GuiManager(@NonNull JavaPlugin plugin) {
+        this(plugin, true);
+    }
+
+    public GuiManager(@NonNull JavaPlugin plugin, boolean registerListener) {
         Preconditions.checkArgument(instance == null, "instance is not null");
         Preconditions.checkNotNull(plugin, "plugin is null");
         GuiManager.instance = this;
@@ -66,7 +70,9 @@ public class GuiManager implements Listener {
         }
         Schedulers.setSync(new SchedulerSync());
         Schedulers.setAsync(new SchedulerAsync());
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        if (registerListener) {
+            Bukkit.getPluginManager().registerEvents(new BukkitEventListener(this), plugin);
+        }
     }
 
     @NonNull
@@ -112,8 +118,7 @@ public class GuiManager implements Listener {
         return Objects.equals(getUserOpenGui(user), gui);
     }
 
-    @EventHandler
-    public void onClick(InventoryClickEvent e) {
+    public void onInventoryClick(InventoryClickEvent e) {
         if (!(e.getWhoClicked() instanceof Player)) {
             return;
         }
@@ -172,7 +177,6 @@ public class GuiManager implements Listener {
         }
     }
 
-    @EventHandler
     public void onInventoryDrag(InventoryDragEvent e) {
         //noinspection ConstantValue
         if (e.getInventory() == null) {
@@ -192,7 +196,6 @@ public class GuiManager implements Listener {
         }
     }
 
-    @EventHandler
     public void onInventoryOpen(InventoryOpenEvent e) {
         //noinspection ConstantValue
         if (null == e.getInventory()) {
@@ -209,7 +212,6 @@ public class GuiManager implements Listener {
         }
     }
 
-    @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {
         //noinspection ConstantValue
         if (e.getInventory() == null) {
@@ -226,7 +228,6 @@ public class GuiManager implements Listener {
         }
     }
 
-    @EventHandler
     public void onPluginDisabled(PluginDisableEvent e) {
         if (e.getPlugin() == plugin) {
             for (Player player : Bukkit.getOnlinePlayers()) {
