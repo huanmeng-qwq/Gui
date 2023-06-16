@@ -25,8 +25,8 @@ public abstract class HGui {
     protected final PackageGuiContext context;
     protected boolean allowBack;
 
-    @NonNull
-    private final MethodHandle constructorHandle;
+    @Nullable
+    private MethodHandle constructorHandle;
 
     public HGui(@NonNull Player player) {
         this(player, false);
@@ -39,7 +39,7 @@ public abstract class HGui {
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             constructorHandle = lookup.findConstructor(getClass(), MethodType.methodType(void.class, Player.class, boolean.class));
         } catch (NoSuchMethodException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+            constructorHandle = null;
         }
     }
 
@@ -52,7 +52,7 @@ public abstract class HGui {
             return;
         }
         context.gui(g);
-        if (allowBack) {
+        if (allowBack && constructorHandle != null) {
             g.backRunner(() -> {
                 HGui gui;
                 try {
