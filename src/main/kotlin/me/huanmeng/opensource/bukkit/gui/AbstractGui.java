@@ -15,7 +15,6 @@ import me.huanmeng.opensource.bukkit.util.item.ItemUtil;
 import me.huanmeng.opensource.scheduler.Scheduler;
 import me.huanmeng.opensource.scheduler.Schedulers;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.*;
@@ -82,6 +81,8 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      * 是否禁用点击事件, 为true时将直接取消{@link InventoryClickEvent}事件并不做任何处理 谨慎使用, 否则正常处理
      */
     protected boolean disableClick = false;
+
+    protected boolean allowReopen = true;
     boolean close = true;
     boolean closing = true;
 
@@ -122,8 +123,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      */
     @Deprecated
     protected void init(@NonNull String title, int itemSize) {
-        this.title = Component.text(title);
-        this.size = itemSize;
+        init(Component.text(title), itemSize);
     }
 
     /**
@@ -208,6 +208,22 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         close(false, false);
     }
 
+    /**
+     * 返回上一个gui, 没有则关闭
+     */
+    public void back() {
+        back(false);
+    }
+
+    /**
+     * 返回上一个gui, 没有则关闭
+     *
+     * @param force 强制返回上一个gui, 即使上一个gui不允许被重新打开
+     */
+    public void back(boolean force) {
+        close(true, force);
+    }
+
     @NonNull
     public G addTick(@NonNull Consumer<G> tickle) {
         tickles.add(tickle);
@@ -258,7 +274,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      */
     @NonNull
     protected <G extends AbstractGui<G>> boolean isAllowReopenFrom(@NonNull G gui) {
-        return true;
+        return allowReopen;
     }
 
     @NonNull
@@ -483,7 +499,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
                         break;
                     }
                 }
-            } else if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) {
+            } else if (ItemUtil.isAir(e.getCurrentItem())) {
                 if (e.getHotbarButton() >= 0 && cancelMoveHotBarItemToSelf && Objects.equals(e.getClickedInventory(), e.getView().getTopInventory())) {
                     e.setCancelled(true);
                 }
@@ -520,6 +536,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             e.getWhoClicked().closeInventory();
             e.setCancelled(true);
         }
+        processingClickEvent = false;
     }
 
     public void onDarg(@NonNull InventoryDragEvent e) {
@@ -593,20 +610,29 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         return self();
     }
 
-    public void setCancelClickOther(boolean cancelClickOther) {
+    public G setCancelClickOther(boolean cancelClickOther) {
         this.cancelClickOther = cancelClickOther;
+        return self();
     }
 
-    public void setCancelClickBottom(boolean cancelClickBottom) {
+    public G setCancelClickBottom(boolean cancelClickBottom) {
         this.cancelClickBottom = cancelClickBottom;
+        return self();
     }
 
-    public void setCancelMoveHotBarItemToSelf(boolean cancelMoveHotBarItemToSelf) {
+    public G setCancelMoveHotBarItemToSelf(boolean cancelMoveHotBarItemToSelf) {
         this.cancelMoveHotBarItemToSelf = cancelMoveHotBarItemToSelf;
+        return self();
     }
 
-    public void setCancelMoveItemToSelf(boolean cancelMoveItemToSelf) {
+    public G setCancelMoveItemToSelf(boolean cancelMoveItemToSelf) {
         this.cancelMoveItemToSelf = cancelMoveItemToSelf;
+        return self();
+    }
+
+    public G setAllowReopen(boolean allowReopen) {
+        this.allowReopen = allowReopen;
+        return self();
     }
 
     public void setDisableClick(boolean disableClick) {
