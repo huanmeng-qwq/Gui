@@ -358,6 +358,18 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
                 );
     }
 
+    public ItemStack getItem(int index) {
+        return cacheInventory.getItem(index);
+    }
+
+    public ItemStack getItem(Slot slot) {
+        return getItem(slot.getIndex());
+    }
+
+    public ItemStack[] getItems(Slots slots){
+        return Arrays.stream(slots.slots(self())).map(this::getItem).toArray(ItemStack[]::new);
+    }
+
     @NonNull
     protected G fillItems(@NonNull Inventory inventory, @Nullable boolean all) {
         if (all) {
@@ -668,6 +680,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         gui.guiBottomClick = guiBottomClick;
         gui.whenClose = whenClose;
         gui.errorMessage = errorMessage;
+        gui.allowReopen = allowReopen;
         return gui;
     }
 }
