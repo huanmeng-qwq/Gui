@@ -1,6 +1,7 @@
 package me.huanmeng.opensource.bukkit.gui;
 
 import com.google.common.base.Preconditions;
+import me.huanmeng.opensource.bukkit.Metrics;
 import me.huanmeng.opensource.bukkit.component.ComponentConvert;
 import me.huanmeng.opensource.bukkit.gui.event.InventorySwitchEvent;
 import me.huanmeng.opensource.bukkit.gui.holder.GuiHolder;
@@ -11,7 +12,6 @@ import me.huanmeng.opensource.bukkit.scheduler.SchedulerSync;
 import me.huanmeng.opensource.scheduler.Schedulers;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
-import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -66,7 +66,7 @@ public class GuiManager implements ListenerAdapter {
         this.plugin = plugin;
         this.audiences = BukkitAudiences.create(plugin);
         if (!Boolean.getBoolean("gui.disable-bStats")) {
-            metrics = new Metrics(plugin, 18670);
+            metrics = new Metrics(plugin, 18670, "2.0.3");
         }
         Schedulers.setSync(new SchedulerSync());
         Schedulers.setAsync(new SchedulerAsync());

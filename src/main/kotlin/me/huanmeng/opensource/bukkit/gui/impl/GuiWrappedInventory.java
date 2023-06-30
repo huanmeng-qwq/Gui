@@ -67,7 +67,15 @@ public class GuiWrappedInventory extends GuiCustom {
     @Override
     public void onClick(@NonNull InventoryClickEvent e) {
         super.onClick(e);
-        updateInventory(cacheInventory);
+        if (cacheInventory == null) {
+            return;
+        }
+        try {
+            for (int i = 0; i < inventory.getSize(); i++) {
+                inventory.setItem(i, cacheInventory.getItem(i));
+            }
+        } catch (Exception ignored) {
+        }
     }
 
     private void updateInventory(Inventory build) {
