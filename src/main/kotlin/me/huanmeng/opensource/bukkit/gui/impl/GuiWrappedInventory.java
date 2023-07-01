@@ -67,6 +67,11 @@ public class GuiWrappedInventory extends GuiCustom {
     @Override
     public void onClick(@NonNull InventoryClickEvent e) {
         super.onClick(e);
+        setToInventory();
+        scheduler().runLater(this::setToInventory,1);
+    }
+
+    private void setToInventory() {
         if (cacheInventory == null) {
             return;
         }
