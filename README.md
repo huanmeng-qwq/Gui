@@ -213,3 +213,10 @@ buildPagedGui {
 For servers on modern [PaperMC](https://papermc.io) versions, The Gui project supports
 using [Adventure](https://github.com/KyoriPowered/adventure) components instead of strings,
 by using the method `gui.title(Component)`.
+
+# Support
+[<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="" width="120">](https://www.jetbrains.com)
+
+[JetBrains](https://www.jetbrains.com/), creators of the IntelliJ IDEA,
+supports Gui with one of their [Open Source Licenses](https://jb.gg/OpenSourceSupport).
+IntelliJ IDEA is the recommended IDE for working with Gui.
