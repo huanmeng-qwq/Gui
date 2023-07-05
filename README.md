@@ -215,7 +215,7 @@ using [Adventure](https://github.com/KyoriPowered/adventure) components instead 
 by using the method `gui.title(Component)`.
 
 # Support
-[<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="" width="120">](https://www.jetbrains.com)
+[<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="" width="120">](https://www.jetbrains.com/?from=https://github.com/huanmeng-qwq/Gui)
 
 [JetBrains](https://www.jetbrains.com/), creators of the IntelliJ IDEA,
 supports Gui with one of their [Open Source Licenses](https://jb.gg/OpenSourceSupport).
