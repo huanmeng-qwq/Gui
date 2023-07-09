@@ -20,7 +20,9 @@ import java.lang.invoke.MethodType;
 @SuppressWarnings({"rawtypes", "unused"})
 public abstract class HGui {
     @Nullable
-    private HGui from;
+    protected HGui from;
+    @Nullable
+    protected AbstractGui<?> fromGui;
     @NonNull
     protected final PackageGuiContext context;
     protected boolean allowBack;
@@ -58,6 +60,7 @@ public abstract class HGui {
                 try {
                     gui = (HGui) constructorHandle.invokeExact(context.getPlayer(), allowBack);
                     gui.from = HGui.this;
+                    gui.fromGui = g;
                     gui.open();
                 } catch (Throwable e) {
                     throw new RuntimeException(e);
@@ -75,5 +78,10 @@ public abstract class HGui {
     @Nullable
     protected HGui from() {
         return from;
+    }
+
+    @Nullable
+    protected AbstractGui<?> getFromGui() {
+        return fromGui;
     }
 }
