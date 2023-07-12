@@ -1,5 +1,6 @@
 package me.huanmeng.opensource.bukkit.gui.slot.impl.slot;
 
+import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
 import me.huanmeng.opensource.bukkit.gui.slot.function.ButtonClickInterface;
@@ -38,14 +39,14 @@ public class SlotInterface extends SlotImpl {
 
     public SlotInterface(int index, @NonNull ButtonPlaceInterface buttonPlaceInterface) {
         super(index);
-        this.clickInterface = (slot, button, player, click, action, slotType, slotKey, hotBarKey, e) -> button.onClick(slot, player, click, action, slotType, slotKey, hotBarKey, e);
+        this.clickInterface = (gui, slot, button, player, click, action, slotType, slotKey, hotBarKey, e) -> button.onClick(gui, slot, player, click, action, slotType, slotKey, hotBarKey, e);
         this.buttonPlaceInterface = buttonPlaceInterface;
     }
 
     @NonNull
     @Override
-    public Result onClick(@NonNull Button button, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slot, int hotBarKey, @NonNull InventoryClickEvent e) {
-        return clickInterface.onClick(this, button, player, click, action, slotType, slot, hotBarKey, e);
+    public Result onClick(@NonNull AbstractGui<?> gui, @NonNull Button button, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slot, int hotBarKey, @NonNull InventoryClickEvent e) {
+        return clickInterface.onClick(gui, this, button, player, click, action, slotType, slot, hotBarKey, e);
     }
 
     @Override

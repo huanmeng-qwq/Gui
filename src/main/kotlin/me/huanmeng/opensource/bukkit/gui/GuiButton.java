@@ -37,10 +37,10 @@ public final class GuiButton {
      * 点击事件
      */
     @NonNull
-    public Result onClick(@NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action,
+    public Result onClick(@NonNull AbstractGui<?> gui, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action,
                           InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey,
                           @NonNull InventoryClickEvent e) {
-        return slot.onClick(button, player, click, action, slotType, slotKey, hotBarKey, e);
+        return slot.onClick(gui, button, player, click, action, slotType, slotKey, hotBarKey, e);
     }
 
     public int getIndex() {

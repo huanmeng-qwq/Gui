@@ -1,6 +1,7 @@
 package me.huanmeng.opensource.bukkit.gui.impl.page;
 
 import com.google.common.collect.ImmutableSet;
+import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.button.function.page.PlayerClickPageButtonInterface;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
@@ -180,14 +181,14 @@ public class PageButton implements Button {
     }
 
     @Override
-    public @NonNull Result onClick(@NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey, @NonNull InventoryClickEvent e) {
+    public @NonNull Result onClick(@NonNull AbstractGui<?> g, @NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey, @NonNull InventoryClickEvent e) {
         if (ItemUtil.isAir(e.getCurrentItem())) {
             return Result.CANCEL;
         }
         if (origin == null) {
             return Result.CANCEL;
         }
-        Result result = origin.onClick(slot, player, click, action, slotType, slotKey, hotBarKey, e);
+        Result result = origin.onClick(gui, slot, player, click, action, slotType, slotKey, hotBarKey, e);
         if (playerClickPageButtonInterface == null || types.isEmpty()) {
             return result;
         }

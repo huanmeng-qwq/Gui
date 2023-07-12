@@ -366,7 +366,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         return getItem(slot.getIndex());
     }
 
-    public ItemStack[] getItems(Slots slots){
+    public ItemStack[] getItems(Slots slots) {
         return Arrays.stream(slots.slots(self())).map(this::getItem).toArray(ItemStack[]::new);
     }
 
@@ -470,7 +470,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
                 if (!allowClick(player, item, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e)) {
                     return;
                 }
-                Result result = item.onClick(player, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e);
+                Result result = item.onClick(this, player, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e);
                 if (result.isCancel()) {
                     e.setCancelled(true);
                 }

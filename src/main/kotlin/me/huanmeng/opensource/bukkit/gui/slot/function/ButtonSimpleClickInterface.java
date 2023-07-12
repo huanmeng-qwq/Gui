@@ -1,5 +1,6 @@
 package me.huanmeng.opensource.bukkit.gui.slot.function;
 
+import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
@@ -20,7 +21,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public interface ButtonSimpleClickInterface extends ButtonClickInterface {
     @NonNull
     @Override
-    default Result onClick(@NonNull Slot slot, @NonNull Button button, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey, @NonNull InventoryClickEvent e) {
+    default Result onClick(@NonNull AbstractGui<?> gui, @NonNull Slot slot, @NonNull Button button, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey, @NonNull InventoryClickEvent e) {
         return onPlayerClick(button, player);
     }
 

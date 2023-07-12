@@ -1,5 +1,6 @@
 package me.huanmeng.opensource.bukkit.gui.button;
 
+import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.button.function.PlayerClickCancelInterface;
 import me.huanmeng.opensource.bukkit.gui.button.function.PlayerClickInterface;
 import me.huanmeng.opensource.bukkit.gui.button.function.PlayerItemInterface;
@@ -46,7 +47,7 @@ public interface Button {
     Button EMPTY = (p) -> null;
 
     @NonNull
-    default Result onClick(@NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action,
+    default Result onClick(@NonNull AbstractGui<?> gui, @NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action,
                            InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey, @NonNull InventoryClickEvent e) {
         return Result.CANCEL;
     }

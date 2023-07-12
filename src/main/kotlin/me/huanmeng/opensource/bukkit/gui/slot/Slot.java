@@ -40,10 +40,10 @@ public interface Slot {
      * @see Result
      */
     @NonNull
-    default Result onClick(@NonNull Button button, @NonNull Player player, @NonNull ClickType click,
+    default Result onClick(@NonNull AbstractGui<?> gui, @NonNull Button button, @NonNull Player player, @NonNull ClickType click,
                            @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slot,
                            int hotBarKey, @NonNull InventoryClickEvent e) {
-        return button.onClick(this, player, click, action, slotType, slot, hotBarKey, e);
+        return button.onClick(gui, this, player, click, action, slotType, slot, hotBarKey, e);
     }
 
     /**

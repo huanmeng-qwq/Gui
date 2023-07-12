@@ -1,5 +1,6 @@
 package me.huanmeng.opensource.bukkit.gui.button;
 
+import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.button.function.PlayerClickInterface;
 import me.huanmeng.opensource.bukkit.gui.button.function.PlayerItemInterface;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
@@ -42,10 +43,10 @@ public class ClickButton implements Button {
 
     @NonNull
     @Override
-    public Result onClick(@NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey, @NonNull InventoryClickEvent e) {
+    public Result onClick(@NonNull AbstractGui<?> gui, @NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey, @NonNull InventoryClickEvent e) {
         if (playerClickInterface == null) {
             return Result.CANCEL;
         }
-        return playerClickInterface.onClick(slot, player, click, action, slotType, slotKey, hotBarKey);
+        return playerClickInterface.onClick(gui, slot, player, click, action, slotType, slotKey, hotBarKey);
     }
 }

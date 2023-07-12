@@ -1,5 +1,6 @@
 package me.huanmeng.opensource.bukkit.gui.button.function;
 
+import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import org.bukkit.entity.Player;
@@ -19,6 +20,7 @@ public interface PlayerClickInterface {
     /**
      * 点击事件
      *
+     * @param gui
      * @param slot      位置
      * @param player    玩家
      * @param click     点击类型
@@ -29,6 +31,6 @@ public interface PlayerClickInterface {
      * @return {@link Result}
      */
     @NonNull
-    Result onClick(@NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action,
+    Result onClick(@NonNull AbstractGui<?> gui, @NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action,
                    InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey);
 }
