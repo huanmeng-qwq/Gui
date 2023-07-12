@@ -66,7 +66,7 @@ public class GuiManager implements ListenerAdapter {
         this.plugin = plugin;
         this.audiences = BukkitAudiences.create(plugin);
         if (!Boolean.getBoolean("gui.disable-bStats")) {
-            metrics = new Metrics(plugin, 18670, "2.0.4");
+            metrics = new Metrics(plugin, 18670, "2.1.0");
         }
         Schedulers.setSync(new SchedulerSync());
         Schedulers.setAsync(new SchedulerAsync());
