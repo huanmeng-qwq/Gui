@@ -103,6 +103,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     @NonNull
     protected Function<@NonNull HumanEntity, @Nullable Component> errorMessage =
             p -> Component.text("§c无法处理您的点击请求，请联系管理员。");
+    protected Map<String, Object> metadata = new HashMap<>(2);
 
     /**
      * 设置目标玩家
@@ -182,6 +183,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             // 在处理点击事件时将close方法延迟到下一tick, 因为下一tick的时候当前的点击事件已经处理完毕
             Schedulers.sync().runLater(() -> {
                 processingClickEvent = false;
+                closing = false;
                 close(openParent, force);
             }, 1);
             return;
@@ -681,6 +683,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         gui.whenClose = whenClose;
         gui.errorMessage = errorMessage;
         gui.allowReopen = allowReopen;
+        gui.metadata = metadata;
         return gui;
     }
 }
