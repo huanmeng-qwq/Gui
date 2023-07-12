@@ -8,6 +8,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 2023/3/17<br>
@@ -17,7 +22,7 @@ import java.lang.invoke.MethodType;
  *
  * @author huanmeng_qwq
  */
-@SuppressWarnings({"rawtypes", "unused"})
+@SuppressWarnings({"unused"})
 public abstract class HGui {
     @Nullable
     protected HGui from;
@@ -29,6 +34,8 @@ public abstract class HGui {
 
     @Nullable
     private MethodHandle constructorHandle;
+
+    static final Map<Player, List<MethodHandle>> backMap = new ConcurrentHashMap<>();
 
     public HGui(@NonNull Player player) {
         this(player, false);
@@ -49,24 +56,52 @@ public abstract class HGui {
     protected abstract AbstractGui<? super GuiCustom> gui();
 
     public final void open() {
-        AbstractGui g = gui();
+        AbstractGui<?> g = gui();
         if (g == null) {
             return;
         }
+        g.setPlayer(context.getPlayer());
         context.gui(g);
-        if (allowBack && constructorHandle != null) {
-            g.backRunner(() -> {
-                HGui gui;
-                try {
-                    gui = (HGui) constructorHandle.invokeExact(context.getPlayer(), allowBack);
-                    gui.from = HGui.this;
-                    gui.fromGui = g;
-                    gui.open();
-                } catch (Throwable e) {
-                    throw new RuntimeException(e);
-                }
-            });
+        if ((allowBack && constructorHandle != null)) {
+            if (!backMap.containsKey(context.getPlayer())) {
+                backMap.put(context.getPlayer(), new ArrayList<>());
+            }
+            if (from == null) {
+                backMap.get(context.getPlayer()).add(constructorHandle);
+            }
         }
+        g.metadata.put("wrapper", this);
+        g.backRunner(() -> {
+            List<MethodHandle> list = backMap.get(context.getPlayer());
+            if ((list == null || list.size() <= 1)) {
+                g.close(false, true);
+                backMap.remove(g.player);
+                return;
+            }
+            try {
+                MethodHandle methodHandle = backMap.get(context.getPlayer()).remove(backMap.get(context.getPlayer()).size() - 2);
+                HGui gui = (HGui) methodHandle.invoke(context.getPlayer(), true);
+                gui.from = this;
+                gui.fromGui = g;
+                gui.open();
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        });
+        g.whenClose(gui -> g.scheduler().runLater(() -> {
+            UUID uuid = context.getPlayer().getUniqueId();
+            if (!GuiManager.instance().isOpenGui(uuid)) {
+                backMap.remove(context.getPlayer());
+                return;
+            }
+            AbstractGui<?> nowGui = GuiManager.instance().getUserOpenGui(uuid);
+            if (nowGui == null) {
+                return;
+            }
+            if (!nowGui.metadata.containsKey("wrapper")) {
+                backMap.remove(context.getPlayer());
+            }
+        }, 1));
         g.openGui();
         whenOpen();
     }
