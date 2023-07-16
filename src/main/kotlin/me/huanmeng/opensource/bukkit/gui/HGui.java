@@ -95,7 +95,7 @@ public abstract class HGui {
         g.metadata.put("wrapper", this);
         g.backRunner(() -> {
             List<Pair<MethodHandle, BiFunction<Player, Boolean, List<Object>>>> list = backMap.get(context.getPlayer());
-            if ((list == null || list.size() <= 1)) {
+            if ((list == null || list.size() <= (list.size() == 1 ? list.get(0).getA().equals(constructorHandle) ? 1 : 0 : 0))) {
                 g.close(false, true);
                 backMap.remove(g.player);
                 return;
