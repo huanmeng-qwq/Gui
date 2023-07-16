@@ -332,7 +332,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         return self();
     }
 
-    private void setButton(@NonNull Slot slot, @Nullable Button button) {
+    protected void setButton(@NonNull Slot slot, @Nullable Button button) {
         GuiButton guiButton = new GuiButton(slot, button);
         buttons.remove(guiButton);
         attachedButtons.remove(guiButton);

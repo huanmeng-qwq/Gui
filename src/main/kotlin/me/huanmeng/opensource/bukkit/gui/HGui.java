@@ -1,6 +1,7 @@
 package me.huanmeng.opensource.bukkit.gui;
 
 import me.huanmeng.opensource.bukkit.gui.impl.GuiCustom;
+import me.huanmeng.opensource.bukkit.util.Pair;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -8,11 +9,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.lang.reflect.Constructor;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiFunction;
 
 /**
  * 2023/3/17<br>
@@ -33,9 +33,11 @@ public abstract class HGui {
     protected boolean allowBack;
 
     @Nullable
-    private MethodHandle constructorHandle;
+    protected MethodHandle constructorHandle;
 
-    static final Map<Player, List<MethodHandle>> backMap = new ConcurrentHashMap<>();
+    protected BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction;
+
+    static final Map<Player, List<Pair<MethodHandle, BiFunction<Player, Boolean, List<Object>>>>> backMap = new ConcurrentHashMap<>();
 
     public HGui(@NonNull Player player) {
         this(player, false);
@@ -44,10 +46,30 @@ public abstract class HGui {
     public HGui(@NonNull Player player, boolean allowBack) {
         this.context = new PackageGuiContext(player);
         this.allowBack = allowBack;
+        setConstructor(MethodType.methodType(void.class, Player.class, boolean.class), Arrays::asList);
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    protected void setConstructor(MethodType methodType, BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction) {
+        this.newInstanceValuesFunction = newInstanceValuesFunction;
         try {
             MethodHandles.Lookup lookup = MethodHandles.lookup();
-            constructorHandle = lookup.findConstructor(getClass(), MethodType.methodType(void.class, Player.class, boolean.class));
+            constructorHandle = lookup.findConstructor(getClass(), methodType);
         } catch (NoSuchMethodException | IllegalAccessException e) {
+            constructorHandle = null;
+        }
+    }
+
+    public void setNewInstanceValuesFunction(BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction) {
+        this.newInstanceValuesFunction = newInstanceValuesFunction;
+    }
+
+    protected void setConstructor(Constructor<?> constructor, BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction) {
+        this.newInstanceValuesFunction = newInstanceValuesFunction;
+        try {
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
+            constructorHandle = lookup.unreflectConstructor(constructor);
+        } catch (IllegalAccessException e) {
             constructorHandle = null;
         }
     }
@@ -67,20 +89,26 @@ public abstract class HGui {
                 backMap.put(context.getPlayer(), new ArrayList<>());
             }
             if (from == null) {
-                backMap.get(context.getPlayer()).add(constructorHandle);
+                backMap.get(context.getPlayer()).add(new Pair<>(constructorHandle, newInstanceValuesFunction));
             }
         }
         g.metadata.put("wrapper", this);
         g.backRunner(() -> {
-            List<MethodHandle> list = backMap.get(context.getPlayer());
+            List<Pair<MethodHandle, BiFunction<Player, Boolean, List<Object>>>> list = backMap.get(context.getPlayer());
             if ((list == null || list.size() <= 1)) {
                 g.close(false, true);
                 backMap.remove(g.player);
                 return;
             }
             try {
-                MethodHandle methodHandle = backMap.get(context.getPlayer()).remove(backMap.get(context.getPlayer()).size() - 2);
-                HGui gui = (HGui) methodHandle.invoke(context.getPlayer(), true);
+                Pair<MethodHandle, BiFunction<Player, Boolean, List<Object>>> pair = backMap.get(context.getPlayer()).remove(backMap.get(context.getPlayer()).size() - 2);
+                MethodHandle methodHandle = pair.getA();
+                HGui gui;
+                if (pair.getB() != null) {
+                    gui = (HGui) methodHandle.invokeWithArguments(pair.getB().apply(context.getPlayer(), true));
+                } else {
+                    gui = (HGui) methodHandle.invoke(context.getPlayer(), true);
+                }
                 gui.from = this;
                 gui.fromGui = g;
                 gui.open();
