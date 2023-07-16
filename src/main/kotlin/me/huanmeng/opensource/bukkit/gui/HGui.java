@@ -95,13 +95,13 @@ public abstract class HGui {
         g.metadata.put("wrapper", this);
         g.backRunner(() -> {
             List<Pair<MethodHandle, BiFunction<Player, Boolean, List<Object>>>> list = backMap.get(context.getPlayer());
-            if ((list == null || list.size() <= (list.size() == 1 ? list.get(0).getA().equals(constructorHandle) ? 1 : 0 : 0))) {
+            if ((list == null || list.size() <= (list.size() == 1 ? list.get(0).getA().equals(constructorHandle) ? 1 : 0 : list.size() > 1 ? 0 : 1))) {
                 g.close(false, true);
                 backMap.remove(g.player);
                 return;
             }
             try {
-                Pair<MethodHandle, BiFunction<Player, Boolean, List<Object>>> pair = backMap.get(context.getPlayer()).remove(backMap.get(context.getPlayer()).size() - 2);
+                Pair<MethodHandle, BiFunction<Player, Boolean, List<Object>>> pair = backMap.get(context.getPlayer()).remove(backMap.get(context.getPlayer()).size() - 1);
                 MethodHandle methodHandle = pair.getA();
                 HGui gui;
                 if (pair.getB() != null) {
