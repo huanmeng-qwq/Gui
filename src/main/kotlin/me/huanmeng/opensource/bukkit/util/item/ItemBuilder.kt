@@ -378,7 +378,7 @@ open class ItemBuilder : Cloneable {
 
         private val itemSpigotUnbreakableMethod: MethodHandle? = try {
             MethodHandles.lookup().unreflect(
-                ItemStack::class.java.getDeclaredMethod("spigot").returnType.getDeclaredMethod(
+                ItemMeta::class.java.getDeclaredMethod("spigot").returnType.getDeclaredMethod(
                     "setUnbreakable",
                     Boolean::class.java
                 )
