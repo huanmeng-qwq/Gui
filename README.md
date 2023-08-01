@@ -55,7 +55,7 @@ Lightweight Inventory API for Bukkit(Paper/Folia/Spigot) plugins, with 1.8.8 to 
     <dependency>
         <groupId>com.huanmeng-qwq</groupId>
         <artifactId>Bukkit-Gui</artifactId>
-        <version>2.1.0</version>
+        <version>2.1.1</version>
     </dependency>
 </dependencies>
 ```
@@ -73,7 +73,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.huanmeng-qwq:Bukkit-Gui:2.1.0'
+    implementation 'com.huanmeng-qwq:Bukkit-Gui:2.1.1'
 }
 
 shadowJar {
