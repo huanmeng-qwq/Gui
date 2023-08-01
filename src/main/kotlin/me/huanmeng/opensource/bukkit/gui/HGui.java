@@ -1,7 +1,7 @@
 package me.huanmeng.opensource.bukkit.gui;
 
 import me.huanmeng.opensource.bukkit.gui.impl.GuiCustom;
-import me.huanmeng.opensource.bukkit.util.Pair;
+import me.huanmeng.opensource.bukkit.gui.impl.GuiPage;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -10,7 +10,10 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 
@@ -37,7 +40,7 @@ public abstract class HGui {
 
     protected BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction;
 
-    static final Map<Player, List<Pair<MethodHandle, BiFunction<Player, Boolean, List<Object>>>>> backMap = new ConcurrentHashMap<>();
+    static final Map<Player, Node> backMap = new ConcurrentHashMap<>();
 
     public HGui(@NonNull Player player) {
         this(player, false);
@@ -82,30 +85,43 @@ public abstract class HGui {
         if (g == null) {
             return;
         }
+        try {
+            if (fromGui != null && fromGui instanceof GuiPage && g instanceof GuiPage) {
+                ((GuiPage) g).page(Math.min(((GuiPage) fromGui).page(), ((GuiPage) fromGui).pagination().getMaxPage()));
+            }
+        } catch (Throwable ignored) {
+        }
         g.setPlayer(context.getPlayer());
         context.gui(g);
         if ((allowBack && constructorHandle != null)) {
             if (!backMap.containsKey(context.getPlayer())) {
-                backMap.put(context.getPlayer(), new ArrayList<>());
+                backMap.put(context.getPlayer(), new Node());
+            } else {
+                Node node = backMap.get(context.getPlayer());
+                node.next = new Node();
+                node.next.prev = node;
+                backMap.put(context.getPlayer(), node.next);
             }
             if (from == null) {
-                backMap.get(context.getPlayer()).add(new Pair<>(constructorHandle, newInstanceValuesFunction));
+                Node node = backMap.get(context.getPlayer());
+                node.methodHandle = constructorHandle;
+                node.newInstanceValuesFunction = newInstanceValuesFunction;
             }
         }
         g.metadata.put("wrapper", this);
         g.backRunner(() -> {
-            List<Pair<MethodHandle, BiFunction<Player, Boolean, List<Object>>>> list = backMap.get(context.getPlayer());
-            if ((list == null || list.size() <= (list.size() == 1 ? list.get(0).getA().equals(constructorHandle) ? 1 : 0 : list.size() > 1 ? 0 : 1))) {
+            Node node = backMap.get(context.getPlayer());
+            if ((node == null || node.prev == null)) {
                 g.close(false, true);
                 backMap.remove(g.player);
                 return;
             }
             try {
-                Pair<MethodHandle, BiFunction<Player, Boolean, List<Object>>> pair = backMap.get(context.getPlayer()).remove(backMap.get(context.getPlayer()).size() - 1);
-                MethodHandle methodHandle = pair.getA();
+                Node prev = node.prev;
+                MethodHandle methodHandle = prev.methodHandle;
                 HGui gui;
-                if (pair.getB() != null) {
-                    gui = (HGui) methodHandle.invokeWithArguments(pair.getB().apply(context.getPlayer(), true));
+                if (prev.newInstanceValuesFunction != null) {
+                    gui = (HGui) methodHandle.invokeWithArguments(prev.newInstanceValuesFunction.apply(context.getPlayer(), true));
                 } else {
                     gui = (HGui) methodHandle.invoke(context.getPlayer(), true);
                 }
@@ -146,5 +162,11 @@ public abstract class HGui {
     @Nullable
     protected AbstractGui<?> getFromGui() {
         return fromGui;
+    }
+
+    public static class Node {
+        private Node prev, next;
+        private MethodHandle methodHandle;
+        private BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction;
     }
 }
