@@ -133,11 +133,9 @@ public class GuiManager implements ListenerAdapter {
                 || e.getClickedInventory() instanceof CraftingInventory)
         ) {
             ClickType switchClickType = ClickType.UNKNOWN;
-            if (swapOffhand) {
-                switchClickType = e.getClick();
-            }
             int slot = e.getHotbarButton();
             if (swapOffhand) {
+                switchClickType = e.getClick();
                 slot = e.getRawSlot();
             }
             InventorySwitchEvent event = new InventorySwitchEvent(e.getView(), InventoryType.SlotType.OUTSIDE, slot, switchClickType, e.getAction(), e.getHotbarButton());
@@ -169,7 +167,6 @@ public class GuiManager implements ListenerAdapter {
             if (gui != null) {
                 gui.onClick(e);
             }
-            e.setCancelled(true);
         } catch (Exception ex) {
             ex.printStackTrace();
             player.closeInventory();
