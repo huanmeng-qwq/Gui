@@ -57,6 +57,14 @@ Lightweight Inventory API for Bukkit(Paper/Folia/Spigot) plugins, with 1.8.8 to 
         <artifactId>Bukkit-Gui</artifactId>
         <version>2.1.2</version>
     </dependency>
+
+    <!--Kotlin DSL-->
+
+    <dependency>
+        <groupId>com.huanmeng-qwq</groupId>
+        <artifactId>Bukkit-Gui-kotlin-dsl</artifactId>
+        <version>2.1.2</version>
+    </dependency>
 </dependencies>
 ```
 When using Maven, make sure to build directly with Maven and not with your IDE configuration. (on IntelliJ IDEA: in the `Maven` tab on the right, in `Lifecycle`, use `package`).
@@ -74,6 +82,8 @@ repositories {
 
 dependencies {
     implementation 'com.huanmeng-qwq:Bukkit-Gui:2.1.2'
+    // Kotlin DSL
+    implementation 'com.huanmeng-qwq:Bukkit-Gui-kotlin-dsl:2.1.2'
 }
 
 shadowJar {
