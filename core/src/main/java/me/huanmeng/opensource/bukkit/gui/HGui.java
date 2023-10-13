@@ -44,6 +44,7 @@ public abstract class HGui {
 
     public HGui(@NonNull Player player) {
         this(player, false);
+        setConstructor(MethodType.methodType(void.class, Player.class), Arrays::asList);
     }
 
     public HGui(@NonNull Player player, boolean allowBack) {
