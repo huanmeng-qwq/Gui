@@ -179,6 +179,11 @@
                             <!-- Replace this with your package! -->
                             <shadedPattern>me.huanmeng.ext.bstats</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>net.kyori</pattern>
+                            <!-- Replace this with your package! -->
+                            <shadedPattern>me.huanmeng.ext.kyori</shadedPattern>
+                        </relocation>
                     </relocations>
                 </configuration>
             </plugin>
