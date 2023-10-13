@@ -81,8 +81,8 @@
     </repositories>
 
     <build>
-<!--        <sourceDirectory>src/main/kotlin</sourceDirectory>-->
-<!--        <testSourceDirectory>src/test/kotlin</testSourceDirectory>-->
+        <!--        <sourceDirectory>src/main/kotlin</sourceDirectory>-->
+        <!--        <testSourceDirectory>src/test/kotlin</testSourceDirectory>-->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -178,11 +178,6 @@
                             <pattern>org.bstats</pattern>
                             <!-- Replace this with your package! -->
                             <shadedPattern>me.huanmeng.ext.bstats</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>net.kyori</pattern>
-                            <!-- Replace this with your package! -->
-                            <shadedPattern>me.huanmeng.ext.kyori</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
