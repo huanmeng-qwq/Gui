@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public class PageSetting {
     /**
-     * 上一页按钮
+     * 按钮集合
      */
     private List<@NonNull Supplier<@NonNull PageButton>> pageButtons;
 

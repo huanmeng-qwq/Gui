@@ -5,6 +5,7 @@ import me.huanmeng.opensource.bukkit.Metrics;
 import me.huanmeng.opensource.bukkit.component.ComponentConvert;
 import me.huanmeng.opensource.bukkit.gui.event.InventorySwitchEvent;
 import me.huanmeng.opensource.bukkit.gui.holder.GuiHolder;
+import me.huanmeng.opensource.bukkit.gui.interfaces.GuiHandler;
 import me.huanmeng.opensource.bukkit.gui.listener.BukkitEventListener;
 import me.huanmeng.opensource.bukkit.gui.listener.ListenerAdapter;
 import me.huanmeng.opensource.bukkit.scheduler.SchedulerAsync;
@@ -46,6 +47,8 @@ public class GuiManager implements ListenerAdapter {
     private final BukkitAudiences audiences;
     @NonNull
     private ComponentConvert componentConvert = ComponentConvert.getDefault();
+    @NonNull
+    private GuiHandler guiHandler = new GuiHandler.GuiHandlerDefaultImpl();
 
     @Nullable
     private Metrics metrics;
@@ -55,21 +58,23 @@ public class GuiManager implements ListenerAdapter {
         return instance;
     }
 
+
     public GuiManager(@NonNull JavaPlugin plugin) {
         this(plugin, true);
     }
 
     public GuiManager(@NonNull JavaPlugin plugin, boolean registerListener) {
-        Preconditions.checkArgument(instance == null, "instance is not null");
         Preconditions.checkNotNull(plugin, "plugin is null");
-        GuiManager.instance = this;
+        if (GuiManager.instance == null) {// 避免构建多个GuiManager
+            GuiManager.instance = this;
+            Schedulers.setSync(new SchedulerSync());
+            Schedulers.setAsync(new SchedulerAsync());
+        }
         this.plugin = plugin;
         this.audiences = BukkitAudiences.create(plugin);
         if (!Boolean.getBoolean("gui.disable-bStats")) {
             metrics = new Metrics(plugin, 18670, "2.1.5");
         }
-        Schedulers.setSync(new SchedulerSync());
-        Schedulers.setAsync(new SchedulerAsync());
         if (registerListener) {
             Bukkit.getPluginManager().registerEvents(new BukkitEventListener(this), plugin);
         }
@@ -298,5 +303,14 @@ public class GuiManager implements ListenerAdapter {
     @NonNull
     public ComponentConvert componentConvert() {
         return componentConvert;
+    }
+
+    @NonNull
+    public GuiHandler guiHandler() {
+        return guiHandler;
+    }
+
+    public void setGuiHandler(@NonNull GuiHandler guiHandler) {
+        this.guiHandler = guiHandler;
     }
 }

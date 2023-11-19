@@ -24,6 +24,7 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -104,6 +105,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     protected Function<@NonNull HumanEntity, @Nullable Component> errorMessage =
             p -> Component.text("§c无法处理您的点击请求，请联系管理员。");
     protected Map<String, Object> metadata = new HashMap<>(2);
+    protected GuiManager manager = GuiManager.instance();
 
     /**
      * 设置目标玩家
@@ -281,16 +283,15 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
 
     @NonNull
     protected G precache() {
-        GuiManager.instance().userNextOpenGui.put(player.getUniqueId(), this);
+        manager.userNextOpenGui.put(player.getUniqueId(), this);
         return self();
     }
 
     @NonNull
     protected G cache(@NonNull Inventory inventory) {
         this.cacheInventory = inventory;
-        //noinspection unchecked
-        ((GuiHolder<G>) inventory.getHolder()).setInventory(inventory);
-        GuiManager.instance().setUserOpenGui(player.getUniqueId(), this);
+        ((GuiHolder) inventory.getHolder()).setInventory(inventory);
+        manager.setUserOpenGui(player.getUniqueId(), this);
         return self();
     }
 
@@ -306,7 +307,8 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
 
     @NonNull
     protected G unCache() {
-        GuiManager.instance().removeUserOpenGui(player.getUniqueId());
+        manager.userNextOpenGui.remove(player.getUniqueId());
+        manager.removeUserOpenGui(player.getUniqueId());
         return self();
     }
 
@@ -383,7 +385,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         for (GuiButton guiButton : fillItems) {
             if (check(guiButton)) {
                 Button button = guiButton.getButton();
-                inventory.setItem(guiButton.getIndex(), button.getShowItem(player));
+                setItem(inventory, guiButton, button.getShowItem(player));
             }
         }
 
@@ -392,7 +394,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         for (GuiButton guiButton : attachedItems) {
             if (check(guiButton)) {
                 Button button = guiButton.getButton();
-                inventory.setItem(guiButton.getIndex(), button.getShowItem(player));
+                setItem(inventory, guiButton, button.getShowItem(player));
             }
         }
 
@@ -400,13 +402,17 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             if (check(guiButton)) {
                 Button button = guiButton.getButton();
                 if (button != null) {
-                    inventory.setItem(guiButton.getIndex(), button.getShowItem(player));
+                    setItem(inventory, guiButton, button.getShowItem(player));
                 } else {
-                    inventory.setItem(guiButton.getIndex(), null);
+                    setItem(inventory, guiButton, null);
                 }
             }
         }
         return self();
+    }
+
+    private void setItem(@NotNull Inventory inventory, GuiButton guiButton, ItemStack itemStack) {
+        manager.guiHandler().onSetItem(this, inventory, guiButton, itemStack);
     }
 
     /**
@@ -419,7 +425,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         }
         for (Slot slot : slots.slots(self())) {
             GuiButton button = getButton(slot.getIndex());
-            cacheInventory.setItem(button.getIndex(), button.getButton().getShowItem(player));
+            setItem(cacheInventory, button, button.getButton().getShowItem(player));
         }
         return self();
     }
@@ -653,6 +659,10 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         this.disableClick = disableClick;
     }
 
+    public G manager(GuiManager manager) {
+        return self();
+    }
+
     public AbstractGui<G> copy() {
         AbstractGui<G> newed = newGui();
         return copy(newed);
@@ -684,6 +694,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         gui.errorMessage = errorMessage;
         gui.allowReopen = allowReopen;
         gui.metadata = metadata;
+        gui.manager = manager;
         return gui;
     }
 }

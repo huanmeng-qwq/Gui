@@ -28,6 +28,12 @@ class ButtonDsl {
     var showingItem: PlayerItemInterface? = null
     var click: PlayerClickInterface? = null
 
+    var item: ItemStack? = null
+        set(value) {
+            showingItem = PlayerItemInterface { value }
+            field = value
+        }
+
     /**
      * 设置按钮展示的物品
      */
