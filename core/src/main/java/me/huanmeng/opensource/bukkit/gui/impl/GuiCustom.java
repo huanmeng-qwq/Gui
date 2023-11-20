@@ -40,11 +40,11 @@ public class GuiCustom extends AbstractGui<@NonNull GuiCustom> {
         if (player == null) {
             throw new IllegalArgumentException("player is null");
         }
-        init(title, line * 9);
-        Inventory inventory = build(createHolder());
-        fillItems(inventory, false);
-        precache();
         Runnable openInventory = () -> {
+            init(title, line * 9);
+            Inventory inventory = build(createHolder());
+            fillItems(inventory, false);
+            precache();
             // 确保玩家鼠标上的物品不会变
             ItemStack itemOnCursor = player.getItemOnCursor();
             if (!ItemUtil.isAir(itemOnCursor)) {
@@ -54,13 +54,13 @@ public class GuiCustom extends AbstractGui<@NonNull GuiCustom> {
             if (!ItemUtil.isAir(itemOnCursor)) {
                 player.setItemOnCursor(itemOnCursor);
             }
+            cache(inventory);
         };
         if (manager.processingClickEvent()) {
             Schedulers.sync().runLater(openInventory, 1);
         } else {
             openInventory.run();
         }
-        cache(inventory);
         return self();
     }
 
