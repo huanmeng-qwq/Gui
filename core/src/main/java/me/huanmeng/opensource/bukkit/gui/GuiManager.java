@@ -139,6 +139,9 @@ public class GuiManager implements ListenerAdapter {
         if ((e.getClick() == ClickType.NUMBER_KEY || swapOffhand) && (Objects.equals(e.getClickedInventory(), e.getWhoClicked().getInventory())
                 || e.getClickedInventory() instanceof CraftingInventory)
         ) {
+            if (e.getSlot() == e.getHotbarButton() && e.getHotbarButton() >= 0) {
+                return;
+            }
             ClickType switchClickType = ClickType.UNKNOWN;
             int slot = e.getHotbarButton();
             if (swapOffhand) {
