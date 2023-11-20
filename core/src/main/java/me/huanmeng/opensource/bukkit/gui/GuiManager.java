@@ -53,6 +53,8 @@ public class GuiManager implements ListenerAdapter {
     @Nullable
     private Metrics metrics;
 
+    private boolean processingClickEvent = false;
+
     @NonNull
     public static GuiManager instance() {
         return instance;
@@ -163,6 +165,7 @@ public class GuiManager implements ListenerAdapter {
     }
 
     protected void onInventoryClick(@NonNull InventoryClickEvent e, @NonNull Player player) {
+        processingClickEvent = true;
         UUID uuid = player.getUniqueId();
         if (!isOpenGui(uuid)) {
             return;
@@ -177,6 +180,7 @@ public class GuiManager implements ListenerAdapter {
             player.closeInventory();
             player.sendMessage("§c在处理您的点击请求时发生了错误！");
         }
+        processingClickEvent = false;
     }
 
     public void onInventoryDrag(InventoryDragEvent e) {
@@ -308,6 +312,10 @@ public class GuiManager implements ListenerAdapter {
     @NonNull
     public GuiHandler guiHandler() {
         return guiHandler;
+    }
+
+    public boolean processingClickEvent() {
+        return processingClickEvent;
     }
 
     public void setGuiHandler(@NonNull GuiHandler guiHandler) {

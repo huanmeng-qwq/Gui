@@ -4,6 +4,7 @@ import me.huanmeng.opensource.bukkit.component.ComponentConvert;
 import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.GuiManager;
 import me.huanmeng.opensource.bukkit.util.item.ItemUtil;
+import me.huanmeng.opensource.scheduler.Schedulers;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -43,14 +44,21 @@ public class GuiCustom extends AbstractGui<@NonNull GuiCustom> {
         Inventory inventory = build(createHolder());
         fillItems(inventory, false);
         precache();
-        // 确保玩家鼠标上的物品不会变
-        ItemStack itemOnCursor = player.getItemOnCursor();
-        if (!ItemUtil.isAir(itemOnCursor)) {
-            player.setItemOnCursor(null);
-        }
-        player.openInventory(inventory);
-        if (!ItemUtil.isAir(itemOnCursor)) {
-            player.setItemOnCursor(itemOnCursor);
+        Runnable openInventory = () -> {
+            // 确保玩家鼠标上的物品不会变
+            ItemStack itemOnCursor = player.getItemOnCursor();
+            if (!ItemUtil.isAir(itemOnCursor)) {
+                player.setItemOnCursor(null);
+            }
+            player.openInventory(inventory);
+            if (!ItemUtil.isAir(itemOnCursor)) {
+                player.setItemOnCursor(itemOnCursor);
+            }
+        };
+        if (manager.processingClickEvent()) {
+            Schedulers.sync().runLater(openInventory, 1);
+        } else {
+            openInventory.run();
         }
         cache(inventory);
         return self();
