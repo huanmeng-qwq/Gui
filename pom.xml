@@ -15,7 +15,7 @@
         <maven.compiler.source>${jdk.version}</maven.compiler.source>
         <maven.compiler.target>${jdk.version}</maven.compiler.target>
 
-        <kotlin.version>1.9.24</kotlin.version>
+        <kotlin.version>2.0.0</kotlin.version>
         <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
     </properties>
 
