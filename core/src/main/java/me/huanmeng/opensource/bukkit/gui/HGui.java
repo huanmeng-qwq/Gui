@@ -40,7 +40,7 @@ public abstract class HGui {
 
     protected BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction;
 
-    static final Map<Player, Node> backMap = new ConcurrentHashMap<>();
+    public static final Map<Player, Node> BACK_NODE_MAP = new ConcurrentHashMap<>();
 
     public HGui(@NonNull Player player) {
         this(player, false);
@@ -95,26 +95,26 @@ public abstract class HGui {
         g.setPlayer(context.getPlayer());
         context.gui(g);
         if ((allowBack && constructorHandle != null)) {
-            if (!backMap.containsKey(context.getPlayer())) {
-                backMap.put(context.getPlayer(), new Node());
+            if (!BACK_NODE_MAP.containsKey(context.getPlayer())) {
+                BACK_NODE_MAP.put(context.getPlayer(), new Node());
             } else {
-                Node node = backMap.get(context.getPlayer());
+                Node node = BACK_NODE_MAP.get(context.getPlayer());
                 node.next = new Node();
                 node.next.prev = node;
-                backMap.put(context.getPlayer(), node.next);
+                BACK_NODE_MAP.put(context.getPlayer(), node.next);
             }
             if (from == null) {
-                Node node = backMap.get(context.getPlayer());
+                Node node = BACK_NODE_MAP.get(context.getPlayer());
                 node.methodHandle = constructorHandle;
                 node.newInstanceValuesFunction = newInstanceValuesFunction;
             }
         }
         g.metadata.put("wrapper", this);
         g.backRunner(() -> {
-            Node node = backMap.get(context.getPlayer());
+            Node node = BACK_NODE_MAP.get(context.getPlayer());
             if ((node == null || node.prev == null)) {
                 g.close(false, true);
-                backMap.remove(g.player);
+                BACK_NODE_MAP.remove(g.player);
                 return;
             }
             try {
@@ -136,7 +136,7 @@ public abstract class HGui {
         g.whenClose(gui -> g.scheduler().runLater(() -> {
             UUID uuid = context.getPlayer().getUniqueId();
             if (!GuiManager.instance().isOpenGui(uuid)) {
-                backMap.remove(context.getPlayer());
+                BACK_NODE_MAP.remove(context.getPlayer());
                 return;
             }
             AbstractGui<?> nowGui = GuiManager.instance().getUserOpenGui(uuid);
@@ -144,7 +144,7 @@ public abstract class HGui {
                 return;
             }
             if (!nowGui.metadata.containsKey("wrapper")) {
-                backMap.remove(context.getPlayer());
+                BACK_NODE_MAP.remove(context.getPlayer());
             }
         }, 1));
         g.openGui();

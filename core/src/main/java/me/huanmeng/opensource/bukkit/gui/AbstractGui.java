@@ -473,7 +473,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
                 e.setCancelled(true);
                 return;
             }
-            GuiButton item = manager.guiHandler().queryClickButton(e);
+            GuiButton item = manager.guiHandler().queryClickButton(e, this);
             if (item == null) {
                 item = getButton(slot);
             }
