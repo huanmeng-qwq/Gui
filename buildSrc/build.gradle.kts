@@ -1,9 +1,13 @@
 plugins {
-    // Support convention plugins written in Kotlin. Convention plugins are build scripts in 'src/main' that automatically become available as plugins in the main build.
     `kotlin-dsl`
 }
 
 repositories {
-    // Use the plugin portal to apply community plugins in convention plugins.
     gradlePluginPortal()
+}
+
+dependencies {
+    implementation(libs.indra)
+    implementation("cl.franciscosolis.sonatype-central-upload:cl.franciscosolis.sonatype-central-upload.gradle.plugin:1.0.3")
+    compileOnly(files(libs::class.java.protectionDomain.codeSource.location))
 }

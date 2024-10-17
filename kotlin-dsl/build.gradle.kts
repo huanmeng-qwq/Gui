@@ -1,12 +1,15 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
-    id("com.huanmeng-qwq.java-conventions")
-    `kotlin-dsl`
+    id("me.huanmeng.gui.publish-conventions")
+    kotlin("jvm")
 }
 
 dependencies {
-    api("org.jetbrains.kotlin:kotlin-stdlib:2.0.0")
-    api(project(":Bukkit-Gui"))
+    implementation(project(":bukkit-gui"))
     compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT")
 }
 
-description = "Bukkit-Gui-kotlin-dsl"
+kotlin {
+    compilerOptions.jvmTarget = JvmTarget.JVM_1_8
+}

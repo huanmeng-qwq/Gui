@@ -1,0 +1,12 @@
+[versions]
+adventure = "4.14.0"
+adventure-bukkit = "4.3.1"
+bstats = "3.0.2"
+[libraries]
+
+adventure-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
+adventure-bukkit = { group = "net.kyori", name = "adventure-platform-bukkit", version.ref = "adventure-bukkit" }
+adventure-text-serializer-legacy = { group = "net.kyori", name = "adventure-text-serializer-legacy", version.ref = "adventure" }
+bstats = { group = "org.bstats", name = "bstats-bukkit", version.ref = "bstats" }
+
+indra = { module = "net.kyori:indra-common", version = "3.1.3" }
