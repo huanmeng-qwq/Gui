@@ -55,7 +55,7 @@ Lightweight Inventory API for Bukkit(Paper/Folia/Spigot) plugins, with 1.8.8 to 
     <dependency>
         <groupId>com.huanmeng-qwq</groupId>
         <artifactId>bukkit-gui</artifactId>
-        <version>2.2.3</version>
+        <version>2.2.4</version>
     </dependency>
 
     <!--Kotlin DSL-->
@@ -63,7 +63,7 @@ Lightweight Inventory API for Bukkit(Paper/Folia/Spigot) plugins, with 1.8.8 to 
     <dependency>
         <groupId>com.huanmeng-qwq</groupId>
         <artifactId>bukkit-gui-kotlin-dsl</artifactId>
-        <version>2.2.3</version>
+        <version>2.2.4</version>
     </dependency>
 </dependencies>
 ```
@@ -81,9 +81,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.huanmeng-qwq:bukkit-gui:2.2.3'
+    implementation 'com.huanmeng-qwq:bukkit-gui:2.2.4'
     // Kotlin DSL
-    implementation 'com.huanmeng-qwq:bukkit-gui-kotlin-dsl:2.2.3'
+    implementation 'com.huanmeng-qwq:bukkit-gui-kotlin-dsl:2.2.4'
 }
 
 shadowJar {
