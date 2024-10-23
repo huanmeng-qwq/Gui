@@ -229,6 +229,9 @@ public class GuiManager implements ListenerAdapter {
         if (!(e.getPlayer() instanceof Player)) {
             return;
         }
+        if (!(e.getInventory().getHolder() instanceof GuiHolder)) {
+            return;
+        }
         Player player = (Player) e.getPlayer();
         UUID uuid = player.getUniqueId();
         AbstractGui<?> gui = getUserOpenGui(uuid);
