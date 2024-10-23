@@ -1,6 +1,6 @@
 [versions]
 adventure = "4.17.0"
-adventure-bukkit = "4.3.1"
+adventure-bukkit = "4.3.4"
 bstats = "3.1.0"
 [libraries]
 
