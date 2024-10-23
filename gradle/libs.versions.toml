@@ -1,7 +1,7 @@
 [versions]
 adventure = "4.17.0"
 adventure-bukkit = "4.3.1"
-bstats = "3.0.2"
+bstats = "3.1.0"
 [libraries]
 
 adventure-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
