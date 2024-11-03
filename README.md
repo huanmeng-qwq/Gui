@@ -12,7 +12,7 @@
 ![Last-Commit](https://img.shields.io/github/last-commit/huanmeng-qwq/Gui?style=plastic)
 </div>
 
-Lightweight Inventory API for Bukkit(Paper/Folia/Spigot) plugins, with 1.8.8 to 1.21 support.
+Lightweight Inventory API for Bukkit(Paper/Spigot) plugins, with 1.8.8 to 1.21 support.
 
 ## Features
 * Works with all versions from 1.8.8 to 1.21

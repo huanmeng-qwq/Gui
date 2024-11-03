@@ -8,6 +8,7 @@ import me.huanmeng.opensource.bukkit.gui.holder.GuiHolder;
 import me.huanmeng.opensource.bukkit.gui.interfaces.GuiHandler;
 import me.huanmeng.opensource.bukkit.gui.listener.BukkitEventListener;
 import me.huanmeng.opensource.bukkit.gui.listener.ListenerAdapter;
+import me.huanmeng.opensource.bukkit.gui.listener.PaperEventListener;
 import me.huanmeng.opensource.bukkit.scheduler.SchedulerAsync;
 import me.huanmeng.opensource.bukkit.scheduler.SchedulerSync;
 import me.huanmeng.opensource.scheduler.Schedulers;
@@ -78,7 +79,12 @@ public class GuiManager implements ListenerAdapter {
             metrics = new Metrics(plugin, 18670, "2.2.4");
         }
         if (registerListener) {
-            Bukkit.getPluginManager().registerEvents(new BukkitEventListener(this), plugin);
+            try {
+                Class.forName("org.bukkit.event.inventory.InventoryCloseEvent$Reason");
+                Bukkit.getPluginManager().registerEvents(new PaperEventListener(this), plugin);
+            } catch (ClassNotFoundException e) {
+                Bukkit.getPluginManager().registerEvents(new BukkitEventListener(this), plugin);
+            }
         }
     }
 
