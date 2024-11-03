@@ -155,13 +155,17 @@ public class GuiPage extends GuiCustom {
         return allItems;
     }
 
-    public void setAllItems(@Nullable List<? extends Button> allItems) {
+    public void setAllItems(@NonNull List<? extends Button> allItems) {
         this.allItems = allItems;
+        this.pagination = createPagination();
     }
 
 
     public void setElementsPerPage(int elementsPerPage) {
         this.elementsPerPage = elementsPerPage;
+        if (this.pagination != null) {
+            this.pagination = createPagination();
+        }
     }
 
     public int getElementsPerPage() {
@@ -175,6 +179,11 @@ public class GuiPage extends GuiCustom {
 
     public void setElementSlots(@Nullable Slots elementSlots) {
         this.elementSlots = elementSlots;
+    }
+
+    @Nullable
+    public PageSetting getPageSetting() {
+        return this.pageSetting;
     }
 
     @Override

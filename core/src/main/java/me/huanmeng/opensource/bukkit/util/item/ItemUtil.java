@@ -24,7 +24,7 @@ public final class ItemUtil {
      * 判断物品是否为空或空气
      */
     public static boolean isAir(ItemStack itemStack) {
-        return itemStack == null || itemStack.getType() == Material.AIR;
+        return itemStack == null || itemStack.getType() == Material.AIR || itemStack.getType().name().endsWith("_AIR");
     }
 
     /**
