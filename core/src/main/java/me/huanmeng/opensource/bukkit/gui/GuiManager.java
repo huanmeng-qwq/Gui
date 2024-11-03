@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 /**
  * 2023/3/17<br>
@@ -195,12 +196,13 @@ public class GuiManager implements ListenerAdapter {
             if (gui != null) {
                 gui.onClick(e);
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Throwable ex) {
+            this.plugin.getLogger().log(Level.SEVERE, "An error occurred while processing the click event", ex);
             player.closeInventory();
             player.sendMessage("§c在处理您的点击请求时发生了错误！");
+        } finally {
+            processingClickEvent = false;
         }
-        processingClickEvent = false;
     }
 
     public void onInventoryDrag(InventoryDragEvent e) {

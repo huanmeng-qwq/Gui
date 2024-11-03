@@ -15,6 +15,7 @@ import me.huanmeng.opensource.bukkit.util.item.ItemUtil;
 import me.huanmeng.opensource.scheduler.Scheduler;
 import me.huanmeng.opensource.scheduler.Schedulers;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.*;
@@ -181,7 +182,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             return;
         }
         closing = true;
-        if (processingClickEvent) {
+        if (processingClickEvent || !Bukkit.isPrimaryThread()) {
             // 在处理点击事件时将close方法延迟到下一tick, 因为下一tick的时候当前的点击事件已经处理完毕
             Schedulers.sync().runLater(() -> {
                 processingClickEvent = false;
@@ -471,6 +472,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             int slot = e.getSlot();
             if (slot == -999) {
                 e.setCancelled(true);
+                processingClickEvent = false;
                 return;
             }
             GuiButton item = manager.guiHandler().queryClickButton(e, this);
@@ -479,6 +481,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             }
             if (item != null) {
                 if (!allowClick(player, item, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e)) {
+                    processingClickEvent = false;
                     return;
                 }
                 Result result = item.onClick(this, player, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e);

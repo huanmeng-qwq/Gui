@@ -56,7 +56,7 @@ public class GuiCustom extends AbstractGui<@NonNull GuiCustom> {
             }
             cache(inventory);
         };
-        if (manager.processingClickEvent()) {
+        if (manager.processingClickEvent() || !Bukkit.isPrimaryThread()) {
             Schedulers.sync().runLater(openInventory, 1);
         } else {
             openInventory.run();
