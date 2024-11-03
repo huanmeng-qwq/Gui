@@ -18,6 +18,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.CraftingInventory;
@@ -56,6 +58,8 @@ public class GuiManager implements ListenerAdapter {
 
     private boolean processingClickEvent = false;
 
+    private Listener registeredListener;
+
     @NonNull
     public static GuiManager instance() {
         return instance;
@@ -81,10 +85,17 @@ public class GuiManager implements ListenerAdapter {
         if (registerListener) {
             try {
                 Class.forName("org.bukkit.event.inventory.InventoryCloseEvent$Reason");
-                Bukkit.getPluginManager().registerEvents(new PaperEventListener(this), plugin);
+                Bukkit.getPluginManager().registerEvents(registeredListener = new PaperEventListener(this), plugin);
             } catch (ClassNotFoundException e) {
-                Bukkit.getPluginManager().registerEvents(new BukkitEventListener(this), plugin);
+                Bukkit.getPluginManager().registerEvents(registeredListener = new BukkitEventListener(this), plugin);
             }
+        }
+    }
+
+    public void close() {
+        if (registeredListener != null) {
+            HandlerList.unregisterAll(registeredListener);
+            registeredListener = null;
         }
     }
 
