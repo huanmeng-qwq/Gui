@@ -28,7 +28,7 @@ public class PaperEventListener implements Listener {
             REASON_CLASS = Class.forName("org.bukkit.event.inventory.InventoryCloseEvent$Reason");
             REASON_OPEN_NEW = Enum.valueOf(REASON_CLASS, "OPEN_NEW");
 
-            GET_REASON_METHOD = lookup.unreflect(InventoryCloseEvent.class.getDeclaredMethod("getReason", REASON_CLASS));
+            GET_REASON_METHOD = lookup.unreflect(InventoryCloseEvent.class.getDeclaredMethod("getReason"));
         } catch (NoSuchMethodException | ClassNotFoundException | IllegalAccessException e) {
             throw new ExceptionInInitializerError(e);
         }
