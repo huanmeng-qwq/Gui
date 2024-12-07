@@ -98,7 +98,7 @@ public interface Slots {
      * 用图案表达位置
      */
     @Contract(value = "!null, _ -> new", pure = true)
-    static Slots pattern(String[] pattern, char... chars) {
+    static PatternSlots pattern(String[] pattern, char... chars) {
         return new PatternSlots(pattern, chars);
     }
 
@@ -111,7 +111,7 @@ public interface Slots {
     }
 
     @Contract(value = "-> !null", pure = true)
-    static Slots patternLineDefault() {
+    static PatternLineSlots patternLineDefault() {
         return PATTERN_LINE_DEFAULT;
     }
 
@@ -121,18 +121,18 @@ public interface Slots {
     }
 
     @Contract(value = "_-> new", pure = true)
-    static Slots exclude(int... slots) {
-        return new ExcludeSlots(slots);
+    static ExcludeSlots exclude(int... slots) {
+        return new ExcludeSlots(full(), slots);
     }
 
     @Contract(value = "_, _-> new", pure = true)
-    static Slots excludePattern(String[] pattern, char... chars) {
-        return new ExcludeSlots(pattern(pattern, chars));
+    static ExcludeSlots excludePattern(String[] pattern, char... chars) {
+        return new ExcludeSlots(full(), pattern(pattern, chars));
     }
 
     @Contract(value = "_, _-> new", pure = true)
-    static Slots excludeRange(int min, int max) {
-        return new ExcludeSlots(range(min, max));
+    static ExcludeSlots excludeRange(int min, int max) {
+        return new ExcludeSlots(full(), range(min, max));
     }
 
     /**

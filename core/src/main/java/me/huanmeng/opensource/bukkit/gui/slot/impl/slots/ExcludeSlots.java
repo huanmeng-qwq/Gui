@@ -16,38 +16,45 @@ import java.util.stream.Collectors;
  * @author huanmeng_qwq
  */
 public class ExcludeSlots implements Slots {
-    @NonNull
-    private final Set<Integer> excludeSlots;
     @Nullable
-    private Slots slots;
+    private Set<Integer> excludeList;
+    @Nullable
+    private Slots excludeSlots;
+    @NonNull
+    private final Slots slots;
 
-    public ExcludeSlots(int[] excludeSlots) {
-        this.excludeSlots = new HashSet<>(excludeSlots.length);
-        this.excludeSlots.addAll(Arrays.stream(excludeSlots).boxed().collect(Collectors.toList()));
+    public ExcludeSlots(@NonNull Slots slots, int[] excludeSlots) {
+        this.slots = slots;
+        this.excludeList = new HashSet<>(excludeSlots.length);
+        this.excludeList.addAll(Arrays.stream(excludeSlots).boxed().collect(Collectors.toList()));
     }
 
-    public ExcludeSlots(@NonNull Slots slots) {
+    public ExcludeSlots(@NonNull Slots slots, @Nullable Slots excludeSlots) {
         this.slots = slots;
-        this.excludeSlots = new HashSet<>(10);
+        this.excludeSlots = excludeSlots;
     }
 
     @Override
     public <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NonNull G gui) {
-        List<Integer> list = null;
-        if (slots != null) {
-            list = Arrays.stream(slots.slots(gui)).map(Slot::getIndex).collect(Collectors.toList());
-            this.excludeSlots.addAll(list);
+        List<Slot> list = new ArrayList<>();
+        List<Integer> dynamicExcludeSlots = new ArrayList<>();
+        List<Slot> exclude = new ArrayList<>();
+        if (excludeSlots != null) {
+            exclude.addAll(Arrays.asList(excludeSlots.slots(gui)));
+            for (@NonNull Slot slot : exclude) {
+                dynamicExcludeSlots.add(slot.getIndex());
+            }
         }
-        List<Slot> slots = new ArrayList<>(gui.size());
-        for (int i = 0; i < gui.size(); i++) {
-            if (this.excludeSlots.contains(i)) {
+        for (@NonNull Slot slot : slots.slots(gui)) {
+            int index = slot.getIndex();
+            if (excludeList != null && excludeList.contains(index)) {
                 continue;
             }
-            slots.add(Slot.of(i));
+            if (dynamicExcludeSlots.contains(index) || exclude.contains(slot)) {
+                continue;
+            }
+            list.add(slot);
         }
-        if (list != null) {
-            list.forEach(this.excludeSlots::remove);
-        }
-        return slots.toArray(new Slot[0]);
+        return list.toArray(new Slot[0]);
     }
 }
