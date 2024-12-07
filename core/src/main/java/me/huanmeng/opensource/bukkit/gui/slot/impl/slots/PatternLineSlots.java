@@ -49,6 +49,13 @@ public class PatternLineSlots implements Slots {
         }
         return list.toArray(new Slot[0]);
     }
+    public Slot[] getSlots(int line) {
+        return applySlots(this.patternFun.apply(line), this.chars);
+    }
+
+    public Slot[] getSlots(int line, char... chars) {
+        return applySlots(this.patternFun.apply(line), Chars.asList(chars));
+    }
 
     @NonNull
     public Function<@NonNull Integer, @NonNull String[]> patternFun() {
