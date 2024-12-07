@@ -85,7 +85,7 @@ public interface Slots {
     <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NonNull G gui);
 
     @Contract(value = "_ -> new", pure = true)
-    static Slots of(Slot... slot) {
+    static ArraySlots of(Slot... slot) {
         return new ArraySlots(slot);
     }
 

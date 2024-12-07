@@ -33,11 +33,15 @@ public class PatternSlots implements Slots {
         return PatternLineSlots.applySlots(pattern, this.chars);
     }
 
-    public Slot[] getSlots() {
-        return PatternLineSlots.applySlots(this.pattern, this.chars);
+    public ArraySlots getSlots() {
+        return Slots.of(PatternLineSlots.applySlots(this.pattern, this.chars));
     }
 
-    public Slot[] getSlots(char... chars) {
-        return PatternLineSlots.applySlots(this.pattern, Chars.asList(chars));
+    public ArraySlots getSlots(char... chars) {
+        return Slots.of(PatternLineSlots.applySlots(this.pattern, Chars.asList(chars)));
+    }
+
+    public Slot first(char c){
+        return getSlots(c).first();
     }
 }

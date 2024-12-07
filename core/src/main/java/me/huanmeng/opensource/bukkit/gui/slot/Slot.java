@@ -97,9 +97,15 @@ public interface Slot {
     static Slot forward(int i, int forwardSlot, ButtonPlaceInterface placeInterface) {
         return new SlotForward(i, forwardSlot, placeInterface);
     }
+
     @Contract(value = "_, _ -> new", pure = true)
     static Slot forward(int i, int forwardSlot) {
         return new SlotForward(i, forwardSlot);
+    }
+
+    @Contract(value = "_, _ -> new", pure = true)
+    static Slot forward(int i, Slot forwardSlot) {
+        return new SlotForward(i, forwardSlot.getIndex());
     }
 
     @Nullable
