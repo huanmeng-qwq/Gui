@@ -22,4 +22,15 @@ public interface ButtonPlaceInterface {
      * @return 是否成功
      */
     boolean tryPlace(@NonNull Slot slot, @NonNull Button button, @NonNull Player player);
+
+    ButtonPlaceInterface ALWAYS_TRUE = (slot, button, player) -> true;
+    ButtonPlaceInterface ALWAYS_FALSE = (slot, button, player) -> false;
+
+    static ButtonPlaceInterface alwaysTrue() {
+        return ALWAYS_TRUE;
+    }
+
+    static ButtonPlaceInterface alwaysFalse() {
+        return ALWAYS_FALSE;
+    }
 }

@@ -4,10 +4,7 @@ import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.draw.GuiDraw;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
 import me.huanmeng.opensource.bukkit.gui.holder.GuiHolder;
-import me.huanmeng.opensource.bukkit.gui.interfaces.GuiBottomClick;
-import me.huanmeng.opensource.bukkit.gui.interfaces.GuiClick;
-import me.huanmeng.opensource.bukkit.gui.interfaces.GuiEmptyItemClick;
-import me.huanmeng.opensource.bukkit.gui.interfaces.GuiTick;
+import me.huanmeng.opensource.bukkit.gui.interfaces.*;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.gui.slot.Slots;
 import me.huanmeng.opensource.bukkit.tick.TickManager;
@@ -100,6 +97,8 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     protected GuiBottomClick guiBottomClick;
     @Nullable
     protected Consumer<@NonNull G> whenClose;
+    @Nullable
+    protected CustomResultHandler customResultHandler;
 
     protected Scheduler.@Nullable Task tickTask;
     @NonNull
@@ -485,46 +484,13 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
                     return;
                 }
                 Result result = item.onClick(this, player, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e);
+                if (result == null) {
+                    result = Result.CANCEL;
+                }
                 if (result.isCancel()) {
                     e.setCancelled(true);
                 }
-                ItemStack itemStack = e.getCurrentItem();
-                switch (result) {
-                    case ALLOW: {
-                        e.setCancelled(false);
-                        break;
-                    }
-                    case CLEAR: {
-                        e.setCurrentItem(null);
-                        break;
-                    }
-                    case DECREMENT: {
-                        itemStack.setAmount(itemStack.getAmount() - 1);
-                        if (itemStack.getAmount() > 0) {
-                            e.setCurrentItem(itemStack);
-                        } else {
-                            e.setCurrentItem(null);
-                        }
-                        break;
-                    }
-                    case INCREMENTAL: {
-                        itemStack.setAmount(itemStack.getAmount() + 1);
-                        e.setCurrentItem(itemStack);
-                        break;
-                    }
-                    case CANCEL_UPDATE: {
-                        refresh(Slots.of(slot));
-                        break;
-                    }
-                    case CANCEL_UPDATE_ALL: {
-                        refresh(true);
-                        break;
-                    }
-                    case CANCEL_CLOSE: {
-                        close(true, false);
-                        break;
-                    }
-                }
+                processResult(result, this, player, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e);
             } else if (ItemUtil.isAir(e.getCurrentItem())) {
                 if (e.getHotbarButton() >= 0 && cancelMoveHotBarItemToSelf && Objects.equals(e.getClickedInventory(), e.getView().getTopInventory())) {
                     e.setCancelled(true);
@@ -563,6 +529,36 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             e.setCancelled(true);
         }
         processingClickEvent = false;
+    }
+
+    protected void processResult(@NonNull Result result, AbstractGui<G> gui, @Nullable Player player, ClickType click, InventoryAction action, InventoryType.SlotType slotType, int slot, int hotbarButton, @NonNull InventoryClickEvent e) {
+        ItemStack itemStack = e.getCurrentItem();
+        if (result.equals(Result.ALLOW)) {
+            e.setCancelled(false);
+        } else if (result.equals(Result.CLEAR)) {
+            e.setCurrentItem(null);
+        } else if (result.equals(Result.DECREMENT)) {
+            itemStack.setAmount(itemStack.getAmount() - 1);
+            if (itemStack.getAmount() > 0) {
+                e.setCurrentItem(itemStack);
+            } else {
+                e.setCurrentItem(null);
+            }
+        } else if (result.equals(Result.INCREMENTAL)) {
+            itemStack.setAmount(itemStack.getAmount() + 1);
+            e.setCurrentItem(itemStack);
+        } else if (result.equals(Result.CANCEL_UPDATE)) {
+            refresh(Slots.of(slot));
+        } else if (result.equals(Result.CANCEL_UPDATE_ALL)) {
+            refresh(true);
+        } else if (result.equals(Result.CANCEL_CLOSE)) {
+            close(true, false);
+        } else if (result instanceof Result.Forward) {
+            Result forwarded = ((Result.Forward) result).forwardClick(gui, player, click, action, slotType, slot, hotbarButton, e);
+            processResult(forwarded, gui, player, click, action, slotType, slot, hotbarButton, e);
+        } else if (customResultHandler != null) {
+            customResultHandler.processResult(result, gui, player, click, action, slotType, slot, hotbarButton, e);
+        }
     }
 
     public void onDarg(@NonNull InventoryDragEvent e) {
@@ -666,7 +662,21 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     public G manager(GuiManager manager) {
+        this.manager = manager;
         return self();
+    }
+
+    public G customResultHandler(CustomResultHandler customResultHandler) {
+        this.customResultHandler = customResultHandler;
+        return self();
+    }
+
+    public GuiManager manager() {
+        return this.manager;
+    }
+
+    public Map<String, Object> metadata() {
+        return metadata;
     }
 
     public AbstractGui<G> copy() {
@@ -701,6 +711,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         gui.allowReopen = allowReopen;
         gui.metadata = metadata;
         gui.manager = manager;
+        gui.customResultHandler = customResultHandler;
         return gui;
     }
 }

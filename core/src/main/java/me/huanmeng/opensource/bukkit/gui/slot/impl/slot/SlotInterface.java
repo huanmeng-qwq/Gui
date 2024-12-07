@@ -21,9 +21,9 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 @SuppressWarnings("unused")
 public class SlotInterface extends SlotImpl {
     @NonNull
-    private final ButtonClickInterface clickInterface;
+    protected final ButtonClickInterface clickInterface;
     @NonNull
-    private final ButtonPlaceInterface buttonPlaceInterface;
+    protected final ButtonPlaceInterface buttonPlaceInterface;
 
     public SlotInterface(int index, @NonNull ButtonClickInterface clickInterface, @NonNull ButtonPlaceInterface buttonPlaceInterface) {
         super(index);
@@ -34,7 +34,7 @@ public class SlotInterface extends SlotImpl {
     public SlotInterface(int index, @NonNull ButtonClickInterface clickInterface) {
         super(index);
         this.clickInterface = clickInterface;
-        this.buttonPlaceInterface = (slot, player, button) -> true;
+        this.buttonPlaceInterface = ButtonPlaceInterface.ALWAYS_TRUE;
     }
 
     public SlotInterface(int index, @NonNull ButtonPlaceInterface buttonPlaceInterface) {

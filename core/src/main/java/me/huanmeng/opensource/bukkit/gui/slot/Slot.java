@@ -8,6 +8,7 @@ import me.huanmeng.opensource.bukkit.gui.enums.Result;
 import me.huanmeng.opensource.bukkit.gui.slot.function.ButtonClickInterface;
 import me.huanmeng.opensource.bukkit.gui.slot.function.ButtonPlaceInterface;
 import me.huanmeng.opensource.bukkit.gui.slot.function.ButtonSimpleClickInterface;
+import me.huanmeng.opensource.bukkit.gui.slot.impl.slot.SlotForward;
 import me.huanmeng.opensource.bukkit.gui.slot.impl.slot.SlotImpl;
 import me.huanmeng.opensource.bukkit.gui.slot.impl.slot.SlotInterface;
 import org.bukkit.entity.Player;
@@ -90,6 +91,15 @@ public interface Slot {
     @Contract(value = "_, !null -> new", pure = true)
     static Slot of(int i, ButtonPlaceInterface placeInterface) {
         return new SlotInterface(i, placeInterface);
+    }
+
+    @Contract(value = "_, _, _ -> new", pure = true)
+    static Slot forward(int i, int forwardSlot, ButtonPlaceInterface placeInterface) {
+        return new SlotForward(i, forwardSlot, placeInterface);
+    }
+    @Contract(value = "_, _ -> new", pure = true)
+    static Slot forward(int i, int forwardSlot) {
+        return new SlotForward(i, forwardSlot);
     }
 
     @Nullable

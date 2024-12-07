@@ -98,6 +98,11 @@ public class GuiManager implements ListenerAdapter {
             HandlerList.unregisterAll(registeredListener);
             registeredListener = null;
         }
+        audiences.close();
+        if (metrics != null) {
+            metrics.shutdown();
+            metrics = null;
+        }
     }
 
     @NonNull
