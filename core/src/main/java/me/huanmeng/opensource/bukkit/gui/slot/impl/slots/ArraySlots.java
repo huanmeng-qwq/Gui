@@ -40,4 +40,8 @@ public class ArraySlots implements Slots {
         }
         return null;
     }
+
+    public @NonNull Slot[] slots() {
+        return slots;
+    }
 }
