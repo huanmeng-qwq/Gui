@@ -127,17 +127,6 @@ fun GuiDraw<out GuiCustom>.setButton(slots: Slots, lambda: ButtonList.() -> Unit
 /* Pattern to Gui*/
 object Guis
 
-fun test() {
-    Guis.ofPage("") {
-        listOf('c', 'c') mapChar buildButton {
-
-        }
-        page {
-
-        }
-    }
-}
-
 open class PatternCustomGuiDsl(open val gui: GuiCustom, open val pattern: Array<out String>) {
     infix fun String.map(button: Button) {
         gui.draw {

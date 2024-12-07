@@ -32,4 +32,12 @@ public class PatternSlots implements Slots {
     public <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NonNull G gui) {
         return PatternLineSlots.applySlots(pattern, this.chars);
     }
+
+    public Slot[] getSlots() {
+        return PatternLineSlots.applySlots(this.pattern, this.chars);
+    }
+
+    public Slot[] getSlots(char... chars) {
+        return PatternLineSlots.applySlots(this.pattern, Chars.asList(chars));
+    }
 }
