@@ -90,7 +90,7 @@ public interface Slots {
     }
 
     @Contract(value = "_ -> new", pure = true)
-    static Slots of(int... slots) {
+    static ArraySlots of(int... slots) {
         return new ArraySlots(Arrays.stream(slots).mapToObj(Slot::of).toArray(Slot[]::new));
     }
 
@@ -116,7 +116,7 @@ public interface Slots {
     }
 
     @Contract(value = "_, _-> new", pure = true)
-    static Slots range(int min, int max) {
+    static ArraySlots range(int min, int max) {
         return of(MathUtil.range(min, max));
     }
 
