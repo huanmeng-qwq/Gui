@@ -8,6 +8,7 @@ import me.huanmeng.opensource.bukkit.gui.slot.impl.slots.PatternSlots;
 import me.huanmeng.opensource.bukkit.util.MathUtil;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,7 +68,21 @@ public interface Slots {
         return list.toArray(new String[0]);
     }, 'x');
 
-    @NonNull <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NonNull G gui);
+    Slots FULL = new Slots() {
+
+        @Override
+        public @NotNull <G extends AbstractGui<@NonNull G>> @NonNull Slot[] slots(@NonNull G gui) {
+            int size = gui.size();
+            Slot[] slots = new Slot[size];
+            for (int i = 0; i < size; i++) {
+                slots[i] = Slot.of(i);
+            }
+            return slots;
+        }
+    };
+
+    @NonNull
+    <@NonNull G extends AbstractGui<@NonNull G>> Slot[] slots(@NonNull G gui);
 
     @Contract(value = "_ -> new", pure = true)
     static Slots of(Slot... slot) {
@@ -118,5 +133,13 @@ public interface Slots {
     @Contract(value = "_, _-> new", pure = true)
     static Slots excludeRange(int min, int max) {
         return new ExcludeSlots(range(min, max));
+    }
+
+    /**
+     * Gui中全部位置
+     */
+    @Contract(value = "-> !null", pure = true)
+    static Slots full() {
+        return FULL;
     }
 }

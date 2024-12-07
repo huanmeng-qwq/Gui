@@ -26,7 +26,7 @@ public enum Result {
      */
     CANCEL_UPDATE_ALL(CANCEL),
     /**
-     * 取消时间并关闭GUI
+     * 取消事件并关闭GUI
      *
      * @see AbstractGui#close(boolean, boolean)
      */
