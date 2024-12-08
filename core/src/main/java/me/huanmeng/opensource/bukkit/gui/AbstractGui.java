@@ -533,7 +533,9 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
 
     protected void processResult(@NonNull Result result, AbstractGui<G> gui, @Nullable Player player, ClickType click, InventoryAction action, InventoryType.SlotType slotType, int slot, int hotbarButton, @NonNull InventoryClickEvent e) {
         ItemStack itemStack = e.getCurrentItem();
-        if (result.equals(Result.ALLOW)) {
+        if (result.equals(Result.CANCEL)) {
+            e.setCancelled(true);
+        } else if (result.equals(Result.ALLOW)) {
             e.setCancelled(false);
         } else if (result.equals(Result.CLEAR)) {
             e.setCurrentItem(null);
