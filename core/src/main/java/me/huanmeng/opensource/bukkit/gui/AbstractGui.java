@@ -607,7 +607,11 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
 
     @NonNull
     public G whenClose(@NonNull Consumer<@NonNull G> consumer) {
-        this.whenClose = consumer;
+        if (this.whenClose != null) {
+            this.whenClose = this.whenClose.andThen(consumer);
+        } else {
+            this.whenClose = consumer;
+        }
         return self();
     }
 
