@@ -1,5 +1,6 @@
 package me.huanmeng.opensource.bukkit.gui;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.draw.GuiDraw;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
@@ -141,6 +142,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      * 打开{@link Inventory}
      */
     @NonNull
+    @CanIgnoreReturnValue
     public abstract G openGui();
 
     /**
@@ -158,6 +160,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     @NonNull
+    @CanIgnoreReturnValue
     public G setTickRefresh(boolean tickRefresh) {
         this.tickRefresh = tickRefresh;
         return self();
@@ -229,18 +232,21 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     @NonNull
+    @CanIgnoreReturnValue
     public G addTick(@NonNull Consumer<G> tickle) {
         tickles.add(tickle);
         return self();
     }
 
     @NonNull
+    @CanIgnoreReturnValue
     public G tick(int tick) {
         this.intervalTick = tick;
         return self();
     }
 
     @NonNull
+    @CanIgnoreReturnValue
     public G errorMessage(@NonNull Function<@NonNull HumanEntity, @Nullable Component> errorMessage) {
         this.errorMessage = errorMessage;
         return self();
@@ -282,12 +288,14 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     @NonNull
+    @CanIgnoreReturnValue
     protected G precache() {
         manager.userNextOpenGui.put(player.getUniqueId(), this);
         return self();
     }
 
     @NonNull
+    @CanIgnoreReturnValue
     protected G cache(@NonNull Inventory inventory) {
         this.cacheInventory = inventory;
         ((GuiHolder) inventory.getHolder()).setInventory(inventory);
@@ -300,12 +308,14 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      * 重新填充所有物品
      */
     @NonNull
+    @CanIgnoreReturnValue
     public G refresh(boolean all) {
         fillItems(cacheInventory, all);
         return self();
     }
 
     @NonNull
+    @CanIgnoreReturnValue
     protected G unCache() {
         manager.userNextOpenGui.remove(player.getUniqueId());
         manager.removeUserOpenGui(player.getUniqueId());
@@ -375,6 +385,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     @NonNull
+    @CanIgnoreReturnValue
     protected G fillItems(@NonNull Inventory inventory, @Nullable boolean all) {
         if (all) {
             inventory.clear();
@@ -419,6 +430,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      * 刷新指定的物品
      */
     @NonNull
+    @CanIgnoreReturnValue
     public G refresh(@NonNull Slots slots) {
         if (cacheInventory == null) {
             return self();
@@ -584,11 +596,13 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     protected abstract G self();
 
     @NonNull
+    @CanIgnoreReturnValue
     public G title(@NonNull String title) {
         return title(Component.text(title));
     }
 
     @NonNull
+    @CanIgnoreReturnValue
     public G title(@NonNull Component title) {
         this.title = title;
         // 已经打开了? 那就先执行close后的操作然后再重新构建一个inventory打开
@@ -600,12 +614,14 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     @NonNull
+    @CanIgnoreReturnValue
     public G guiClick(@NonNull GuiClick guiClick) {
         this.guiClick = guiClick;
         return self();
     }
 
     @NonNull
+    @CanIgnoreReturnValue
     public G whenClose(@NonNull Consumer<@NonNull G> consumer) {
         if (this.whenClose != null) {
             this.whenClose = this.whenClose.andThen(consumer);
@@ -616,62 +632,74 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     @NonNull
+    @CanIgnoreReturnValue
     public G backGui(@NonNull Function<@NonNull Player, @NonNull AbstractGui<?>> parentGuiGetter) {
         this.backGuiGetter = parentGuiGetter;
         return self();
     }
 
     @NonNull
+    @CanIgnoreReturnValue
     public G backRunner(@NonNull Runnable runner) {
         backGuiRunner = runner;
         return self();
     }
 
     @NonNull
+    @CanIgnoreReturnValue
     public G guiEmptyItemClick(@NonNull GuiEmptyItemClick guiEmptyItemClick) {
         this.guiEmptyItemClick = guiEmptyItemClick;
         return self();
     }
 
+    @CanIgnoreReturnValue
     public G guiBottomClick(@NonNull GuiBottomClick guiBottomClick) {
         this.guiBottomClick = guiBottomClick;
         return self();
     }
 
+    @CanIgnoreReturnValue
     public G setCancelClickOther(boolean cancelClickOther) {
         this.cancelClickOther = cancelClickOther;
         return self();
     }
 
+    @CanIgnoreReturnValue
     public G setCancelClickBottom(boolean cancelClickBottom) {
         this.cancelClickBottom = cancelClickBottom;
         return self();
     }
 
+    @CanIgnoreReturnValue
     public G setCancelMoveHotBarItemToSelf(boolean cancelMoveHotBarItemToSelf) {
         this.cancelMoveHotBarItemToSelf = cancelMoveHotBarItemToSelf;
         return self();
     }
 
+    @CanIgnoreReturnValue
     public G setCancelMoveItemToSelf(boolean cancelMoveItemToSelf) {
         this.cancelMoveItemToSelf = cancelMoveItemToSelf;
         return self();
     }
 
+    @CanIgnoreReturnValue
     public G setAllowReopen(boolean allowReopen) {
         this.allowReopen = allowReopen;
         return self();
     }
 
+    @CanIgnoreReturnValue
     public void setDisableClick(boolean disableClick) {
         this.disableClick = disableClick;
     }
 
+    @CanIgnoreReturnValue
     public G manager(GuiManager manager) {
         this.manager = manager;
         return self();
     }
 
+    @CanIgnoreReturnValue
     public G customResultHandler(CustomResultHandler customResultHandler) {
         this.customResultHandler = customResultHandler;
         return self();

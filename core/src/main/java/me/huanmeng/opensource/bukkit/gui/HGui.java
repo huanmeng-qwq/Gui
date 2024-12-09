@@ -79,7 +79,7 @@ public abstract class HGui {
     }
 
     @Nullable
-    protected abstract AbstractGui<? super GuiCustom> gui();
+    protected abstract AbstractGui<?> gui();
 
     public final void open() {
         AbstractGui<?> g = gui();

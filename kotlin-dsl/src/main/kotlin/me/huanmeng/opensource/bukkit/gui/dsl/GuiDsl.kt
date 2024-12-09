@@ -6,6 +6,7 @@ import me.huanmeng.opensource.bukkit.gui.AbstractGui
 import me.huanmeng.opensource.bukkit.gui.GuiButton
 import me.huanmeng.opensource.bukkit.gui.button.Button
 import me.huanmeng.opensource.bukkit.gui.draw.GuiDraw
+import me.huanmeng.opensource.bukkit.gui.impl.AbstractGuiCustom
 import me.huanmeng.opensource.bukkit.gui.impl.GuiCustom
 import me.huanmeng.opensource.bukkit.gui.impl.GuiPage
 import me.huanmeng.opensource.bukkit.gui.impl.page.PageButton
@@ -50,7 +51,7 @@ fun Player.openGui(gui: AbstractGui<*>) {
 /**
  * 打开一个[GuiCustom]
  */
-fun Player.openGui(lambda: GuiCustom.() -> Unit) = openGui(buildGui(lambda))
+fun Player.openGui(lambda: AbstractGuiCustom<*>.() -> Unit) = openGui(buildGui(lambda))
 
 /**
  * 打开一个[GuiPage]
@@ -62,7 +63,7 @@ fun Player.openPagedGui(lambda: GuiPage.() -> Unit) = openGui(buildPagedGui(lamb
 /**
  * 添加按钮, 自动取index为slot
  */
-fun GuiCustom.buttons(lambda: ButtonList.() -> Unit) {
+fun AbstractGuiCustom<*>.buttons(lambda: ButtonList.() -> Unit) {
     val arrayList = ButtonList()
     lambda(arrayList)
     arrayList.forEachIndexed { index, btn ->
@@ -73,13 +74,13 @@ fun GuiCustom.buttons(lambda: ButtonList.() -> Unit) {
 /**
  * 绘制Gui
  */
-fun GuiCustom.draw(lambda: GuiDraw<GuiCustom>.() -> Unit) = lambda(draw())
+fun <G : AbstractGuiCustom<G>> G.draw(lambda: GuiDraw<G>.() -> Unit) = lambda(draw())
 fun <G : AbstractGui<G>> G.draw(lambda: GuiDraw<G>.() -> Unit) = lambda(draw())
 
 /**
  * 给一个玩家打开当前Gui
  */
-fun GuiCustom.openGui(player: Player) {
+fun AbstractGuiCustom<*>.openGui(player: Player) {
     this.player = player
     openGui()
 }
@@ -106,28 +107,28 @@ fun GuiPage.simplePageSetting() {
 /**
  * 设置按钮
  */
-fun GuiDraw<out GuiCustom>.setButton(slot: Slot, lambda: ButtonDsl.() -> Unit) {
+fun GuiDraw<out AbstractGuiCustom<*>>.setButton(slot: Slot, lambda: ButtonDsl.() -> Unit) {
     set(slot, buildButton(lambda))
 }
 
 /**
  * 设置按钮
  */
-fun GuiDraw<out GuiCustom>.setButton(slots: Slots, lambda: ButtonDsl.() -> Unit) {
+fun GuiDraw<out AbstractGuiCustom<*>>.setButton(slots: Slots, lambda: ButtonDsl.() -> Unit) {
     set(slots, buildButton(lambda))
 }
 
 /**
  * 设置按钮
  */
-fun GuiDraw<out GuiCustom>.setButton(slots: Slots, lambda: ButtonList.() -> Unit) =
+fun GuiDraw<out AbstractGuiCustom<*>>.setButton(slots: Slots, lambda: ButtonList.() -> Unit) =
     set(slots, ButtonList().apply(lambda))
 /* end */
 
 /* Pattern to Gui*/
 object Guis
 
-open class PatternCustomGuiDsl(open val gui: GuiCustom, open val pattern: Array<out String>) {
+open class PatternCustomGuiDsl<G : AbstractGuiCustom<G>>(open val gui: G, open val pattern: Array<out String>) {
     infix fun String.map(button: Button) {
         gui.draw {
             set(Slots.pattern(pattern, *toCharArray()), button)
@@ -169,13 +170,13 @@ open class PatternCustomGuiDsl(open val gui: GuiCustom, open val pattern: Array<
     }
 
 
-    fun gui(lambda: GuiCustom.() -> Unit) {
+    fun gui(lambda: AbstractGuiCustom<*>.() -> Unit) {
         gui.lambda()
     }
 }
 
 class PatternPageGuiDsl(override val gui: GuiPage, override val pattern: Array<out String>) :
-    PatternCustomGuiDsl(gui, pattern) {
+    PatternCustomGuiDsl<GuiPage>(gui, pattern) {
 
     fun page(lambda: GuiPage.() -> Unit) {
         gui.lambda()
@@ -198,7 +199,7 @@ class PatternPageGuiDsl(override val gui: GuiPage, override val pattern: Array<o
     }
 }
 
-fun Guis.of(vararg patterns: String, lambda: PatternCustomGuiDsl.() -> Unit): GuiCustom {
+fun Guis.of(vararg patterns: String, lambda: PatternCustomGuiDsl<GuiCustom>.() -> Unit): GuiCustom {
     return GuiCustom().apply {
         line(min(9, patterns.size))
 

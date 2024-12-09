@@ -21,7 +21,7 @@ import java.util.function.Supplier;
  * @author huanmeng_qwq
  */
 @SuppressWarnings("unused")
-public class GuiPage extends GuiCustom {
+public class GuiPage extends AbstractGuiCustom<GuiPage> {
     protected int page = 1;
 
     @Nullable
@@ -50,6 +50,7 @@ public class GuiPage extends GuiCustom {
     }
 
     public GuiPage() {
+        super();
     }
 
     @Override
@@ -80,12 +81,6 @@ public class GuiPage extends GuiCustom {
             }
         }
         return buttons;
-    }
-
-    @NonNull
-    @Override
-    protected GuiPage self() {
-        return this;
     }
 
     @NonNull
@@ -186,6 +181,12 @@ public class GuiPage extends GuiCustom {
         return this.pageSetting;
     }
 
+    @NonNull
+    @Override
+    protected GuiPage self() {
+        return this;
+    }
+
     @Override
     public GuiPage copy() {
         return (GuiPage) super.copy();
@@ -197,7 +198,7 @@ public class GuiPage extends GuiCustom {
     }
 
     @Override
-    protected GuiCustom copy(Object newGui) {
+    protected GuiPage copy(Object newGui) {
         super.copy(newGui);
         GuiPage guiPage = (GuiPage) newGui;
         guiPage.page = page;

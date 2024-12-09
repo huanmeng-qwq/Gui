@@ -1,8 +1,8 @@
 package me.huanmeng.opensource.bukkit.gui.impl;
 
 import me.huanmeng.opensource.bukkit.component.ComponentConvert;
-import me.huanmeng.opensource.bukkit.gui.GuiManager;
 import me.huanmeng.opensource.bukkit.gui.slot.Slots;
+import me.huanmeng.opensource.scheduler.Schedulers;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -30,11 +30,12 @@ public class GuiWrappedInventory extends GuiCustom {
     }
 
     public GuiWrappedInventory() {
+        super();
     }
 
     @Override
     protected @NonNull Inventory build(@NonNull InventoryHolder holder) {
-        ComponentConvert componentConvert = GuiManager.instance().componentConvert();
+        ComponentConvert componentConvert = manager.componentConvert();
         Inventory build;
         if (inventory.getType() != InventoryType.CHEST) {
             build = Bukkit.createInventory(holder, inventory.getType(), componentConvert.convert(title));
@@ -45,7 +46,7 @@ public class GuiWrappedInventory extends GuiCustom {
     }
 
     @Override
-    protected @NonNull GuiCustom fillItems(@NonNull Inventory inventory, boolean all) {
+    protected @NonNull GuiWrappedInventory fillItems(@NonNull Inventory inventory, boolean all) {
         if (all) {
             inventory.clear();
         }
@@ -60,7 +61,7 @@ public class GuiWrappedInventory extends GuiCustom {
      */
     @Deprecated
     @Override
-    public @NonNull GuiCustom refresh(@NonNull Slots slots) {
+    public @NonNull GuiWrappedInventory refresh(@NonNull Slots slots) {
         return self();
     }
 
@@ -68,7 +69,7 @@ public class GuiWrappedInventory extends GuiCustom {
     public void onClick(@NonNull InventoryClickEvent e) {
         super.onClick(e);
         setToInventory();
-        scheduler().runLater(this::setToInventory,1);
+        Schedulers.sync().runLater(this::setToInventory,1);
     }
 
     private void setToInventory() {
