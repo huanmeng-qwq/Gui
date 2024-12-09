@@ -167,7 +167,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     /**
-     * 当关闭时, 调用来之{@link InventoryCloseEvent}
+     * 当关闭时, 调用来自{@link InventoryCloseEvent}, 或在打开时更新title导致的重新reopen触发
      */
     public void onClose() {
         close = true;
