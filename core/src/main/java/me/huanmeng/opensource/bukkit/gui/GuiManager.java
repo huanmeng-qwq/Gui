@@ -241,6 +241,10 @@ public class GuiManager implements ListenerAdapter {
         UUID uuid = player.getUniqueId();
         if (userNextOpenGui.containsKey(uuid)) {
             AbstractGui<?> gui = userNextOpenGui.remove(uuid);
+            AbstractGui<?> alreadyOpen = getUserOpenGui(uuid);
+            if (alreadyOpen != null) {
+                alreadyOpen.onClose();
+            }
             gui.onOpen();
         }
     }
