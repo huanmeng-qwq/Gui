@@ -230,21 +230,21 @@ public class GuiManager implements ListenerAdapter {
     }
 
     public void onInventoryOpen(InventoryOpenEvent e) {
-        //noinspection ConstantValue
-        if (null == e.getInventory()) {
-            return;
-        }
         if (!(e.getPlayer() instanceof Player)) {
             return;
         }
         Player player = (Player) e.getPlayer();
         UUID uuid = player.getUniqueId();
+        AbstractGui<?> alreadyOpen = getUserOpenGui(uuid);
+        if (alreadyOpen != null) {
+            alreadyOpen.onClose();
+        }
+        //noinspection ConstantValue
+        if (null == e.getInventory()) {
+            return;
+        }
         if (userNextOpenGui.containsKey(uuid)) {
             AbstractGui<?> gui = userNextOpenGui.remove(uuid);
-            AbstractGui<?> alreadyOpen = getUserOpenGui(uuid);
-            if (alreadyOpen != null) {
-                alreadyOpen.onClose();
-            }
             gui.onOpen();
         }
     }

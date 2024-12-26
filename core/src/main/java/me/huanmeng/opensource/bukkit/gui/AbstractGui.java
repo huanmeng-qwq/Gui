@@ -187,12 +187,12 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         if (processingClickEvent || !Bukkit.isPrimaryThread()) {
             // 在处理点击事件时将close方法延迟到下一tick, 因为下一tick的时候当前的点击事件已经处理完毕
             Schedulers.sync().runLater(() -> {
-                processingClickEvent = false;
                 closing = false;
                 close(openParent, force);
             }, 1);
             return;
         }
+        closing = false;
         if (openParent) {
             if (backGuiGetter != null) {
                 AbstractGui<?> gui = backGuiGetter.apply(player);
@@ -476,6 +476,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             if (cancelClickOther) {
                 e.setCancelled(true);
             }
+            processingClickEvent = false;
             return;
         }
         InventoryView view = e.getView();
