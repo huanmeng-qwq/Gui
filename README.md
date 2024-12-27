@@ -45,6 +45,11 @@ Lightweight Inventory API for Bukkit(Paper/Spigot) plugins, with 1.8.8 to 1.21 s
                         <!-- Replace 'com.yourpackage' with the package of your plugin ! -->
                         <shadedPattern>com.yourpackage.gui</shadedPattern>
                     </relocation>
+                    <relocation>
+                        <pattern>org.bstats</pattern>
+                        <!-- Replace 'com.yourpackage' with the package of your plugin ! -->
+                        <shadedPattern>com.yourpackage.bstats</shadedPattern>
+                    </relocation>
                 </relocations>
             </configuration>
         </plugin>
@@ -87,7 +92,8 @@ dependencies {
 }
 
 shadowJar {
-    // Replace 'com.yourpackage' with the package of your plugin 
+    // Replace 'com.yourpackage' with the package of your plugin
+    relocate("org.bstats","com.yourpackage.bstats")
     relocate 'me.huanmeng.opensource', 'com.yourpackage.huanmeng'
 }
 ```
