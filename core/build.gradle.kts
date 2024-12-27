@@ -9,3 +9,11 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.0.2")
     compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT")
 }
+
+tasks.compileJava{
+    exclude("**/test/**")
+}
+
+tasks.processResources{
+    exclude("plugin.yml")
+}

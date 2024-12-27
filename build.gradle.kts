@@ -29,6 +29,7 @@ allprojects {
         maven {
             url = uri("https://repo.maven.apache.org/maven2/")
         }
+        maven("https://repo.codemc.io/repository/nms/")
     }
 
     group = "com.huanmeng-qwq"
