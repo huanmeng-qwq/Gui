@@ -33,4 +33,21 @@ public interface PlayerClickInterface {
     @NonNull
     Result onClick(@NonNull AbstractGui<?> gui, @NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action,
                    InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey);
+
+    static PlayerClickInterface dummy(Result result) {
+        return new Dummy(result);
+    }
+
+    class Dummy implements PlayerClickInterface {
+        final Result result;
+
+        Dummy(Result result) {
+            this.result = result;
+        }
+
+        @Override
+        public @NonNull Result onClick(@NonNull AbstractGui<?> gui, @NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey) {
+            return this.result;
+        }
+    }
 }

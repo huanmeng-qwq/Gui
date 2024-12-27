@@ -64,6 +64,27 @@ public interface Button {
     }
 
     /**
+     * 展示型按钮
+     *
+     * @param item 物品
+     */
+    @Contract(value = "_ -> new", pure = true)
+    static Button of(ItemStack item) {
+        return new SimpleItemButton(item, PlayerClickInterface.dummy(Result.CANCEL));
+    }
+
+    /**
+     * 点击型按钮
+     *
+     * @param item      物品
+     * @param clickable 点击事件
+     */
+    @Contract(value = "_,_ -> new", pure = true)
+    static Button of(ItemStack item, PlayerClickInterface clickable) {
+        return new SimpleItemButton(item, clickable);
+    }
+
+    /**
      * 点击型按钮
      *
      * @param item      物品

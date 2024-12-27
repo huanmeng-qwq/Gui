@@ -28,10 +28,10 @@ public interface PageSettings {
     @NonNull
     static PageSetting normal(@NonNull GuiPage gui) {
         Button pre = Button.of(player ->
-                new ItemBuilder(Material.ARROW, "§a下一页").build()
+                new ItemBuilder(Material.ARROW, "§a上一页").build()
         );
         Button next = Button.of(player ->
-                new ItemBuilder(Material.ARROW, "§a上一页").build()
+                new ItemBuilder(Material.ARROW, "§a下一页").build()
         );
         return normal(gui, pre, next);
     }
