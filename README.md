@@ -106,7 +106,17 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class Example {
+public class Example extends JavaPlugin {
+    @Override
+    public void onEnable() {
+        new GuiManager(this);
+    }
+
+    @Override
+    public void onDisable() {
+        GuiManager.instance().close();
+    }
+
     public static void open(Player player) {
         GuiCustom gui = new GuiCustom(player);
         // Set the line
