@@ -317,8 +317,13 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     @NonNull
     @CanIgnoreReturnValue
     protected G unCache() {
-        manager.userNextOpenGui.remove(player.getUniqueId());
-        manager.removeUserOpenGui(player.getUniqueId());
+        AbstractGui<?> gui = manager.userNextOpenGui.get(player.getUniqueId());
+        if (gui == this) {
+            manager.removeUserOpenGui(player.getUniqueId());
+        }
+        if (manager.getUserOpenGui(player.getUniqueId()) == this) {
+            manager.removeUserOpenGui(player.getUniqueId());
+        }
         return self();
     }
 
