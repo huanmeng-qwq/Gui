@@ -56,7 +56,7 @@ public abstract class AbstractGuiCustom<G extends AbstractGuiCustom<@NonNull G>>
             }
             cache(inventory);
         };
-        if (manager.processingClickEvent() || !Bukkit.isPrimaryThread()) {
+        if (processingClickEvent || manager.processingClickEvent() || !Bukkit.isPrimaryThread()) {
             Schedulers.sync().runLater(openInventory, 1);
         } else {
             openInventory.run();
