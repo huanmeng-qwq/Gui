@@ -10,10 +10,10 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT")
 }
 
-tasks.compileJava{
+tasks.compileJava {
     exclude("**/test/**")
 }
 
-tasks.processResources{
+tasks.processResources {
     exclude("plugin.yml")
 }
