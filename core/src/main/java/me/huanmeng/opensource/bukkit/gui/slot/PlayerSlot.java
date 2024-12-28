@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 代表玩家背包中的槽位
@@ -43,7 +44,7 @@ public class PlayerSlot implements Slot {
         return this;
     }
 
-    public Slot getSlot() {
+    public @NotNull Slot getSlot() {
         return slot;
     }
 }

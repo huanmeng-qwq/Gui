@@ -30,7 +30,7 @@ public class PlayerSlots implements Slots {
         return this;
     }
 
-    public Slots getSlots() {
+    public @NotNull Slots getSlots() {
         return slots;
     }
 }
