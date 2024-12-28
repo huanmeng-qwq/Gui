@@ -13,13 +13,13 @@ public enum PageButtonTypes implements PageButtonType {
      */
     PREVIOUS(ClickType.LEFT, null) {
         @Override
-        public void changePage(@NonNull GuiPage gui) {
-            gui.previousPage(1);
+        public void changePage(@NonNull PageArea area) {
+            area.previousPage(1);
         }
 
         @Override
-        public boolean hasPage(@NonNull GuiPage gui) {
-            return gui.hasPreviousPage();
+        public boolean hasPage(@NonNull PageArea area) {
+            return area.hasPreviousPage();
         }
 
         @NotNull
@@ -33,13 +33,13 @@ public enum PageButtonTypes implements PageButtonType {
      */
     NEXT(ClickType.LEFT, ClickType.RIGHT) {
         @Override
-        public void changePage(@NonNull GuiPage gui) {
-            gui.nextPage(1);
+        public void changePage(@NonNull PageArea area) {
+            area.nextPage(1);
         }
 
         @Override
-        public boolean hasPage(@NonNull GuiPage gui) {
-            return gui.hasNextPage();
+        public boolean hasPage(@NonNull PageArea area) {
+            return area.hasNextPage();
         }
 
         @NotNull
@@ -53,13 +53,13 @@ public enum PageButtonTypes implements PageButtonType {
      */
     FIRST(ClickType.LEFT, ClickType.SHIFT_LEFT) {
         @Override
-        public void changePage(@NonNull GuiPage gui) {
-            gui.setToFirstPage();
+        public void changePage(@NonNull PageArea area) {
+            area.setToFirstPage();
         }
 
         @Override
-        public boolean hasPage(@NonNull GuiPage gui) {
-            return gui.page() > gui.pagination().getMinPage();
+        public boolean hasPage(@NonNull PageArea area) {
+            return area.currentPage() > area.pagination().getMinPage();
         }
 
         @NotNull
@@ -73,13 +73,13 @@ public enum PageButtonTypes implements PageButtonType {
      */
     LAST(ClickType.LEFT, ClickType.SHIFT_RIGHT) {
         @Override
-        public void changePage(@NonNull GuiPage gui) {
-            gui.setToLastPage();
+        public void changePage(@NonNull PageArea area) {
+            area.setToLastPage();
         }
 
         @Override
-        public boolean hasPage(@NonNull GuiPage gui) {
-            return gui.page() < gui.pagination().getMaxPage();
+        public boolean hasPage(@NonNull PageArea area) {
+            return area.currentPage() < area.getMaxPage();
         }
 
         @NotNull

@@ -1,6 +1,5 @@
 package me.huanmeng.opensource.bukkit.gui.impl.page;
 
-import me.huanmeng.opensource.bukkit.gui.impl.GuiPage;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import org.bukkit.event.inventory.ClickType;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -27,12 +26,12 @@ public interface PageButtonType {
     @Nullable
     ClickType subType();
 
-    void changePage(@NonNull GuiPage gui);
+    void changePage(@NonNull PageArea area);
 
     /**
      * @return 要修改的页数是否存在与合法
      */
-    boolean hasPage(@NonNull GuiPage gui);
+    boolean hasPage(@NonNull PageArea area);
 
     @NonNull
     Slot recommendSlot(int line);

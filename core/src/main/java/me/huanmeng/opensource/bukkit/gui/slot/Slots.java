@@ -115,6 +115,12 @@ public interface Slots {
         return PATTERN_LINE_DEFAULT;
     }
 
+    /**
+     *
+     * @param min 包含
+     * @param max 不包含
+     * @return
+     */
     @Contract(value = "_, _-> new", pure = true)
     static ArraySlots range(int min, int max) {
         return of(MathUtil.range(min, max));

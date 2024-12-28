@@ -724,7 +724,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         return copy(newed);
     }
 
-    protected abstract AbstractGui<G> newGui();
+    protected abstract G newGui();
 
     protected AbstractGui<G> copy(Object newGui) {
         AbstractGui<G> gui = (AbstractGui<G>) newGui;

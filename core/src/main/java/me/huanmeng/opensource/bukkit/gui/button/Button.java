@@ -108,6 +108,11 @@ public interface Button {
         return new ClickButton(item, clickable);
     }
 
+    @Contract(value = "null, !null, null -> new", pure = true)
+    static <@NonNull T extends PlayerClickInterface> Button of(ItemStack item, Class<T> cls, T clickable) {
+        return new SimpleItemButton(item, clickable);
+    }
+
     /**
      * 点击型按钮
      *
@@ -127,9 +132,14 @@ public interface Button {
      * @param playerSimpleCancelInterface 点击事件
      * @return {@link Button}
      */
-    @Contract(value = "null, null -> new", pure = true)
+    @Contract(value = "_, _ -> new", pure = true)
     static Button of(PlayerItemInterface item, PlayerSimpleCancelInterface playerSimpleCancelInterface) {
         return new ClickButton(item, playerSimpleCancelInterface);
+    }
+
+    @Contract(value = "_, _ -> new", pure = true)
+    static Button of(ItemStack item, PlayerSimpleCancelInterface playerSimpleCancelInterface) {
+        return new SimpleItemButton(item, playerSimpleCancelInterface);
     }
 
     /**

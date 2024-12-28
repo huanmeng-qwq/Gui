@@ -5,7 +5,9 @@ package me.huanmeng.opensource.bukkit.gui.dsl
 import me.huanmeng.opensource.bukkit.gui.button.Button
 import me.huanmeng.opensource.bukkit.gui.button.function.page.PlayerClickPageButtonInterface
 import me.huanmeng.opensource.bukkit.gui.enums.Result
+import me.huanmeng.opensource.bukkit.gui.impl.AbstractGuiPage
 import me.huanmeng.opensource.bukkit.gui.impl.GuiPage
+import me.huanmeng.opensource.bukkit.gui.impl.page.PageArea
 import me.huanmeng.opensource.bukkit.gui.impl.page.PageButton
 import me.huanmeng.opensource.bukkit.gui.impl.page.PageButton.Builder
 import me.huanmeng.opensource.bukkit.gui.impl.page.PageButtonType
@@ -34,7 +36,7 @@ fun Builder.setButton(lambda: ButtonDsl.() -> Unit) {
  */
 fun Builder.click(
     lambda: (
-        gui: GuiPage, buttonType: PageButtonType, slot: Slot, player: Player, click: ClickType, action: InventoryAction,
+        gui: AbstractGuiPage<*>, pageArea:PageArea, buttonType: PageButtonType, slot: Slot, player: Player, click: ClickType, action: InventoryAction,
         slotType: InventoryType.SlotType, slotKey: Int, hotBarKey: Int
     ) -> Result
 ) {
@@ -44,7 +46,7 @@ fun Builder.click(
 /**
  * 处理点击后的操作
  */
-fun Builder.handleClick(lambda: (player: Player, gui: GuiPage, buttonType: PageButtonType) -> Unit) {
+fun Builder.handleClick(lambda: (player: Player, gui: AbstractGuiPage<*>, buttonType: PageButtonType) -> Unit) {
     click(PageButtonClickDsl().apply { handleClick = lambda })
 }
 
@@ -56,9 +58,10 @@ fun Builder.onClick(lambda: PageButtonClickDsl.() -> Unit) {
 }
 
 class PageButtonClickDsl : PlayerClickPageButtonInterface {
-    var handleClick: ((player: Player, gui: GuiPage, buttonType: PageButtonType) -> Unit)? = null
+    var handleClick: ((player: Player, gui: AbstractGuiPage<*>, buttonType: PageButtonType) -> Unit)? = null
     override fun onClick(
-        gui: GuiPage,
+        gui: AbstractGuiPage<*>,
+        pageArea: PageArea,
         buttonType: PageButtonType,
         slot: Slot,
         player: Player,

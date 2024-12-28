@@ -23,7 +23,7 @@ public interface PageCondition {
      * @return 允许绘制 {@link Button}
      * @see PageButton
      */
-    boolean isAllow(int currentPage, int maxPage, @NonNull GuiPage page, @NonNull PageButton button, @NonNull Player player);
+    boolean isAllow(int currentPage, int maxPage, @NonNull PageArea page, @NonNull PageButton button, @NonNull Player player);
 
     /**
      * 简单的判断，只要按钮存在一个符合{@link PageButtonType}的页数就允许
@@ -32,7 +32,7 @@ public interface PageCondition {
         return (currentPage, maxPage, page, button, player) -> button.types().stream().anyMatch(type -> type.hasPage(page));
     }
 
-    PageCondition DUMMY = (currentPage, maxPage, page, button, player) -> true;
+    PageCondition DUMMY = (currentPage, maxPage, pageArea, button, player) -> true;
 
     static PageCondition dummy() {
         return DUMMY;

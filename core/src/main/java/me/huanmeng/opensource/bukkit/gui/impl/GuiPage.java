@@ -1,10 +1,8 @@
 package me.huanmeng.opensource.bukkit.gui.impl;
 
-import me.huanmeng.opensource.bukkit.gui.GuiButton;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
-import me.huanmeng.opensource.bukkit.gui.impl.page.PageButton;
+import me.huanmeng.opensource.bukkit.gui.impl.page.PageArea;
 import me.huanmeng.opensource.bukkit.gui.impl.page.PageSetting;
-import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.gui.slot.Slots;
 import me.huanmeng.opensource.page.Pagination;
 import org.bukkit.entity.Player;
@@ -12,7 +10,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 /**
  * 2023/3/17<br>
@@ -21,21 +18,8 @@ import java.util.function.Supplier;
  * @author huanmeng_qwq
  */
 @SuppressWarnings("unused")
-public class GuiPage extends AbstractGuiCustom<GuiPage> {
-    protected int page = 1;
-
-    @Nullable
-    protected List<? extends Button> allItems;
-
-    protected int elementsPerPage;
-    @Nullable
-    protected Pagination<? extends Button> pagination;
-
-    @Nullable
-    protected Slots elementSlots;
-
-    @Nullable
-    protected PageSetting pageSetting;
+public class GuiPage extends AbstractGuiPage<GuiPage> {
+    protected PageArea defaultArea;
 
     public GuiPage(@NonNull Player player, @NonNull List<? extends Button> allItems, @NonNull Slots elementSlots) {
         this(player, allItems, allItems.size(), elementSlots);
@@ -43,142 +27,107 @@ public class GuiPage extends AbstractGuiCustom<GuiPage> {
 
     public GuiPage(@NonNull Player player, @NonNull List<? extends Button> allItems, int elementsPerPage, @NonNull Slots elementSlots) {
         super(player);
-        this.allItems = allItems;
-        this.elementsPerPage = elementsPerPage;
-        this.pagination = createPagination();
-        this.elementSlots = elementSlots;
+        this.defaultArea = pageArea(elementSlots, allItems, elementsPerPage);
     }
 
     public GuiPage() {
         super();
     }
 
-    @Override
-    @NonNull
-    protected Set<GuiButton> getFillItems() {
-        if (player == null) {
-            throw new IllegalArgumentException("player is null");
-        }
-        buttons.clear();
-        Set<GuiButton> buttons = new HashSet<>();
-        List<? extends Button> buttonList = getPaginationNotNull().getElementsFor(page);
-        ArrayList<Slot> slots = new ArrayList<>(Arrays.asList(Objects.requireNonNull(this.elementSlots).slots(self())));
-        for (Button button : buttonList) {
-            if (slots.isEmpty()) {
-                break;
-            }
-            Slot slot = slots.remove(0);
-            buttons.add(new GuiButton(slot, button));
-        }
-        if (pageSetting != null) {
-            for (Supplier<PageButton> supplier : pageSetting.pageButtons()) {
-                PageButton pageButton = supplier.get();
-                Slot slot = pageButton.slot().apply(line);
-                editButtons.removeIf(button -> button.getSlot().equals(slot));
-                if (pageButton.condition().isAllow(page, getPaginationNotNull().getMaxPage(), this, pageButton, player)) {
-                    editButtons.add(new GuiButton(slot, pageButton));
-                }
-            }
-        }
-        return buttons;
-    }
-
     @NonNull
     protected final Pagination<? extends Button> createPagination() {
-        return new Pagination<>(Objects.requireNonNull(allItems), elementsPerPage);
+        this.defaultArea.refreshPagination();
+        return this.defaultArea.pagination();
     }
 
     @NonNull
     public Pagination<? extends Button> pagination() {
-        return Objects.requireNonNull(pagination);
+        return this.defaultArea.pagination();
     }
 
     @NonNull
     public GuiPage page(int page) {
-        this.page = page;
+        this.defaultArea.currentPage(page);
         return this;
     }
 
     @NonNull
     public GuiPage pageSetting(@NonNull PageSetting pageSetting) {
-        this.pageSetting = pageSetting;
+        this.defaultArea.pageSetting(pageSetting);
         return this;
     }
 
     public int page() {
-        return page;
+        return this.defaultArea.currentPage();
     }
 
     public int elementsPerPage() {
-        return elementsPerPage;
+        return this.defaultArea.elementsPerPage();
     }
 
     public void nextPage(int count) {
-        page += count;
+        this.defaultArea.nextPage(count);
     }
 
     public void previousPage(int count) {
-        page -= count;
+        this.defaultArea.previousPage(count);
     }
 
     public void setToFirstPage() {
-        page = 1;
+        this.defaultArea.setToFirstPage();
     }
 
     public void setToLastPage() {
-        page = getPaginationNotNull().getMaxPage();
+        this.defaultArea.setToLastPage();
     }
 
     public boolean hasPreviousPage() {
-        return getPaginationNotNull().hasLast(page);
+        return this.defaultArea.hasPreviousPage();
     }
 
     @NonNull
     public Pagination<? extends Button> getPaginationNotNull() {
-        if (pagination == null) {
-            pagination = createPagination();
-        }
-        return pagination;
+        return this.defaultArea.pagination();
     }
 
     public boolean hasNextPage() {
-        return getPaginationNotNull().hasNext(page);
+        return this.defaultArea.hasNextPage();
     }
 
     @Nullable
     public List<? extends Button> getAllItems() {
-        return allItems;
+        return this.defaultArea.items();
     }
 
     public void setAllItems(@NonNull List<? extends Button> allItems) {
-        this.allItems = allItems;
-        this.pagination = createPagination();
+        this.defaultArea.items(allItems);
     }
 
 
     public void setElementsPerPage(int elementsPerPage) {
-        this.elementsPerPage = elementsPerPage;
-        if (this.pagination != null) {
-            this.pagination = createPagination();
-        }
+        this.defaultArea.elementsPerPage(elementsPerPage);
     }
 
     public int getElementsPerPage() {
-        return this.elementsPerPage;
+        return this.defaultArea.elementsPerPage();
     }
 
     @Nullable
     public Slots getElementSlots() {
-        return elementSlots;
+        return this.defaultArea.slots();
     }
 
     public void setElementSlots(@Nullable Slots elementSlots) {
-        this.elementSlots = elementSlots;
+        this.defaultArea.slots(elementSlots);
     }
 
     @Nullable
     public PageSetting getPageSetting() {
-        return this.pageSetting;
+        return this.defaultArea.pageSetting();
+    }
+
+    public PageArea defaultPageArea() {
+        return this.defaultArea;
     }
 
     @NonNull
@@ -193,20 +142,13 @@ public class GuiPage extends AbstractGuiCustom<GuiPage> {
     }
 
     @Override
-    protected GuiPage newGui() {
+    protected @NonNull GuiPage newGui() {
         return new GuiPage();
     }
 
     @Override
     protected GuiPage copy(Object newGui) {
         super.copy(newGui);
-        GuiPage guiPage = (GuiPage) newGui;
-        guiPage.page = page;
-        guiPage.allItems = allItems;
-        guiPage.elementsPerPage = elementsPerPage;
-        guiPage.createPagination();
-        guiPage.elementSlots = elementSlots;
-        guiPage.pageSetting = pageSetting;
-        return guiPage;
+        return (GuiPage) newGui;
     }
 }

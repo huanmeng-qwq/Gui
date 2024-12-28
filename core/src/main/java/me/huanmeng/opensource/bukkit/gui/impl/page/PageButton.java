@@ -5,6 +5,7 @@ import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.button.function.page.PlayerClickPageButtonInterface;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
+import me.huanmeng.opensource.bukkit.gui.impl.AbstractGuiPage;
 import me.huanmeng.opensource.bukkit.gui.impl.GuiPage;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.util.item.ItemUtil;
@@ -21,7 +22,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * 2023/6/4<br>
@@ -31,7 +31,8 @@ import java.util.function.Function;
  */
 @SuppressWarnings("unused")
 public class PageButton implements Button {
-    private GuiPage gui;
+    private AbstractGuiPage<?> gui;
+    private PageArea pageArea;
     @Nullable
     private Button origin;
     @Nullable
@@ -43,7 +44,7 @@ public class PageButton implements Button {
      * 通过行数获取对应的槽位
      */
     @NonNull
-    private Function<@NonNull Integer, @NonNull Slot> slot = line -> {
+    private PageSlot slot = (line, area, gui) -> {
         if (types != null) {
             return types.stream().findFirst().map(type -> type.recommendSlot(line)).orElse(Slot.ofGame(1, line));
         }
@@ -58,7 +59,7 @@ public class PageButton implements Button {
      */
     @NonNull
     public Builder toBuilder() {
-        return new Builder(gui)
+        return new Builder(gui, pageArea)
                 .button(origin)
                 .condition(condition)
                 .click(playerClickPageButtonInterface)
@@ -81,6 +82,17 @@ public class PageButton implements Button {
     /**
      * 构建器
      *
+     * @param gui gui
+     * @return {@link Builder}
+     */
+    @NonNull
+    public static Builder builder(@NonNull AbstractGuiPage<?> gui, PageArea area) {
+        return new Builder(gui, area);
+    }
+
+    /**
+     * 构建器
+     *
      * @param gui    gui
      * @param button 按钮
      * @return {@link Builder}
@@ -88,6 +100,11 @@ public class PageButton implements Button {
     @NonNull
     public static PageButton of(@NonNull GuiPage gui, @NonNull Button button) {
         return PageButton.builder(gui).button(button).build();
+    }
+
+    @NonNull
+    public static PageButton of(@NonNull AbstractGuiPage<?> gui, @NonNull PageArea pageArea, @NonNull Button button) {
+        return PageButton.builder(gui, pageArea).button(button).build();
     }
 
     /**
@@ -99,8 +116,13 @@ public class PageButton implements Button {
      * @return {@link Builder}
      */
     @NonNull
+    public static PageButton of(@NonNull AbstractGuiPage<?> gui, @NonNull PageArea pageArea, @NonNull Button button, @NonNull PageCondition condition) {
+        return PageButton.builder(gui, pageArea).button(button).condition(condition).build();
+    }
+
+    @NonNull
     public static PageButton of(@NonNull GuiPage gui, @NonNull Button button, @NonNull PageCondition condition) {
-        return PageButton.builder(gui).button(button).condition(condition).build();
+        return of(gui, gui.defaultPageArea(), button, condition);
     }
 
     /**
@@ -114,12 +136,17 @@ public class PageButton implements Button {
      * @return {@link Builder}
      */
     @NonNull
-    public static PageButton of(@NonNull GuiPage gui, @NonNull Button button, @NonNull PageCondition condition, @NonNull PlayerClickPageButtonInterface click, @NonNull PageButtonType... types) {
-        return PageButton.builder(gui)
+    public static PageButton of(@NonNull AbstractGuiPage<?> gui, @NonNull PageArea pageArea, @NonNull Button button, @NonNull PageCondition condition, @NonNull PlayerClickPageButtonInterface click, @NonNull PageButtonType... types) {
+        return PageButton.builder(gui, pageArea)
                 .button(button)
                 .condition(condition)
                 .click(click)
                 .types(types).build();
+    }
+
+    @NonNull
+    public static PageButton of(@NonNull GuiPage gui, @NonNull Button button, @NonNull PageCondition condition, @NonNull PlayerClickPageButtonInterface click, @NonNull PageButtonType... types) {
+        return of(gui, gui.defaultPageArea(), button, condition, click, types);
     }
 
     /**
@@ -134,15 +161,22 @@ public class PageButton implements Button {
      * @return {@link Builder}
      */
     @NonNull
-    public static PageButton of(@NonNull GuiPage gui, @NonNull Button button, @NonNull PageCondition condition,
+    public static PageButton of(@NonNull AbstractGuiPage<?> gui, @NonNull PageArea pageArea, @NonNull Button button, @NonNull PageCondition condition,
                                 @NonNull PlayerClickPageButtonInterface click,
-                                @Nullable Function<@NonNull Integer, @NonNull Slot> slot, @NonNull PageButtonType... types) {
-        return PageButton.builder(gui)
+                                @Nullable PageSlot slot, @NonNull PageButtonType... types) {
+        return PageButton.builder(gui, pageArea)
                 .button(button)
                 .condition(condition)
                 .click(click)
                 .types(types)
                 .slot(slot).build();
+    }
+
+    @NonNull
+    public static PageButton of(@NonNull GuiPage gui, @NonNull Button button, @NonNull PageCondition condition,
+                                @NonNull PlayerClickPageButtonInterface click,
+                                @Nullable PageSlot slot, @NonNull PageButtonType... types) {
+        return of(gui, gui.defaultPageArea(), button, condition, click, slot, types);
     }
 
     /**
@@ -165,7 +199,7 @@ public class PageButton implements Button {
      * @return 通过行数获取对应的槽位
      */
     @NonNull
-    public Function<@NonNull Integer, @NonNull Slot> slot() {
+    public PageSlot slot() {
         return slot;
     }
 
@@ -173,7 +207,7 @@ public class PageButton implements Button {
     public @Nullable ItemStack getShowItem(@NonNull Player player) {
         if (origin == null) return null;
         if (condition != null) {
-            if (!condition.isAllow(gui.page(), gui.pagination().getMaxPage(), gui, this, player)) {
+            if (!condition.isAllow(pageArea.currentPage(), pageArea.getMaxPage(), pageArea, this, player)) {
                 return null;
             }
         }
@@ -203,10 +237,10 @@ public class PageButton implements Button {
                 }
             }
         }
-        if (!buttonType.hasPage(gui)) {
+        if (!buttonType.hasPage(pageArea)) {
             return Result.CANCEL;
         }
-        return playerClickPageButtonInterface.onClick(gui, buttonType, slot, player, click, action, slotType, slotKey, hotBarKey);
+        return playerClickPageButtonInterface.onClick(gui, pageArea, buttonType, slot, player, click, action, slotType, slotKey, hotBarKey);
     }
 
     /**
@@ -218,8 +252,9 @@ public class PageButton implements Button {
     }
 
     public static class Builder {
-        private final GuiPage gui;
-        private Function<@NonNull Integer, @NonNull Slot> slot;
+        private final AbstractGuiPage<?> gui;
+        private final PageArea pageArea;
+        private PageSlot slot;
         private Button origin;
         private PageCondition condition;
         private PlayerClickPageButtonInterface playerClickPageButtonInterface;
@@ -227,6 +262,12 @@ public class PageButton implements Button {
 
         public Builder(@NonNull GuiPage gui) {
             this.gui = gui;
+            this.pageArea = gui.defaultPageArea();
+        }
+
+        public Builder(@NonNull AbstractGuiPage<?> gui, PageArea pageArea) {
+            this.gui = gui;
+            this.pageArea = pageArea;
         }
 
         /**
@@ -269,7 +310,7 @@ public class PageButton implements Button {
          * 通过行数获取对应的槽位
          */
         @NonNull
-        public Builder slot(@Nullable Function<@NonNull Integer, @NonNull Slot> slot) {
+        public Builder slot(@Nullable PageSlot slot) {
             this.slot = slot;
             return this;
         }
@@ -281,6 +322,7 @@ public class PageButton implements Button {
         public PageButton build() {
             PageButton pageButton = new PageButton();
             pageButton.gui = this.gui;
+            pageButton.pageArea = this.pageArea;
             pageButton.origin = this.origin;
             pageButton.condition = this.condition;
             pageButton.playerClickPageButtonInterface = this.playerClickPageButtonInterface;
