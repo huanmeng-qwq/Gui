@@ -39,7 +39,7 @@ public class PlayerSlot implements Slot {
     }
 
     @Override
-    public PlayerSlot toPlayerSlot() {
+    public PlayerSlot asPlayer() {
         return this;
     }
 

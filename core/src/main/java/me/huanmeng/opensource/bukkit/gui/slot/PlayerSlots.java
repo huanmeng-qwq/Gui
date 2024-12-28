@@ -22,11 +22,11 @@ public class PlayerSlots implements Slots {
 
     @Override
     public @NotNull <G extends AbstractGui<@NonNull G>> @NonNull Slot[] slots(@NonNull G gui) {
-        return Arrays.stream(slots.slots(gui)).map(Slot::toPlayerSlot).toArray(PlayerSlot[]::new);
+        return Arrays.stream(slots.slots(gui)).map(Slot::asPlayer).toArray(PlayerSlot[]::new);
     }
 
     @Override
-    public PlayerSlots toPlayerSlots() {
+    public PlayerSlots asPlayer() {
         return this;
     }
 

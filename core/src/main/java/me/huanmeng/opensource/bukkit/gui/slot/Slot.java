@@ -120,11 +120,11 @@ public interface Slot {
      *
      * @param index 背包槽位
      */
-    static PlayerSlot playerSlot(int index) {
+    static PlayerSlot player(int index) {
         return new PlayerSlot(of(index));
     }
 
-    default PlayerSlot toPlayerSlot() {
+    default PlayerSlot asPlayer() {
         return new PlayerSlot(this);
     }
 }

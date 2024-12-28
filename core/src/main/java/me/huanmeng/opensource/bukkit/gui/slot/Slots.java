@@ -149,7 +149,7 @@ public interface Slots {
         return FULL;
     }
 
-    default PlayerSlots toPlayerSlots(){
+    default PlayerSlots asPlayer(){
         return new PlayerSlots(this);
     }
 }
