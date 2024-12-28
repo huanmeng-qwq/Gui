@@ -148,4 +148,8 @@ public interface Slots {
     static Slots full() {
         return FULL;
     }
+
+    default PlayerSlots toPlayerSlots(){
+        return new PlayerSlots(this);
+    }
 }

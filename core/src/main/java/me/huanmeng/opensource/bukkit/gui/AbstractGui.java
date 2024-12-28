@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * 2023/3/17<br>
@@ -71,10 +72,13 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     protected boolean cancelMoveHotBarItemToSelf = true;
     /**
      * 是否取消玩家用鼠标选中拿起的物品移动至当前gui
+     * 或者Shift点击将背包物品移动至当前gui
      *
      * @see #cancelClickBottom
      */
     protected boolean cancelMoveItemToSelf = true;
+    protected boolean cancelMoveItemToBottom = true;
+    protected boolean enablePlayerInventory = false;
 
     protected boolean processingClickEvent;
     /**
@@ -357,24 +361,31 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     @Nullable
-    public GuiButton getButton(int index) {
+    public GuiButton getButton(int index, Predicate<GuiButton> predicate) {
         return editButtons
                 .stream()
+                .filter(predicate)
                 .filter(e -> e.getIndex() == index)
                 .findFirst()
                 .orElseGet(
                         () -> buttons
                                 .stream()
+                                .filter(predicate)
                                 .filter(e -> e.getIndex() == index)
                                 .findFirst()
                                 .orElseGet(
                                         () -> attachedButtons
                                                 .stream()
+                                                .filter(predicate)
                                                 .filter(e -> e.getIndex() == index)
                                                 .findFirst()
                                                 .orElse(null)
                                 )
                 );
+    }
+
+    public GuiButton getButton(int index) {
+        return getButton(index, t -> true);
     }
 
     public ItemStack getItem(int index) {
@@ -394,6 +405,9 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     protected G fillItems(@NonNull Inventory inventory, @Nullable boolean all) {
         if (all) {
             inventory.clear();
+            if (enablePlayerInventory) {
+                player.getInventory().clear();
+            }
         }
         Set<GuiButton> fillItems = getFillItems();
         fillItems.removeAll(editButtons);
@@ -428,7 +442,11 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     private void setItem(@NotNull Inventory inventory, GuiButton guiButton, ItemStack itemStack) {
-        manager.guiHandler().onSetItem(this, inventory, guiButton, itemStack);
+        if (!guiButton.isPlayerInventory()) {
+            manager.guiHandler().onSetItem(this, inventory, guiButton, itemStack);
+        } else if (enablePlayerInventory) {
+            manager.guiHandler().onSetItem(this, player.getInventory(), guiButton, itemStack);
+        }
     }
 
     /**
@@ -494,7 +512,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             }
             GuiButton item = manager.guiHandler().queryClickButton(e, this);
             if (item == null) {
-                item = getButton(slot);
+                item = getButton(slot, btn -> !btn.isPlayerInventory());
             }
             if (item != null) {
                 if (!allowClick(player, item, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e)) {
@@ -527,6 +545,44 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         } else if (Objects.equals(view.getBottomInventory(), e.getClickedInventory())) {
             if (cancelClickBottom) {
                 e.setCancelled(true);
+            }
+            if (e.isShiftClick() && cancelMoveItemToSelf) {
+                e.setCancelled(true);
+            }
+            if (enablePlayerInventory) {
+                int slot = e.getSlot();
+                if (slot == -999) {
+                    e.setCancelled(true);
+                    processingClickEvent = false;
+                    return;
+                }
+                GuiButton item = manager.guiHandler().queryClickButton(e, this);
+                if (item == null) {
+                    item = getButton(slot, GuiButton::isPlayerInventory);
+                }
+                if (item != null) {
+                    if (!allowClick(player, item, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e)) {
+                        processingClickEvent = false;
+                        return;
+                    }
+                    Result result = item.onClick(this, player, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e);
+                    if (result == null) {
+                        result = Result.CANCEL;
+                    }
+                    if (result.isCancel()) {
+                        e.setCancelled(true);
+                    }
+                    processResult(result, this, player, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e);
+                } else if (ItemUtil.isAir(e.getCurrentItem())) {
+                    if (guiEmptyItemClick != null) {
+                        if (guiEmptyItemClick.onClickEmptyButton(player, slot, e.getClick(), e.getAction(), e.getSlotType(), e.getHotbarButton(), e)) {
+                            e.setCancelled(true);
+                        }
+                    }
+                }
+                if (!ItemUtil.isAir(e.getCursor()) && cancelMoveItemToBottom) {
+                    e.setCancelled(true);
+                }
             }
 
             if (guiBottomClick != null) {
@@ -586,9 +642,14 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         for (Map.Entry<Integer, ItemStack> entry : e.getNewItems().entrySet()) {
             // fake event
             InventoryClickEvent inventoryClickEvent = new InventoryClickEvent(e.getView(), InventoryType.SlotType.CONTAINER, entry.getKey(), ClickType.LEFT, InventoryAction.UNKNOWN);
+            ItemStack oldCursor = e.getOldCursor();
+            inventoryClickEvent.setCursor(oldCursor);
+            boolean hasCursor = ItemUtil.isAir(oldCursor);
             onClick(inventoryClickEvent);
             if (inventoryClickEvent.isCancelled()) {
                 e.setCancelled(true);
+            } else if (hasCursor) {
+                e.setCursor(null);
             }
         }
     }
@@ -689,6 +750,13 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     @CanIgnoreReturnValue
+    public G setCancelMoveItemToBottom(boolean cancelMoveItemToBottom) {
+        this.cancelMoveItemToBottom = cancelMoveItemToBottom;
+        return self();
+    }
+
+
+    @CanIgnoreReturnValue
     public G setAllowReopen(boolean allowReopen) {
         this.allowReopen = allowReopen;
         return self();
@@ -708,6 +776,15 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     @CanIgnoreReturnValue
     public G customResultHandler(CustomResultHandler customResultHandler) {
         this.customResultHandler = customResultHandler;
+        return self();
+    }
+
+    public boolean enablePlayerInventory() {
+        return enablePlayerInventory;
+    }
+
+    public G enablePlayerInventory(boolean enablePlayerInventory) {
+        this.enablePlayerInventory = enablePlayerInventory;
         return self();
     }
 
@@ -739,6 +816,8 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         gui.cancelClickBottom = cancelClickBottom;
         gui.cancelMoveHotBarItemToSelf = cancelMoveHotBarItemToSelf;
         gui.cancelMoveItemToSelf = cancelMoveItemToSelf;
+        gui.cancelMoveItemToBottom = cancelMoveItemToBottom;
+        gui.enablePlayerInventory = enablePlayerInventory;
         gui.disableClick = disableClick;
         gui.tickles = tickles;
         gui.intervalTick = intervalTick;

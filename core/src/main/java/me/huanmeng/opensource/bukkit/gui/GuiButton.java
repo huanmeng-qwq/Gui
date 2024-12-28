@@ -2,6 +2,7 @@ package me.huanmeng.opensource.bukkit.gui;
 
 import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
+import me.huanmeng.opensource.bukkit.gui.slot.PlayerSlot;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -27,10 +28,12 @@ public final class GuiButton {
 
     @NonNull
     private Button button;
+    private boolean isPlayerInventory;
 
     public GuiButton(@NonNull Slot slot, @Nullable Button button) {
         this.slot = slot;
         this.button = button == null ? Button.empty() : button;
+        this.isPlayerInventory = this.slot instanceof PlayerSlot;
     }
 
     /**
@@ -69,18 +72,19 @@ public final class GuiButton {
         this.button = button;
     }
 
+    public boolean isPlayerInventory() {
+        return isPlayerInventory;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         GuiButton guiButton = (GuiButton) o;
-
-        return Objects.equals(slot.getIndex(), guiButton.slot.getIndex());
+        return isPlayerInventory == guiButton.isPlayerInventory && Objects.equals(slot, guiButton.slot);
     }
 
     @Override
     public int hashCode() {
-        return slot.hashCode();
+        return Objects.hash(slot, isPlayerInventory);
     }
 }

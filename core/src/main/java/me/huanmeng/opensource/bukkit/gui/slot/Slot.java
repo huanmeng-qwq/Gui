@@ -109,9 +109,22 @@ public interface Slot {
     }
 
     @Nullable
-    default ItemStack getShowingItem(@NonNull AbstractGui gui, @NonNull Player player) {
+    default ItemStack getShowingItem(@NonNull AbstractGui<?> gui, @NonNull Player player) {
         GuiButton button = gui.getButton(getIndex());
         if (button == null) return null;
         return button.getButton().getShowItem(player);
+    }
+
+    /**
+     * 玩家背包槽位
+     *
+     * @param index 背包槽位
+     */
+    static PlayerSlot playerSlot(int index) {
+        return new PlayerSlot(of(index));
+    }
+
+    default PlayerSlot toPlayerSlot() {
+        return new PlayerSlot(this);
     }
 }
