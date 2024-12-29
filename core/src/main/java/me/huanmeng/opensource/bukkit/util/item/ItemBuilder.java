@@ -2,10 +2,7 @@ package me.huanmeng.opensource.bukkit.util.item;
 
 import me.huanmeng.opensource.bukkit.component.ComponentConvert;
 import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -175,6 +172,29 @@ public class ItemBuilder {
             im.setOwner(owner);
             is.setItemMeta(im);
         } catch (ClassCastException ignored) {
+        }
+        return this;
+    }
+
+    public ItemBuilder setSkullOwner(OfflinePlayer player) {
+        try {
+            SkullMeta im = (SkullMeta) is.getItemMeta();
+            Object playerProfile = getPlayerProfileMethod.bindTo(player).invoke();
+            setPlayerProfileMethod.bindTo(im).invoke(playerProfile);
+            is.setItemMeta(im);
+        } catch (Throwable ignored) {
+            setSkullOwner(player.getName());
+        }
+        return this;
+    }
+
+    public ItemBuilder setSkullPlayerProfile(Object playerProfile) {
+        try {
+            SkullMeta im = (SkullMeta) is.getItemMeta();
+            setPlayerProfileMethod.bindTo(im).invoke(playerProfile);
+            is.setItemMeta(im);
+        } catch (Throwable throwable) {
+            throw new RuntimeException(throwable);
         }
         return this;
     }
@@ -373,9 +393,12 @@ public class ItemBuilder {
         return new ItemBuilder(is.clone());
     }
 
-    private static MethodHandle itemSpigotMethod = null;
+    private static MethodHandle itemSpigotMethod;
     private static MethodHandle itemSpigotUnbreakableMethod;
     private static MethodHandle itemUnbreakableMethod;
+
+    private static MethodHandle getPlayerProfileMethod;
+    private static MethodHandle setPlayerProfileMethod;
 
     static {
         try {
@@ -385,17 +408,28 @@ public class ItemBuilder {
         }
 
         try {
-            itemSpigotUnbreakableMethod = MethodHandles.lookup().unreflect(
-                    ItemMeta.class.getDeclaredMethod("spigot").getReturnType().getDeclaredMethod("setUnbreakable", boolean.class));
+            itemSpigotUnbreakableMethod = MethodHandles.lookup().unreflect(ItemMeta.class.getDeclaredMethod("spigot").getReturnType().getDeclaredMethod("setUnbreakable", boolean.class));
         } catch (Exception e) {
             itemSpigotUnbreakableMethod = null;
         }
 
         try {
-            itemUnbreakableMethod = MethodHandles.lookup()
-                    .unreflect(ItemMeta.class.getDeclaredMethod("setUnbreakable", boolean.class));
+            itemUnbreakableMethod = MethodHandles.lookup().unreflect(ItemMeta.class.getDeclaredMethod("setUnbreakable", boolean.class));
         } catch (Exception e) {
             itemUnbreakableMethod = null;
+        }
+
+        try {
+            getPlayerProfileMethod = MethodHandles.lookup().unreflect(OfflinePlayer.class.getDeclaredMethod("getPlayerProfile"));
+        } catch (Exception e) {
+            getPlayerProfileMethod = null;
+        }
+
+        try {
+            Class<?> playerProfileClass = Class.forName("org.bukkit.profile.PlayerProfile");
+            setPlayerProfileMethod = MethodHandles.lookup().unreflect(SkullMeta.class.getDeclaredMethod("setOwnerProfile", playerProfileClass));
+        } catch (Exception e) {
+            setPlayerProfileMethod = null;
         }
     }
 
