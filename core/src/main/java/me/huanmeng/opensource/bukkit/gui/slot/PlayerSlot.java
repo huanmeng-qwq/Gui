@@ -11,6 +11,8 @@ import org.bukkit.event.inventory.InventoryType;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * 代表玩家背包中的槽位
  *
@@ -46,5 +48,17 @@ public class PlayerSlot implements Slot {
 
     public @NotNull Slot getSlot() {
         return slot;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        PlayerSlot that = (PlayerSlot) o;
+        return Objects.equals(slot, that.slot);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(slot);
     }
 }

@@ -5,6 +5,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * 2024/12/28<br>
@@ -32,5 +33,17 @@ public class PlayerSlots implements Slots {
 
     public @NotNull Slots getSlots() {
         return slots;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        PlayerSlots that = (PlayerSlots) o;
+        return Objects.equals(slots, that.slots);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(slots);
     }
 }
