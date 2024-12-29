@@ -90,7 +90,7 @@ public abstract class AbstractGuiCustom<G extends AbstractGuiCustom<@NonNull G>>
             return createSpigotInventory(holder);
         }
         try {
-            return (Inventory) paperCreateTitle.bindTo(Bukkit.class).invoke(holder, line * 9, title);
+            return (Inventory) paperCreateTitle.invoke(holder, line * 9, title);
         } catch (Throwable e) {
             return createSpigotInventory(holder);
         }
