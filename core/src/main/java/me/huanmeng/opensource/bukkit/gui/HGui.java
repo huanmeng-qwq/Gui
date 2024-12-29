@@ -1,6 +1,5 @@
 package me.huanmeng.opensource.bukkit.gui;
 
-import me.huanmeng.opensource.bukkit.gui.impl.GuiCustom;
 import me.huanmeng.opensource.bukkit.gui.impl.GuiPage;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;

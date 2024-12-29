@@ -36,8 +36,7 @@ fun Builder.setButton(lambda: ButtonDsl.() -> Unit) {
  */
 fun Builder.click(
     lambda: (
-        gui: AbstractGuiPage<*>, pageArea:PageArea, buttonType: PageButtonType, slot: Slot, player: Player, click: ClickType, action: InventoryAction,
-        slotType: InventoryType.SlotType, slotKey: Int, hotBarKey: Int
+        gui: AbstractGuiPage<*>, pageArea: PageArea, buttonType: PageButtonType, slot: Slot, player: Player, click: ClickType, action: InventoryAction, slotType: InventoryType.SlotType, slotKey: Int, hotBarKey: Int
     ) -> Result
 ) {
     click(PlayerClickPageButtonInterface(lambda))
