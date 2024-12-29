@@ -11,6 +11,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
+
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 
 /**
  * 2024/12/9<br>
@@ -19,6 +23,18 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * @author huanmeng_qwq
  */
 public abstract class AbstractGuiCustom<G extends AbstractGuiCustom<@NonNull G>> extends AbstractGui<@NonNull G> {
+    private static Class<?> componentClass;
+    private static MethodHandle paperCreateTitle;
+
+    static {
+        try {
+            componentClass = Class.forName("net{}kyori{}adventure{}text{}Component".replace("{}", "."));
+            paperCreateTitle = MethodHandles.lookup().unreflect(Bukkit.class.getDeclaredMethod("createInventory", InventoryHolder.class, int.class, componentClass));
+        } catch (Exception ignored) {
+        }
+    }
+
+
     protected int line = 6;
 
     public AbstractGuiCustom(@NonNull Player player) {
@@ -70,6 +86,17 @@ public abstract class AbstractGuiCustom<G extends AbstractGuiCustom<@NonNull G>>
         if (player == null) {
             throw new IllegalArgumentException("player is null");
         }
+        if ((paperCreateTitle == null && componentClass == null) || !componentClass.isInstance(title)) {
+            return createSpigotInventory(holder);
+        }
+        try {
+            return (Inventory) paperCreateTitle.bindTo(Bukkit.class).invoke(holder, line * 9, title);
+        } catch (Throwable e) {
+            return createSpigotInventory(holder);
+        }
+    }
+
+    private @NotNull Inventory createSpigotInventory(@NotNull InventoryHolder holder) {
         ComponentConvert componentConvert = GuiManager.instance().componentConvert();
         return Bukkit.createInventory(holder, line * 9, componentConvert.convert(player, title));
     }
