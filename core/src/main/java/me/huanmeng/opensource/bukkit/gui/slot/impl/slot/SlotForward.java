@@ -3,6 +3,7 @@ package me.huanmeng.opensource.bukkit.gui.slot.impl.slot;
 import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
+import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.gui.slot.function.ButtonPlaceInterface;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -12,25 +13,33 @@ import org.bukkit.event.inventory.InventoryType;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.util.Objects;
+
 /**
  * 2024/12/7<br>
  * Bukkit-Gui-pom<br>
  *
  * @author huanmeng_qwq
  */
-public class SlotForward extends SlotImpl {
-    protected final int forwardSlot;
+public class SlotForward implements Slot {
+    protected final Slot self;
+    protected final Slot forwardSlot;
     @Nullable
     protected final ButtonPlaceInterface buttonPlaceInterface;
 
-    public SlotForward(int index, int forwardSlot, @Nullable ButtonPlaceInterface buttonPlaceInterface) {
-        super(index);
+    public SlotForward(@NonNull Slot self, @NonNull Slot forwardSlot, @Nullable ButtonPlaceInterface buttonPlaceInterface) {
+        this.self = self;
         this.forwardSlot = forwardSlot;
         this.buttonPlaceInterface = buttonPlaceInterface;
     }
 
-    public SlotForward(int index, int forwardSlot) {
-        this(index, forwardSlot, null);
+    public SlotForward(@NonNull Slot forwardSlot, @NonNull Slot self) {
+        this(self, forwardSlot, null);
+    }
+
+    @Override
+    public int getIndex() {
+        return self.getIndex();
     }
 
     @Override
@@ -42,5 +51,22 @@ public class SlotForward extends SlotImpl {
     public boolean tryPlace(@NonNull Button button, @NonNull Player player) {
         if (this.buttonPlaceInterface == null) return false;
         return this.buttonPlaceInterface.tryPlace(this, button, player);
+    }
+
+    @Override
+    public boolean isPlayer() {
+        return self.isPlayer();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        SlotForward that = (SlotForward) o;
+        return Objects.equals(self, that.self) && Objects.equals(forwardSlot, that.forwardSlot) && Objects.equals(buttonPlaceInterface, that.buttonPlaceInterface);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(self, forwardSlot, buttonPlaceInterface);
     }
 }

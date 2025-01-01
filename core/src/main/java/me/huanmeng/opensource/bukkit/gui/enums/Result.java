@@ -79,17 +79,25 @@ public class Result {
     }
 
     public static Result forward(int forwardSlot, boolean cancel) {
-        return new Forward(cancel, forwardSlot);
+        return new Forward(cancel, Slot.of(forwardSlot));
     }
 
     public static Result forward(int forwardSlot) {
+        return new Forward(true, Slot.of(forwardSlot));
+    }
+
+    public static Result forward(Slot forwardSlot, boolean cancel) {
+        return new Forward(cancel, forwardSlot);
+    }
+
+    public static Result forward(Slot forwardSlot) {
         return new Forward(true, forwardSlot);
     }
 
     public static class Forward extends Result {
-        private final int forward;
+        private final Slot forward;
 
-        protected Forward(boolean cancel, int forward) {
+        protected Forward(boolean cancel, Slot forward) {
             super(cancel);
             this.forward = forward;
         }

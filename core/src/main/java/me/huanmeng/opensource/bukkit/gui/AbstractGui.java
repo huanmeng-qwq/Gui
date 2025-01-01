@@ -388,6 +388,10 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         return getButton(index, t -> true);
     }
 
+    public GuiButton getButton(Slot slot) {
+        return getButton(slot.getIndex(), btn -> btn.isPlayerInventory() == slot.isPlayer());
+    }
+
     public ItemStack getItem(int index) {
         return cacheInventory.getItem(index);
     }

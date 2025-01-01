@@ -94,18 +94,38 @@ public interface Slot {
     }
 
     @Contract(value = "_, _, _ -> new", pure = true)
-    static Slot forward(int i, int forwardSlot, ButtonPlaceInterface placeInterface) {
-        return new SlotForward(i, forwardSlot, placeInterface);
+    static Slot forward(int slot, int forwardSlot, @Nullable ButtonPlaceInterface placeInterface) {
+        return new SlotForward(Slot.of(slot), Slot.of(forwardSlot), placeInterface);
     }
 
     @Contract(value = "_, _ -> new", pure = true)
-    static Slot forward(int i, int forwardSlot) {
-        return new SlotForward(i, forwardSlot);
+    static Slot forward(int slot, int forwardSlot) {
+        return new SlotForward(Slot.of(slot), Slot.of(forwardSlot));
     }
 
     @Contract(value = "_, _ -> new", pure = true)
-    static Slot forward(int i, Slot forwardSlot) {
-        return new SlotForward(i, forwardSlot.getIndex());
+    static Slot forward(int slot, @NonNull Slot forwardSlot) {
+        return new SlotForward(Slot.of(slot), forwardSlot);
+    }
+
+    @Contract(value = "_, _ -> new", pure = true)
+    static Slot forward(@NonNull Slot slot, @NonNull Slot forwardSlot) {
+        return new SlotForward(slot, forwardSlot);
+    }
+
+    @Contract(value = "_, _, _ -> new", pure = true)
+    static Slot forward(@NonNull Slot slot, int forwardSlot,@Nullable ButtonPlaceInterface placeInterface) {
+        return new SlotForward(slot, Slot.of(forwardSlot), placeInterface);
+    }
+
+    @Contract(value = "_, _, _ -> new", pure = true)
+    static Slot forward(int slot, @NonNull Slot forwardSlot, @Nullable ButtonPlaceInterface placeInterface) {
+        return new SlotForward(Slot.of(slot), forwardSlot, placeInterface);
+    }
+
+    @Contract(value = "_, _, _ -> new", pure = true)
+    static Slot forward(@NonNull Slot slot, @NonNull Slot forwardSlot, @Nullable ButtonPlaceInterface placeInterface) {
+        return new SlotForward(slot, forwardSlot, placeInterface);
     }
 
     @Nullable
@@ -126,5 +146,9 @@ public interface Slot {
 
     default PlayerSlot asPlayer() {
         return new PlayerSlot(this);
+    }
+
+    default boolean isPlayer() {
+        return this instanceof PlayerSlot;
     }
 }
