@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * 2023/3/17<br>
@@ -32,6 +32,7 @@ public class GuiPage extends AbstractGuiPage<GuiPage> {
 
     public GuiPage() {
         super();
+        this.defaultArea = pageArea(new PageArea());
     }
 
     @NonNull
