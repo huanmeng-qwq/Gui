@@ -58,8 +58,7 @@ fun buildSlotsByLine(lambda: SlotsDsl.(line: Int) -> List<Slot>): Slots {
 class SlotDsl {
     var index: Int? = null
     var onClick: ((
-        button: Button, player: Player, click: ClickType, action: InventoryAction, slotType: SlotType,
-        slot: Int, hotbarKey: Int, e: InventoryClickEvent
+        button: Button, player: Player, click: ClickType, action: InventoryAction, slotType: SlotType, slot: Int, hotbarKey: Int, e: InventoryClickEvent
     ) -> Result)? = null
     var tryPlace: ((button: Button, player: Player) -> Boolean)? = null
 }
@@ -109,3 +108,123 @@ class SlotsDsl(list: MutableList<Slot>) : MutableList<Slot> by list {
 
     fun slot(lambda: SlotDsl.() -> Unit) = add(buildSlot(lambda))
 }
+
+enum class IntSlotType {
+    X {
+        override fun IntSlot.createSlot(other: IntSlot): Slot {
+            when (other.type) {
+                X -> {
+                    throw IllegalArgumentException("Cannot add X to X")
+                }
+
+                Y -> {
+                    return Slot.ofBukkit(this.value, other.value)
+                }
+
+                GAME_X -> {
+                    throw IllegalArgumentException("Cannot add X to GameX")
+                }
+
+                GAME_Y -> {
+                    return Slot.ofGame(this.value + 1, other.value)
+                }
+            }
+        }
+    },
+    Y {
+        override fun IntSlot.createSlot(other: IntSlot): Slot {
+            when (other.type) {
+                X -> {
+                    return Slot.ofBukkit(other.value, this.value)
+                }
+
+                Y -> {
+                    throw IllegalArgumentException("Cannot add Y to X")
+                }
+
+                GAME_X -> {
+                    return Slot.ofGame(other.value, this.value + 1)
+                }
+
+                GAME_Y -> {
+                    throw IllegalArgumentException("Cannot add GameY to X")
+                }
+            }
+        }
+    },
+    GAME_X {
+        override fun IntSlot.createSlot(other: IntSlot): Slot {
+            when (other.type) {
+                X -> {
+                    throw IllegalArgumentException("Cannot add X to X")
+                }
+
+                Y -> {
+                    return Slot.ofGame(this.value, other.value + 1)
+                }
+
+                GAME_X -> {
+                    throw IllegalArgumentException("Cannot add X to GameX")
+                }
+
+                GAME_Y -> {
+                    return Slot.ofGame(this.value, other.value)
+                }
+            }
+        }
+    },
+    GAME_Y {
+        override fun IntSlot.createSlot(other: IntSlot): Slot {
+            when (other.type) {
+                X -> {
+                    return Slot.ofGame(other.value + 1, this.value)
+                }
+
+                Y -> {
+                    throw IllegalArgumentException("Cannot add GameY to X")
+                }
+
+                GAME_X -> {
+                    return Slot.ofGame(other.value, this.value)
+                }
+
+                GAME_Y -> {
+                    throw IllegalArgumentException("Cannot add GameY to GameY")
+                }
+            }
+        }
+    },
+    ;
+
+    abstract fun IntSlot.createSlot(other: IntSlot): Slot
+}
+
+class IntSlot(val value: Int, val type: IntSlotType) {
+    operator fun plus(other: IntSlot): Slot {
+        return type.run { createSlot(other) }
+    }
+    operator fun plus(other: Int): IntSlot {
+        return IntSlot(value+ other, type)
+    }
+    operator fun minus(other: Int): IntSlot {
+        return IntSlot(value - other, type)
+    }
+    operator fun times(other: Int): IntSlot {
+        return IntSlot(value * other, type)
+    }
+    operator fun div(other: Int): IntSlot {
+        return IntSlot(value / other, type)
+    }
+    operator fun rem(other: Int): IntSlot {
+        return IntSlot(value % other, type)
+    }
+
+    override fun toString(): String {
+        return "IntSlot(value=$value, type=$type)"
+    }
+}
+
+val Int.x: IntSlot get() = IntSlot(this, IntSlotType.X)
+val Int.y: IntSlot get() = IntSlot(this, IntSlotType.Y)
+val Int.gx: IntSlot get() = IntSlot(this, IntSlotType.GAME_X)
+val Int.gy: IntSlot get() = IntSlot(this, IntSlotType.GAME_Y)

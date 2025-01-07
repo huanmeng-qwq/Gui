@@ -19,7 +19,7 @@ import java.util.List;
  * @author huanmeng_qwq
  */
 @SuppressWarnings("unused")
-public class GuiDraw<@NonNull G extends AbstractGui<G>> {
+public class GuiDraw<G extends AbstractGui<G>> {
     @NonNull
     private final G gui;
 
@@ -43,7 +43,7 @@ public class GuiDraw<@NonNull G extends AbstractGui<G>> {
      * @return this
      */
     @NonNull
-    public GuiDraw<@NonNull G> vertical(int x1, int y1, int x2, int y2, @Nullable Button button) {
+    public GuiDraw<G> vertical(int x1, int y1, int x2, int y2, @Nullable Button button) {
         int[] xRange = MathUtil.range(x1, x2);
         int[] yRange = MathUtil.range(y1, y2);
         for (int x : xRange) {
@@ -51,7 +51,7 @@ public class GuiDraw<@NonNull G extends AbstractGui<G>> {
                 set(x, y, button);
             }
         }
-        return this;
+        return self();
     }
 
     /**
@@ -63,9 +63,9 @@ public class GuiDraw<@NonNull G extends AbstractGui<G>> {
      * @return this
      */
     @NonNull
-    public GuiDraw<@NonNull G> set(int x, int y, @Nullable Button button) {
+    public GuiDraw<G> set(int x, int y, @Nullable Button button) {
         set(Slot.ofBukkit(x, y), button);
-        return this;
+        return self();
     }
 
     /**
@@ -76,9 +76,9 @@ public class GuiDraw<@NonNull G extends AbstractGui<G>> {
      * @return this
      */
     @NonNull
-    public GuiDraw<@NonNull G> set(int slot, @Nullable Button button) {
+    public GuiDraw<G> set(int slot, @Nullable Button button) {
         set(Slot.of(slot), button);
-        return this;
+        return self();
     }
 
     /**
@@ -89,11 +89,11 @@ public class GuiDraw<@NonNull G extends AbstractGui<G>> {
      * @return this
      */
     @NonNull
-    public GuiDraw<@NonNull G> set(@NonNull Slots slots, @Nullable Button button) {
+    public GuiDraw<G> set(@NonNull Slots slots, @Nullable Button button) {
         for (Slot slot : slots.slots(gui)) {
             set(slot, button);
         }
-        return this;
+        return self();
     }
 
     /**
@@ -104,7 +104,7 @@ public class GuiDraw<@NonNull G extends AbstractGui<G>> {
      * @return this
      */
     @NonNull
-    public GuiDraw<@NonNull G> set(@NonNull Slots slots, @NonNull List<@Nullable ? extends Button> buttons) {
+    public GuiDraw<G> set(@NonNull Slots slots, @NonNull List<@Nullable ? extends Button> buttons) {
         Slot[] slotArray = slots.slots(gui);
         for (int i = 0; i < slotArray.length; i++) {
             if (i >= buttons.size()) {
@@ -112,7 +112,7 @@ public class GuiDraw<@NonNull G extends AbstractGui<G>> {
             }
             set(slotArray[i], buttons.get(i));
         }
-        return this;
+        return self();
     }
 
     /**
@@ -123,8 +123,12 @@ public class GuiDraw<@NonNull G extends AbstractGui<G>> {
      * @return this
      */
     @NonNull
-    public GuiDraw<@NonNull G> set(@NonNull Slot slot, @Nullable Button button) {
+    public GuiDraw<G> set(@NonNull Slot slot, @Nullable Button button) {
         gui.addAttachedButton(new GuiButton(slot, button));
-        return this;
+        return self();
+    }
+
+    public GuiDraw<G> self() {
+        return self();
     }
 }

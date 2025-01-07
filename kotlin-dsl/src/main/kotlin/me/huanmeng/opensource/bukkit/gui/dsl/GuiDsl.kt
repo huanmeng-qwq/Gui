@@ -123,6 +123,42 @@ fun GuiDraw<out AbstractGuiCustom<*>>.setButton(slots: Slots, lambda: ButtonDsl.
  */
 fun GuiDraw<out AbstractGuiCustom<*>>.setButton(slots: Slots, lambda: ButtonList.() -> Unit) =
     set(slots, ButtonList().apply(lambda))
+
+class SetButton<G : AbstractGui<G>>(private val draw: GuiDraw<G>, private val slot: Slot) {
+    infix fun button(button: Button) {
+        draw.set(slot, button)
+    }
+}
+
+class SetButtons<G : AbstractGui<G>>(private val draw: GuiDraw<G>, private val slots: Slots) {
+    infix fun button(button: Button) {
+        draw.set(slots, button)
+    }
+
+    infix fun buttons(lambda: ButtonList.() -> Unit) {
+        draw.set(slots, ButtonList().apply(lambda))
+    }
+}
+
+infix fun <G : AbstractGui<G>> GuiDraw<G>.slot(slot: Int): SetButton<G> {
+    return SetButton(this, Slot.of(slot))
+}
+
+infix fun <G : AbstractGui<G>> GuiDraw<G>.slot(slot: Slot): SetButton<G> {
+    return SetButton(this, slot)
+}
+
+infix fun <G : AbstractGui<G>> GuiDraw<G>.slot(slot: Pair<Int, Int>): SetButton<G> {
+    return SetButton(this, Slot.ofBukkit(slot.first, slot.second))
+}
+
+infix fun <G : AbstractGui<G>> GuiDraw<G>.gameSlot(slot: Pair<Int, Int>): SetButton<G> {
+    return SetButton(this, Slot.ofGame(slot.first, slot.second))
+}
+
+infix fun <G : AbstractGui<G>> GuiDraw<G>.slots(slots: Slots): SetButtons<G> {
+    return SetButtons(this, slots)
+}
 /* end */
 
 /* Pattern to Gui*/
