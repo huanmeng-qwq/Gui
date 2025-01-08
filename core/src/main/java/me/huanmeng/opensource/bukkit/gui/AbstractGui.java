@@ -2,6 +2,7 @@ package me.huanmeng.opensource.bukkit.gui;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
+import me.huanmeng.opensource.bukkit.gui.button.ClickData;
 import me.huanmeng.opensource.bukkit.gui.draw.GuiDraw;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
 import me.huanmeng.opensource.bukkit.gui.holder.GuiHolder;
@@ -514,23 +515,24 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
                 processingClickEvent = false;
                 return;
             }
-            GuiButton item = manager.guiHandler().queryClickButton(e, this);
-            if (item == null) {
-                item = getButton(slot, btn -> !btn.isPlayerInventory());
+            GuiButton guiButton = manager.guiHandler().queryClickButton(e, this);
+            if (guiButton == null) {
+                guiButton = getButton(slot, btn -> !btn.isPlayerInventory());
             }
-            if (item != null) {
-                if (!allowClick(player, item, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e)) {
+            if (guiButton != null) {
+                if (!allowClick(player, guiButton, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e)) {
                     processingClickEvent = false;
                     return;
                 }
-                Result result = item.onClick(this, player, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e);
+                ClickData clickData = new ClickData(player, this, guiButton.getSlot(), null, guiButton.getButton(), e, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton());
+                Result result = guiButton.onClick(clickData);
                 if (result == null) {
                     result = Result.CANCEL;
                 }
                 if (result.isCancel()) {
                     e.setCancelled(true);
                 }
-                processResult(result, this, player, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e);
+                processResult(result, clickData);
             } else if (ItemUtil.isAir(e.getCurrentItem())) {
                 if (e.getHotbarButton() >= 0 && cancelMoveHotBarItemToSelf && Objects.equals(e.getClickedInventory(), e.getView().getTopInventory())) {
                     e.setCancelled(true);
@@ -560,23 +562,24 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
                     processingClickEvent = false;
                     return;
                 }
-                GuiButton item = manager.guiHandler().queryClickButton(e, this);
-                if (item == null) {
-                    item = getButton(slot, GuiButton::isPlayerInventory);
+                GuiButton guiButton = manager.guiHandler().queryClickButton(e, this);
+                if (guiButton == null) {
+                    guiButton = getButton(slot, GuiButton::isPlayerInventory);
                 }
-                if (item != null) {
-                    if (!allowClick(player, item, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e)) {
+                if (guiButton != null) {
+                    if (!allowClick(player, guiButton, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e)) {
                         processingClickEvent = false;
                         return;
                     }
-                    Result result = item.onClick(this, player, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e);
+                    ClickData clickData = new ClickData(player, this, guiButton.getSlot(), null, guiButton.getButton(), e, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton());
+                    Result result = guiButton.onClick(clickData);
                     if (result == null) {
                         result = Result.CANCEL;
                     }
                     if (result.isCancel()) {
                         e.setCancelled(true);
                     }
-                    processResult(result, this, player, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e);
+                    processResult(result, clickData);
                 } else if (ItemUtil.isAir(e.getCurrentItem())) {
                     if (guiEmptyItemClick != null) {
                         if (guiEmptyItemClick.onClickEmptyButton(player, slot, e.getClick(), e.getAction(), e.getSlotType(), e.getHotbarButton(), e)) {
@@ -609,7 +612,8 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         processingClickEvent = false;
     }
 
-    protected void processResult(@NonNull Result result, AbstractGui<G> gui, @Nullable Player player, ClickType click, InventoryAction action, InventoryType.SlotType slotType, int slot, int hotbarButton, @NonNull InventoryClickEvent e) {
+    protected void processResult(@NonNull Result result, @NonNull ClickData clickData) {
+        InventoryClickEvent e = clickData.event;
         ItemStack itemStack = e.getCurrentItem();
         if (result.equals(Result.CANCEL)) {
             e.setCancelled(true);
@@ -628,16 +632,16 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             itemStack.setAmount(itemStack.getAmount() + 1);
             e.setCurrentItem(itemStack);
         } else if (result.equals(Result.CANCEL_UPDATE)) {
-            refresh(Slots.of(slot));
+            refresh(Slots.of(clickData.slotKey));
         } else if (result.equals(Result.CANCEL_UPDATE_ALL)) {
             refresh(true);
         } else if (result.equals(Result.CANCEL_CLOSE)) {
             close(true, false);
         } else if (result instanceof Result.Forward) {
-            Result forwarded = ((Result.Forward) result).forwardClick(gui, player, click, action, slotType, slot, hotbarButton, e);
-            processResult(forwarded, gui, player, click, action, slotType, slot, hotbarButton, e);
+            Result forwarded = ((Result.Forward) result).forwardClick(clickData);
+            processResult(forwarded, clickData);
         } else if (customResultHandler != null) {
-            customResultHandler.processResult(result, gui, player, click, action, slotType, slot, hotbarButton, e);
+            customResultHandler.processResult(result, clickData);
         }
     }
 

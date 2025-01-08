@@ -4,6 +4,7 @@ package me.huanmeng.opensource.bukkit.gui.dsl
 
 import me.huanmeng.opensource.bukkit.gui.AbstractGui
 import me.huanmeng.opensource.bukkit.gui.button.Button
+import me.huanmeng.opensource.bukkit.gui.button.ClickData
 import me.huanmeng.opensource.bukkit.gui.enums.Result
 import me.huanmeng.opensource.bukkit.gui.slot.Slot
 import me.huanmeng.opensource.bukkit.gui.slot.Slots
@@ -60,12 +61,21 @@ class SlotDsl {
     var onClick: ((
         button: Button, player: Player, click: ClickType, action: InventoryAction, slotType: SlotType, slot: Int, hotbarKey: Int, e: InventoryClickEvent
     ) -> Result)? = null
+    var onClickData: ((
+        clickData: ClickData
+    ) -> Result)? = null
     var tryPlace: ((button: Button, player: Player) -> Boolean)? = null
 }
 
 private class SlotWrapper(private val index: Int, private val slotDsl: SlotDsl) : Slot {
     override fun getIndex(): Int {
         return index
+    }
+
+    override fun onClick(clickData: ClickData): Result {
+        return if(slotDsl.onClickData != null){
+            slotDsl.onClickData!!(clickData)
+        }else super.onClick(clickData)
     }
 
     override fun onClick(
@@ -80,7 +90,7 @@ private class SlotWrapper(private val index: Int, private val slotDsl: SlotDsl) 
         e: InventoryClickEvent
     ): Result {
         return if (slotDsl.onClick != null) {
-            return slotDsl.onClick!!(button, player, click, action, slotType, slot, hotBarKey, e)
+            slotDsl.onClick!!(button, player, click, action, slotType, slot, hotBarKey, e)
         } else super.onClick(gui, button, player, click, action, slotType, slot, hotBarKey, e)
     }
 

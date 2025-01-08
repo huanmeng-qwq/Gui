@@ -129,6 +129,6 @@ public class GuiDraw<G extends AbstractGui<G>> {
     }
 
     public GuiDraw<G> self() {
-        return self();
+        return this;
     }
 }

@@ -27,11 +27,11 @@ public class ArraySlots implements Slots {
     }
 
     public ArraySlots forward(int forwardSlot) {
-        return Slots.of(Arrays.stream(slots).map(slot -> Slot.forward(slot.getIndex(), forwardSlot)).toArray(Slot[]::new));
+        return Slots.of(Arrays.stream(slots).map(slot -> Slot.forward(slot, forwardSlot)).toArray(Slot[]::new));
     }
 
     public ArraySlots forward(Slot forwardSlot) {
-        return Slots.of(Arrays.stream(slots).map(slot -> Slot.forward(slot.getIndex(), forwardSlot)).toArray(Slot[]::new));
+        return Slots.of(Arrays.stream(slots).map(slot -> Slot.forward(slot, forwardSlot)).toArray(Slot[]::new));
     }
 
     public Slot first() {

@@ -3,14 +3,10 @@ package me.huanmeng.opensource.bukkit.gui.enums;
 
 import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.GuiButton;
+import me.huanmeng.opensource.bukkit.gui.button.ClickData;
 import me.huanmeng.opensource.bukkit.gui.interfaces.CustomResultHandler;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
@@ -102,12 +98,12 @@ public class Result {
             this.forward = forward;
         }
 
-        public Result forwardClick(@NonNull AbstractGui<?> gui, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slot, int hotBarKey, @NonNull InventoryClickEvent e) {
-            GuiButton forwardButton = gui.getButton(forward);
+        public Result forwardClick(@NonNull ClickData clickData) {
+            GuiButton forwardButton = clickData.gui.getButton(forward);
             if (forwardButton == null) {
                 return Result.ALLOW;
             }
-            return forwardButton.onClick(gui, player, click, action, slotType, slot, hotBarKey, e);
+            return forwardButton.onClick(new ClickData(clickData.player, clickData.gui, forward, clickData.slot, forwardButton.getButton(), clickData.event, clickData.click, clickData.action, clickData.slotType, clickData.slotKey, clickData.hotBarKey));
         }
     }
 }

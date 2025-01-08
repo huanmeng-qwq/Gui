@@ -2,6 +2,7 @@ package me.huanmeng.opensource.bukkit.gui.slot.impl.slot;
 
 import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
+import me.huanmeng.opensource.bukkit.gui.button.ClickData;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.gui.slot.function.ButtonPlaceInterface;
@@ -33,13 +34,18 @@ public class SlotForward implements Slot {
         this.buttonPlaceInterface = buttonPlaceInterface;
     }
 
-    public SlotForward(@NonNull Slot forwardSlot, @NonNull Slot self) {
+    public SlotForward(@NonNull Slot self, @NonNull Slot forwardSlot) {
         this(self, forwardSlot, null);
     }
 
     @Override
     public int getIndex() {
         return self.getIndex();
+    }
+
+    @Override
+    public @NonNull Result onClick(@NonNull ClickData clickData) {
+        return Result.forward(forwardSlot);
     }
 
     @Override

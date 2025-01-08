@@ -3,6 +3,7 @@ package me.huanmeng.opensource.bukkit.gui.impl.page;
 import com.google.common.collect.ImmutableSet;
 import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
+import me.huanmeng.opensource.bukkit.gui.button.ClickData;
 import me.huanmeng.opensource.bukkit.gui.button.function.page.PlayerClickPageButtonInterface;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
 import me.huanmeng.opensource.bukkit.gui.impl.AbstractGuiPage;
@@ -215,6 +216,37 @@ public class PageButton implements Button {
     }
 
     @Override
+    public @NonNull Result onClick(@NonNull ClickData clickData) {
+        InventoryClickEvent e = clickData.event;
+        if (ItemUtil.isAir(e.getCurrentItem())) {
+            return Result.CANCEL;
+        }
+        if (origin == null) {
+            return Result.CANCEL;
+        }
+        Result result = origin.onClick(clickData);
+        if (playerClickPageButtonInterface == null || types.isEmpty()) {
+            return result;
+        }
+        Iterator<PageButtonType> iterator = types.iterator();
+        PageButtonType buttonType = iterator.next();
+        if (iterator.hasNext()) {
+            while (iterator.hasNext()) {
+                PageButtonType type = iterator.next();
+                if (type.mainType() == buttonType.mainType() || type.subType() == clickData.click) {
+                    buttonType = type;
+                    break;
+                }
+            }
+        }
+        if (!buttonType.hasPage(pageArea)) {
+            return Result.CANCEL;
+        }
+        return playerClickPageButtonInterface.onClick(gui, pageArea, buttonType, clickData);
+    }
+
+    @Override
+    @Deprecated
     public @NonNull Result onClick(@NonNull AbstractGui<?> g, @NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey, @NonNull InventoryClickEvent e) {
         if (ItemUtil.isAir(e.getCurrentItem())) {
             return Result.CANCEL;

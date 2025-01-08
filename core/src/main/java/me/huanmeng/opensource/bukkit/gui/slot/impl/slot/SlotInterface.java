@@ -2,6 +2,7 @@ package me.huanmeng.opensource.bukkit.gui.slot.impl.slot;
 
 import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
+import me.huanmeng.opensource.bukkit.gui.button.ClickData;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
 import me.huanmeng.opensource.bukkit.gui.slot.function.ButtonClickInterface;
 import me.huanmeng.opensource.bukkit.gui.slot.function.ButtonPlaceInterface;
@@ -41,6 +42,11 @@ public class SlotInterface extends SlotImpl {
         super(index);
         this.clickInterface = (gui, slot, button, player, click, action, slotType, slotKey, hotBarKey, e) -> button.onClick(gui, slot, player, click, action, slotType, slotKey, hotBarKey, e);
         this.buttonPlaceInterface = buttonPlaceInterface;
+    }
+
+    @Override
+    public @NonNull Result onClick(@NonNull ClickData clickData) {
+        return clickInterface.onClick(clickData);
     }
 
     @NonNull

@@ -34,10 +34,18 @@ public class SimpleItemButton implements Button {
     }
 
     @Override
+    public @NonNull Result onClick(@NonNull ClickData clickData) {
+        if (clickable == null) {
+            return Result.CANCEL;
+        }
+        return this.clickable.onClick(clickData);
+    }
+
+    @Override
     public @NonNull Result onClick(@NonNull AbstractGui<?> gui, @NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey, @NonNull InventoryClickEvent e) {
         if (clickable == null) {
             return Result.CANCEL;
         }
-        return this.clickable.onClick(gui, slot, player, click, action, slotType, slotKey, hotBarKey);
+        return this.clickable.onClick(gui, slot, player, click, action, slotType, slotKey, hotBarKey, e);
     }
 }

@@ -4,6 +4,7 @@ import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.GuiButton;
 import me.huanmeng.opensource.bukkit.gui.SlotUtil;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
+import me.huanmeng.opensource.bukkit.gui.button.ClickData;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
 import me.huanmeng.opensource.bukkit.gui.slot.function.ButtonClickInterface;
 import me.huanmeng.opensource.bukkit.gui.slot.function.ButtonPlaceInterface;
@@ -19,6 +20,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -41,6 +43,19 @@ public interface Slot {
      * @see Result
      */
     @NonNull
+    default Result onClick(@NonNull ClickData clickData) {
+        return clickData.button.onClick(clickData);
+    }
+
+    /**
+     * 当点击时
+     *
+     * @return 是否取消事件
+     * @see Result
+     */
+    @NonNull
+    @Deprecated
+    @ApiStatus.ScheduledForRemoval(inVersion = "2.5")
     default Result onClick(@NonNull AbstractGui<?> gui, @NonNull Button button, @NonNull Player player, @NonNull ClickType click,
                            @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slot,
                            int hotBarKey, @NonNull InventoryClickEvent e) {
@@ -109,12 +124,17 @@ public interface Slot {
     }
 
     @Contract(value = "_, _ -> new", pure = true)
+    static Slot forward(@NonNull Slot slot, int forwardSlot) {
+        return new SlotForward(slot, Slot.of(forwardSlot));
+    }
+
+    @Contract(value = "_, _ -> new", pure = true)
     static Slot forward(@NonNull Slot slot, @NonNull Slot forwardSlot) {
         return new SlotForward(slot, forwardSlot);
     }
 
     @Contract(value = "_, _, _ -> new", pure = true)
-    static Slot forward(@NonNull Slot slot, int forwardSlot,@Nullable ButtonPlaceInterface placeInterface) {
+    static Slot forward(@NonNull Slot slot, int forwardSlot, @Nullable ButtonPlaceInterface placeInterface) {
         return new SlotForward(slot, Slot.of(forwardSlot), placeInterface);
     }
 
@@ -130,7 +150,7 @@ public interface Slot {
 
     @Nullable
     default ItemStack getShowingItem(@NonNull AbstractGui<?> gui, @NonNull Player player) {
-        GuiButton button = gui.getButton(getIndex());
+        GuiButton button = gui.getButton(this);
         if (button == null) return null;
         return button.getButton().getShowItem(player);
     }
@@ -141,7 +161,7 @@ public interface Slot {
      * @param index 背包槽位
      */
     static PlayerSlot player(int index) {
-        return new PlayerSlot(of(index));
+        return new PlayerSlot(Slot.of(index));
     }
 
     default PlayerSlot asPlayer() {
