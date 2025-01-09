@@ -1,5 +1,6 @@
 package me.huanmeng.opensource.bukkit.gui.impl.page;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.slot.Slots;
 import me.huanmeng.opensource.page.Pagination;
@@ -68,6 +69,7 @@ public class PageArea {
         return slots;
     }
 
+    @CanIgnoreReturnValue
     public PageArea slots(Slots slots) {
         this.slots = slots;
         return this;
@@ -77,6 +79,7 @@ public class PageArea {
         return items;
     }
 
+    @CanIgnoreReturnValue
     public PageArea items(List<? extends Button> items) {
         this.items = new ArrayList<>(items);
         refreshPagination();
@@ -87,6 +90,7 @@ public class PageArea {
         return elementsPerPage;
     }
 
+    @CanIgnoreReturnValue
     public PageArea elementsPerPage(int elementsPerPage) {
         this.elementsPerPage = elementsPerPage;
         refreshPagination();
@@ -97,6 +101,7 @@ public class PageArea {
         return currentPage;
     }
 
+    @CanIgnoreReturnValue
     public PageArea currentPage(int currentPage) {
         this.currentPage = currentPage;
         return this;
@@ -110,6 +115,7 @@ public class PageArea {
         return pageSetting;
     }
 
+    @CanIgnoreReturnValue
     public PageArea pageSetting(PageSetting pageSetting) {
         this.pageSetting = pageSetting;
         return this;
