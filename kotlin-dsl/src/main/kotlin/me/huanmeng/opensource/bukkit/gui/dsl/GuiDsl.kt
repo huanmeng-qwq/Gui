@@ -7,6 +7,7 @@ import me.huanmeng.opensource.bukkit.gui.GuiButton
 import me.huanmeng.opensource.bukkit.gui.button.Button
 import me.huanmeng.opensource.bukkit.gui.draw.GuiDraw
 import me.huanmeng.opensource.bukkit.gui.impl.AbstractGuiCustom
+import me.huanmeng.opensource.bukkit.gui.impl.CustomGuiPage
 import me.huanmeng.opensource.bukkit.gui.impl.GuiCustom
 import me.huanmeng.opensource.bukkit.gui.impl.GuiPage
 import me.huanmeng.opensource.bukkit.gui.impl.page.PageButton
@@ -38,6 +39,9 @@ fun buildPagedGui(lambda: GuiPage.() -> Unit): GuiPage {
             "allItems is null"
         }
     }
+}
+fun buildCustomPage(lambda: CustomGuiPage.() -> Unit): CustomGuiPage {
+    return CustomGuiPage().apply(lambda)
 }
 
 /* Player method */
