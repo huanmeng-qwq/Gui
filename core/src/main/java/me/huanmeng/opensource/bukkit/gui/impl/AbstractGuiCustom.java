@@ -59,7 +59,7 @@ public abstract class AbstractGuiCustom<G extends AbstractGuiCustom<@NonNull G>>
         Runnable openInventory = () -> {
             init(title, line * 9);
             Inventory inventory = build(createHolder());
-            fillItems(inventory, false);
+            fillItems(inventory, true);
             precache();
             // 确保玩家鼠标上的物品不会变
             ItemStack itemOnCursor = player.getItemOnCursor();
