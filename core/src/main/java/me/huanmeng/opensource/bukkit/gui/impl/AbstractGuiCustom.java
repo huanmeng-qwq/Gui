@@ -71,6 +71,7 @@ public abstract class AbstractGuiCustom<G extends AbstractGuiCustom<@NonNull G>>
                 player.setItemOnCursor(itemOnCursor);
             }
             cache(inventory);
+            fillItems(inventory, false);// 打开后重新填充一遍，避免call之前的close函数时清除了player背包内容
         };
         if (processingClickEvent || manager.processingClickEvent() || !Bukkit.isPrimaryThread()) {
             Schedulers.sync().runLater(openInventory, 1);
