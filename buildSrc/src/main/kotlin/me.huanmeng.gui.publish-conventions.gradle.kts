@@ -83,7 +83,7 @@ tasks.sonatypeCentralUpload {
     dependsOn(tasks.build, tasks.generatePomFileForMavenPublication, cleanUpload)
     this.username = centralUsername
     this.password = centralPassword
-    this.publishingType = "MANUAL"
+    this.publishingType = "AUTOMATIC"
     this.signingKey = privateKey
     this.signingKeyPassphrase = privateKeyPwd
     this.publicKey = publicKey
