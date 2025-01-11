@@ -3,6 +3,7 @@ package me.huanmeng.opensource.bukkit.gui.slot.impl.slots;
 import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.gui.slot.Slots;
+import me.huanmeng.opensource.bukkit.gui.slot.function.ButtonPlaceInterface;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Arrays;
@@ -30,8 +31,16 @@ public class ArraySlots implements Slots {
         return Slots.of(Arrays.stream(slots).map(slot -> Slot.forward(slot, forwardSlot)).toArray(Slot[]::new));
     }
 
+    public ArraySlots forward(int forwardSlot, @NonNull ButtonPlaceInterface buttonPlaceInterface) {
+        return Slots.of(Arrays.stream(slots).map(slot -> Slot.forward(slot, forwardSlot, buttonPlaceInterface)).toArray(Slot[]::new));
+    }
+
     public ArraySlots forward(Slot forwardSlot) {
         return Slots.of(Arrays.stream(slots).map(slot -> Slot.forward(slot, forwardSlot)).toArray(Slot[]::new));
+    }
+
+    public ArraySlots forward(Slot forwardSlot, @NonNull ButtonPlaceInterface buttonPlaceInterface) {
+        return Slots.of(Arrays.stream(slots).map(slot -> Slot.forward(slot, forwardSlot, buttonPlaceInterface)).toArray(Slot[]::new));
     }
 
     public Slot first() {

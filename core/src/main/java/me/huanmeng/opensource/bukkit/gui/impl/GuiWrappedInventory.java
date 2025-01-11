@@ -17,7 +17,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *
  * @author huanmeng_qwq
  */
-public class GuiWrappedInventory extends GuiCustom {
+public class GuiWrappedInventory extends AbstractGuiCustom<GuiWrappedInventory> {
     protected Inventory inventory;
 
     public GuiWrappedInventory(@NonNull Player player, Inventory inventory) {
@@ -27,6 +27,7 @@ public class GuiWrappedInventory extends GuiCustom {
         cancelClickBottom = false;
         cancelMoveHotBarItemToSelf = false;
         cancelMoveItemToSelf = false;
+        cancelMoveItemToBottom = false;
     }
 
     public GuiWrappedInventory() {
@@ -92,7 +93,7 @@ public class GuiWrappedInventory extends GuiCustom {
 
     @Override
     protected @NonNull GuiWrappedInventory self() {
-        return (GuiWrappedInventory) super.self();
+        return this;
     }
 
     @Override

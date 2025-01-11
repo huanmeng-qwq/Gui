@@ -123,14 +123,14 @@ public interface Slot {
         return new SlotForward(Slot.of(slot), forwardSlot);
     }
 
-    @Contract(value = "_, _ -> new", pure = true)
-    static Slot forward(@NonNull Slot slot, int forwardSlot) {
-        return new SlotForward(slot, Slot.of(forwardSlot));
+    @Contract(value = "_, _, _ -> new", pure = true)
+    static Slot forward(int slot, @NonNull Slot forwardSlot, @Nullable ButtonPlaceInterface placeInterface) {
+        return new SlotForward(Slot.of(slot), forwardSlot, placeInterface);
     }
 
     @Contract(value = "_, _ -> new", pure = true)
-    static Slot forward(@NonNull Slot slot, @NonNull Slot forwardSlot) {
-        return new SlotForward(slot, forwardSlot);
+    static Slot forward(@NonNull Slot slot, int forwardSlot) {
+        return new SlotForward(slot, Slot.of(forwardSlot));
     }
 
     @Contract(value = "_, _, _ -> new", pure = true)
@@ -138,9 +138,9 @@ public interface Slot {
         return new SlotForward(slot, Slot.of(forwardSlot), placeInterface);
     }
 
-    @Contract(value = "_, _, _ -> new", pure = true)
-    static Slot forward(int slot, @NonNull Slot forwardSlot, @Nullable ButtonPlaceInterface placeInterface) {
-        return new SlotForward(Slot.of(slot), forwardSlot, placeInterface);
+    @Contract(value = "_, _ -> new", pure = true)
+    static Slot forward(@NonNull Slot slot, @NonNull Slot forwardSlot) {
+        return new SlotForward(slot, forwardSlot);
     }
 
     @Contract(value = "_, _, _ -> new", pure = true)

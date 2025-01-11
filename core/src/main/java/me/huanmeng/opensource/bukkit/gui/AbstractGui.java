@@ -464,7 +464,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             return self();
         }
         for (Slot slot : slots.slots(self())) {
-            GuiButton button = getButton(slot.getIndex());
+            GuiButton button = getButton(slot);
             setItem(cacheInventory, button, button.getButton().getShowItem(player));
         }
         return self();

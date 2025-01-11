@@ -1,5 +1,6 @@
 package me.huanmeng.opensource.bukkit.gui.impl;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import me.huanmeng.opensource.bukkit.component.ComponentConvert;
 import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.GuiManager;
@@ -45,6 +46,7 @@ public abstract class AbstractGuiCustom<G extends AbstractGuiCustom<@NonNull G>>
     }
 
     @NonNull
+    @CanIgnoreReturnValue
     public G line(int line) {
         this.line = line;
         return self();
@@ -87,7 +89,7 @@ public abstract class AbstractGuiCustom<G extends AbstractGuiCustom<@NonNull G>>
         if (player == null) {
             throw new IllegalArgumentException("player is null");
         }
-        if ((paperCreateTitle == null && componentClass == null) || !componentClass.isInstance(title)) {
+        if (paperCreateTitle == null || componentClass == null || !componentClass.isInstance(title)) {
             return createSpigotInventory(holder);
         }
         try {
@@ -97,7 +99,7 @@ public abstract class AbstractGuiCustom<G extends AbstractGuiCustom<@NonNull G>>
         }
     }
 
-    private @NotNull Inventory createSpigotInventory(@NotNull InventoryHolder holder) {
+    protected @NotNull Inventory createSpigotInventory(@NotNull InventoryHolder holder) {
         ComponentConvert componentConvert = GuiManager.instance().componentConvert();
         return Bukkit.createInventory(holder, line * 9, componentConvert.convert(player, title));
     }
