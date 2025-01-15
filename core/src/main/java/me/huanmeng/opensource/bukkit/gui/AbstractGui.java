@@ -30,6 +30,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.logging.Level;
 
 /**
  * 2023/3/17<br>
@@ -180,7 +181,11 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             tickTask.stop();
         }
         if (whenClose != null) {
-            whenClose.accept(self());
+            try {
+                whenClose.accept(self());
+            } catch (Exception e) {
+                manager.plugin().getLogger().log(Level.SEVERE, "An error occurred while executing the whenClose action: ", e);
+            }
         }
     }
 
