@@ -73,59 +73,59 @@ public interface Slot {
      * 以0开始
      */
     @Contract(value = "_ -> new", pure = true)
-    static Slot of(int i) {
-        return new SlotImpl(i);
+    static Slot of(int slotIndex) {
+        return new SlotImpl(slotIndex);
     }
 
     /**
      * 以1开始
      */
     @Contract(value = "_, _ -> new", pure = true)
-    static Slot ofGame(int x, int y) {
-        return new SlotImpl(SlotUtil.getSlot(y, x));
+    static Slot ofGame(int row, int column) {
+        return new SlotImpl(SlotUtil.getSlot(row, column));
     }
 
     /**
      * 以0开始
      */
     @Contract(value = "_, _ -> new", pure = true)
-    static Slot ofBukkit(int x, int y) {
-        return new SlotImpl(SlotUtil.getSlot(y + 1, x + 1));
+    static Slot ofBukkit(int row, int column) {
+        return new SlotImpl(SlotUtil.getSlot(row + 1, column + 1));
     }
 
     @Contract(value = "_, _ -> new", pure = true)
-    static Slot of(int i, ButtonClickInterface buttonClickInterface) {
-        return new SlotInterface(i, buttonClickInterface);
+    static Slot of(int slotIndex, ButtonClickInterface buttonClickInterface) {
+        return new SlotInterface(slotIndex, buttonClickInterface);
     }
 
     @Contract(value = "_, !null -> new", pure = true)
-    static Slot of(int i, ButtonSimpleClickInterface buttonSimpleClickInterface) {
-        return new SlotInterface(i, buttonSimpleClickInterface);
+    static Slot of(int slotIndex, ButtonSimpleClickInterface buttonSimpleClickInterface) {
+        return new SlotInterface(slotIndex, buttonSimpleClickInterface);
     }
 
     @Contract(value = "_, !null -> new", pure = true)
-    static Slot of(int i, ButtonPlaceInterface placeInterface) {
-        return new SlotInterface(i, placeInterface);
+    static Slot of(int slotIndex, ButtonPlaceInterface placeInterface) {
+        return new SlotInterface(slotIndex, placeInterface);
     }
 
     @Contract(value = "_, _, _ -> new", pure = true)
-    static Slot forward(int slot, int forwardSlot, @Nullable ButtonPlaceInterface placeInterface) {
-        return new SlotForward(Slot.of(slot), Slot.of(forwardSlot), placeInterface);
+    static Slot forward(int slotIndex, int forwardSlot, @Nullable ButtonPlaceInterface placeInterface) {
+        return new SlotForward(Slot.of(slotIndex), Slot.of(forwardSlot), placeInterface);
     }
 
     @Contract(value = "_, _ -> new", pure = true)
-    static Slot forward(int slot, int forwardSlot) {
-        return new SlotForward(Slot.of(slot), Slot.of(forwardSlot));
+    static Slot forward(int slotIndex, int forwardSlot) {
+        return new SlotForward(Slot.of(slotIndex), Slot.of(forwardSlot));
     }
 
     @Contract(value = "_, _ -> new", pure = true)
-    static Slot forward(int slot, @NonNull Slot forwardSlot) {
-        return new SlotForward(Slot.of(slot), forwardSlot);
+    static Slot forward(int slotIndex, @NonNull Slot forwardSlot) {
+        return new SlotForward(Slot.of(slotIndex), forwardSlot);
     }
 
     @Contract(value = "_, _, _ -> new", pure = true)
-    static Slot forward(int slot, @NonNull Slot forwardSlot, @Nullable ButtonPlaceInterface placeInterface) {
-        return new SlotForward(Slot.of(slot), forwardSlot, placeInterface);
+    static Slot forward(int slotIndex, @NonNull Slot forwardSlot, @Nullable ButtonPlaceInterface placeInterface) {
+        return new SlotForward(Slot.of(slotIndex), forwardSlot, placeInterface);
     }
 
     @Contract(value = "_, _ -> new", pure = true)
@@ -158,10 +158,10 @@ public interface Slot {
     /**
      * 玩家背包槽位
      *
-     * @param index 背包槽位
+     * @param slotIndex 背包槽位
      */
-    static PlayerSlot player(int index) {
-        return new PlayerSlot(Slot.of(index));
+    static PlayerSlot player(int slotIndex) {
+        return new PlayerSlot(Slot.of(slotIndex));
     }
 
     default PlayerSlot asPlayer() {

@@ -1,7 +1,6 @@
 package me.huanmeng.opensource.bukkit.gui;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
 
@@ -17,12 +16,12 @@ public class SlotUtil {
      * 以1开始计算
      * 比如3,5 对应箱子的第3行第5格 = 22
      *
-     * @param line   行数
+     * @param row    行数
      * @param column 列
      * @return bukkit中的slot(0开始)
      */
-    public static int getSlot(int line, int column) {
-        return (line * 9) - (column == 9 ? 1 : 10 - column);
+    public static int getSlot(int row, int column) {
+        return (row * 9) - (column == 9 ? 1 : 10 - column);
     }
 
     /**
@@ -32,7 +31,7 @@ public class SlotUtil {
      *
      * @param items 集合
      */
-    public static int getLine(@NonNull Collection<@Nullable ?> items) {
+    public static int getLine(@NonNull Collection<?> items) {
         return getLine(items.size());
     }
 
