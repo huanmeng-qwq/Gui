@@ -103,6 +103,7 @@ public class GuiManager implements ListenerAdapter {
             metrics.shutdown();
             metrics = null;
         }
+        GuiManager.instance = null;
     }
 
     @NonNull
@@ -355,4 +356,5 @@ public class GuiManager implements ListenerAdapter {
     public void setGuiHandler(@NonNull GuiHandler guiHandler) {
         this.guiHandler = guiHandler;
     }
+
 }
