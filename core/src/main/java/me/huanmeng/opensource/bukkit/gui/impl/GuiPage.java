@@ -23,6 +23,7 @@ public class GuiPage extends AbstractGuiPage<GuiPage> {
 
     public GuiPage(@NonNull Player player, @NonNull List<Button> allItems, @NonNull Slots elementSlots) {
         this(player, allItems, allItems.size(), elementSlots);
+        this.defaultArea.elementsPerPage(elementSlots.slots(this).length);
     }
 
     public GuiPage(@NonNull Player player, @NonNull List<Button> allItems, int elementsPerPage, @NonNull Slots elementSlots) {
