@@ -1,6 +1,7 @@
 package me.huanmeng.opensource.bukkit.gui.slot;
 
 import me.huanmeng.opensource.bukkit.gui.AbstractGui;
+import me.huanmeng.opensource.bukkit.gui.SlotUtil;
 import me.huanmeng.opensource.bukkit.gui.slot.impl.slots.ArraySlots;
 import me.huanmeng.opensource.bukkit.gui.slot.impl.slots.ExcludeSlots;
 import me.huanmeng.opensource.bukkit.gui.slot.impl.slots.PatternLineSlots;
@@ -9,6 +10,7 @@ import me.huanmeng.opensource.bukkit.util.MathUtil;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -116,14 +118,63 @@ public interface Slots {
     }
 
     /**
-     *
      * @param min 包含
      * @param max 不包含
-     * @return
      */
     @Contract(value = "_, _-> new", pure = true)
     static ArraySlots range(int min, int max) {
         return of(MathUtil.range(min, max));
+    }
+
+    /**
+     * 框选范围
+     *
+     * @param a a点 不能大于b
+     * @param b b点
+     */
+    static ArraySlots cut(int a, int b) {
+        if (a > b) {
+            throw new IllegalArgumentException("a must be less than or equal to b");
+        }
+        int aRow = SlotUtil.getRow(a);
+        int aColumn = SlotUtil.getColumn(a);
+        int bRow = SlotUtil.getRow(b);
+        int bColumn = SlotUtil.getColumn(b);
+        return of(MathUtil.cut(aRow, bRow, aColumn, bColumn));
+    }
+
+    /**
+     * 框选玩家背包槽位
+     * @param a a点 不能低于0 不能大于35 不能大于b
+     * @param b b点 不能低于0 不能大于35
+     */
+    static PlayerSlots cutPlayer(@Range(from = 0, to = 35) int a, @Range(from = 0, to = 35) int b) {
+        if (a > b) {
+            throw new IllegalArgumentException("a must be less than or equal to b");
+        }
+        if (a < 0) {
+            throw new IllegalArgumentException("a must be greater than or equal to 0");
+        }
+        if (b > 35) {
+            throw new IllegalArgumentException("b must be less than or equal to 35");
+        }
+        int aRow = SlotUtil.getRow(a);
+        int aColumn = SlotUtil.getColumn(a);
+        int bRow = SlotUtil.getRow(b);
+        int bColumn = SlotUtil.getColumn(b);
+        if (aRow > 4 || bRow > 4) {
+            throw new IllegalArgumentException("aRow and bRow must be less than 5");
+        }
+        int[] slots = MathUtil.cut(aRow, bRow, aColumn, bColumn);
+        int[] playerSlots = new int[slots.length];
+        for (int i = 0; i < slots.length; i++) {
+            if (slots[i] >= 27) {
+                playerSlots[i] = slots[i] - 27;
+            } else {
+                playerSlots[i] = slots[i] + 9;
+            }
+        }
+        return of(playerSlots).asPlayer();
     }
 
     @Contract(value = "_-> new", pure = true)
@@ -149,7 +200,7 @@ public interface Slots {
         return FULL;
     }
 
-    default PlayerSlots asPlayer(){
+    default PlayerSlots asPlayer() {
         return new PlayerSlots(this);
     }
 }

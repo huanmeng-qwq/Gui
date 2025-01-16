@@ -16,12 +16,32 @@ public class SlotUtil {
      * 以1开始计算
      * 比如3,5 对应箱子的第3行第5格 = 22
      *
-     * @param row    行数
+     * @param row    行
      * @param column 列
      * @return bukkit中的slot(0开始)
      */
     public static int getSlot(int row, int column) {
         return (row * 9) - (column == 9 ? 1 : 10 - column);
+    }
+
+    /**
+     * 通过slot计算行
+     *
+     * @param slot slot
+     * @return 行
+     */
+    public static int getRow(int slot) {
+        return (slot + 9) / 9;
+    }
+
+    /**
+     * 通过slot计算列
+     *
+     * @param slot slot
+     * @return 列
+     */
+    public static int getColumn(int slot) {
+        return (slot % 9) + 1;
     }
 
     /**
