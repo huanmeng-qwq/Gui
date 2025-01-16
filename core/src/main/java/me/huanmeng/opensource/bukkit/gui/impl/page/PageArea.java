@@ -17,19 +17,18 @@ import java.util.List;
  */
 public class PageArea {
     protected Slots slots = Slots.full();
-    protected List<? extends Button> items = Collections.emptyList();
+    protected List<Button> items = Collections.emptyList();
     protected int elementsPerPage;
     protected PageSetting pageSetting;
 
-
     protected int currentPage = 1;
-    protected Pagination<? extends Button> pagination = new Pagination<>(items, elementsPerPage);
+    protected Pagination<Button> pagination = new Pagination<>(items, elementsPerPage);
 
     public void previousPage() {
         currentPage--;
     }
 
-    public void previousPage(int n){
+    public void previousPage(int n) {
         currentPage -= n;
     }
 
@@ -37,7 +36,7 @@ public class PageArea {
         currentPage++;
     }
 
-    public void nextPage(int n){
+    public void nextPage(int n) {
         currentPage += n;
     }
 
@@ -48,20 +47,21 @@ public class PageArea {
     public void setToLastPage() {
         currentPage = pagination.getMaxPage();
     }
-    public boolean hasPreviousPage(){
+
+    public boolean hasPreviousPage() {
         return pagination.hasLast(currentPage);
     }
 
-    public boolean hasNextPage(){
+    public boolean hasNextPage() {
         return pagination.hasNext(currentPage);
     }
 
 
-    public int getMaxPage(){
+    public int getMaxPage() {
         return pagination.getMaxPage();
     }
 
-    public List<? extends Button> getCurrentItems() {
+    public List<Button> getCurrentItems() {
         return pagination.getElementsFor(currentPage);
     }
 
@@ -75,14 +75,15 @@ public class PageArea {
         return this;
     }
 
-    public List<? extends Button> items() {
+    public List<Button> items() {
         return items;
     }
 
     @CanIgnoreReturnValue
-    public PageArea items(List<? extends Button> items) {
+    public PageArea items(List<Button> items) {
         this.items = new ArrayList<>(items);
         refreshPagination();
+
         return this;
     }
 
@@ -107,7 +108,7 @@ public class PageArea {
         return this;
     }
 
-    public Pagination<? extends Button> pagination() {
+    public Pagination<Button> pagination() {
         return pagination;
     }
 

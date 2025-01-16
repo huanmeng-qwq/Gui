@@ -30,7 +30,7 @@ public abstract class AbstractGuiPage<G extends AbstractGuiPage<@NonNull G>> ext
         super();
     }
 
-    public PageArea pageArea(Slots slots, List<? extends Button> items, int elementsPerPage) {
+    public PageArea pageArea(Slots slots, List<Button> items, int elementsPerPage) {
         return pageArea(new PageArea().slots(slots).items(items).elementsPerPage(elementsPerPage));
     }
 
@@ -48,7 +48,7 @@ public abstract class AbstractGuiPage<G extends AbstractGuiPage<@NonNull G>> ext
         buttons.clear();
         Set<GuiButton> buttons = new HashSet<>();
         for (PageArea pageArea : pageAreas) {
-            List<? extends Button> buttonList = pageArea.getCurrentItems();
+            List<Button> buttonList = pageArea.getCurrentItems();
             ArrayList<Slot> slots = new ArrayList<>(Arrays.asList(Objects.requireNonNull(pageArea.slots()).slots(self())));
             for (Button button : buttonList) {
                 if (slots.isEmpty()) {

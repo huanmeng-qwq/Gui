@@ -104,7 +104,7 @@ public class GuiDraw<G extends AbstractGui<G>> {
      * @return this
      */
     @NonNull
-    public GuiDraw<G> set(@NonNull Slots slots, @NonNull List<@Nullable ? extends Button> buttons) {
+    public GuiDraw<G> set(@NonNull Slots slots, @NonNull List<Button> buttons) {
         Slot[] slotArray = slots.slots(gui);
         for (int i = 0; i < slotArray.length; i++) {
             if (i >= buttons.size()) {

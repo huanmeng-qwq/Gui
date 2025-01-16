@@ -18,7 +18,7 @@ public class Pagination<@NonNull T> {
     private List<@Nullable T> content;
     private final int elementsPerPage;
 
-    public Pagination(@NonNull List<@Nullable T> content, int elementsPerPage) {
+    public Pagination(@NonNull List<T> content, int elementsPerPage) {
         this.content = content;
         this.elementsPerPage = elementsPerPage;
     }
@@ -36,7 +36,7 @@ public class Pagination<@NonNull T> {
      * @return 元素列表
      */
     @NonNull
-    public List<@Nullable T> getElementsFor(int page) {
+    public List<T> getElementsFor(int page) {
         if (page <= 0 || page > getPages()) return new ArrayList<T>();
 
         int startIndex = (page - 1) * this.elementsPerPage;
@@ -107,7 +107,7 @@ public class Pagination<@NonNull T> {
      * @return 元素列表
      */
     @NonNull
-    public List<@Nullable T> getContent() {
+    public List<T> getContent() {
         return content;
     }
 
@@ -116,7 +116,7 @@ public class Pagination<@NonNull T> {
      *
      * @param content 元素列表
      */
-    public void setContent(@NonNull List<@Nullable T> content) {
+    public void setContent(@NonNull List<T> content) {
         this.content = content;
     }
 

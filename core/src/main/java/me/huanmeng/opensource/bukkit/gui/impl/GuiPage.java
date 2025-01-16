@@ -21,11 +21,11 @@ import java.util.List;
 public class GuiPage extends AbstractGuiPage<GuiPage> {
     protected PageArea defaultArea;
 
-    public GuiPage(@NonNull Player player, @NonNull List<? extends Button> allItems, @NonNull Slots elementSlots) {
+    public GuiPage(@NonNull Player player, @NonNull List<Button> allItems, @NonNull Slots elementSlots) {
         this(player, allItems, allItems.size(), elementSlots);
     }
 
-    public GuiPage(@NonNull Player player, @NonNull List<? extends Button> allItems, int elementsPerPage, @NonNull Slots elementSlots) {
+    public GuiPage(@NonNull Player player, @NonNull List<Button> allItems, int elementsPerPage, @NonNull Slots elementSlots) {
         super(player);
         this.defaultArea = pageArea(elementSlots, allItems, elementsPerPage);
     }
@@ -36,13 +36,13 @@ public class GuiPage extends AbstractGuiPage<GuiPage> {
     }
 
     @NonNull
-    protected final Pagination<? extends Button> createPagination() {
+    protected final Pagination<Button> createPagination() {
         this.defaultArea.refreshPagination();
         return this.defaultArea.pagination();
     }
 
     @NonNull
-    public Pagination<? extends Button> pagination() {
+    public Pagination<Button> pagination() {
         return this.defaultArea.pagination();
     }
 
@@ -87,7 +87,7 @@ public class GuiPage extends AbstractGuiPage<GuiPage> {
     }
 
     @NonNull
-    public Pagination<? extends Button> getPaginationNotNull() {
+    public Pagination<Button> getPaginationNotNull() {
         return this.defaultArea.pagination();
     }
 
@@ -96,11 +96,11 @@ public class GuiPage extends AbstractGuiPage<GuiPage> {
     }
 
     @Nullable
-    public List<? extends Button> getAllItems() {
+    public List<Button> getAllItems() {
         return this.defaultArea.items();
     }
 
-    public void setAllItems(@NonNull List<? extends Button> allItems) {
+    public void setAllItems(@NonNull List<Button> allItems) {
         this.defaultArea.items(allItems);
     }
 
