@@ -1,27 +1,19 @@
 package me.huanmeng.opensource.bukkit.gui.button;
 
-import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.button.function.PlayerClickCancelInterface;
 import me.huanmeng.opensource.bukkit.gui.button.function.PlayerClickInterface;
 import me.huanmeng.opensource.bukkit.gui.button.function.PlayerItemInterface;
 import me.huanmeng.opensource.bukkit.gui.button.function.PlayerSimpleCancelInterface;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
-import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -50,17 +42,9 @@ public interface Button {
 
     @NonNull
     default Result onClick(@NonNull ClickData clickData) {
-        return onClick(clickData.gui, clickData.slot, clickData.player, clickData.click, clickData.action, clickData.slotType, clickData.slotKey, clickData.hotBarKey, clickData.event);
-    }
-
-
-    @NonNull
-    @Deprecated
-    @ApiStatus.ScheduledForRemoval(inVersion = "2.5")
-    default Result onClick(@NonNull AbstractGui<?> gui, @NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action,
-                           InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey, @NonNull InventoryClickEvent e) {
         return Result.CANCEL;
     }
+
 
     /**
      * 展示型按钮

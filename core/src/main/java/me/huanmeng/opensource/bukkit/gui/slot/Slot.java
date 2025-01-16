@@ -13,14 +13,9 @@ import me.huanmeng.opensource.bukkit.gui.slot.impl.slot.SlotForward;
 import me.huanmeng.opensource.bukkit.gui.slot.impl.slot.SlotImpl;
 import me.huanmeng.opensource.bukkit.gui.slot.impl.slot.SlotInterface;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -45,21 +40,6 @@ public interface Slot {
     @NonNull
     default Result onClick(@NonNull ClickData clickData) {
         return clickData.button.onClick(clickData);
-    }
-
-    /**
-     * 当点击时
-     *
-     * @return 是否取消事件
-     * @see Result
-     */
-    @NonNull
-    @Deprecated
-    @ApiStatus.ScheduledForRemoval(inVersion = "2.5")
-    default Result onClick(@NonNull AbstractGui<?> gui, @NonNull Button button, @NonNull Player player, @NonNull ClickType click,
-                           @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slot,
-                           int hotBarKey, @NonNull InventoryClickEvent e) {
-        return button.onClick(gui, this, player, click, action, slotType, slot, hotBarKey, e);
     }
 
     /**

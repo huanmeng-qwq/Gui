@@ -1,15 +1,9 @@
 package me.huanmeng.opensource.bukkit.gui.button;
 
-import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.button.function.PlayerClickInterface;
 import me.huanmeng.opensource.bukkit.gui.button.function.PlayerItemInterface;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
-import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -47,14 +41,5 @@ public class ClickButton implements Button {
             return Result.CANCEL;
         }
         return playerClickInterface.onClick(clickData);
-    }
-
-    @NonNull
-    @Override
-    public Result onClick(@NonNull AbstractGui<?> gui, @NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey, @NonNull InventoryClickEvent e) {
-        if (playerClickInterface == null) {
-            return Result.CANCEL;
-        }
-        return playerClickInterface.onClick(new ClickData(player, gui, slot, null, this, e, click, action, slotType, slotKey, hotBarKey));
     }
 }

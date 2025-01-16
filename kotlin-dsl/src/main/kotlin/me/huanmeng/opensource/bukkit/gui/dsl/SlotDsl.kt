@@ -78,22 +78,6 @@ private class SlotWrapper(private val index: Int, private val slotDsl: SlotDsl) 
         }else super.onClick(clickData)
     }
 
-    override fun onClick(
-        gui: AbstractGui<*>,
-        button: Button,
-        player: Player,
-        click: ClickType,
-        action: InventoryAction,
-        slotType: SlotType,
-        slot: Int,
-        hotBarKey: Int,
-        e: InventoryClickEvent
-    ): Result {
-        return if (slotDsl.onClick != null) {
-            slotDsl.onClick!!(button, player, click, action, slotType, slot, hotBarKey, e)
-        } else super.onClick(gui, button, player, click, action, slotType, slot, hotBarKey, e)
-    }
-
     override fun tryPlace(button: Button, player: Player): Boolean {
         return if (slotDsl.tryPlace != null) {
             return slotDsl.tryPlace!!(button, player)

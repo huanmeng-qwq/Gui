@@ -1,13 +1,8 @@
 package me.huanmeng.opensource.bukkit.gui.button.function;
 
-import me.huanmeng.opensource.bukkit.gui.AbstractGui;
+import me.huanmeng.opensource.bukkit.gui.button.ClickData;
 import me.huanmeng.opensource.bukkit.gui.enums.Result;
-import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
@@ -20,9 +15,8 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 @FunctionalInterface
 public interface PlayerSimpleCancelUpdateInterface extends PlayerClickInterface {
     @Override
-    @NonNull
-    default Result onClick(@NonNull AbstractGui<?> gui, @NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey, @NonNull InventoryClickEvent event) {
-        onPlayerClick(player);
+    default Result onClick(@NonNull ClickData clickData) {
+        onPlayerClick(clickData.player);
         return Result.CANCEL_UPDATE;
     }
 

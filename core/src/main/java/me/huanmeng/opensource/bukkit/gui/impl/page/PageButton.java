@@ -1,7 +1,6 @@
 package me.huanmeng.opensource.bukkit.gui.impl.page;
 
 import com.google.common.collect.ImmutableSet;
-import me.huanmeng.opensource.bukkit.gui.AbstractGui;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.button.ClickData;
 import me.huanmeng.opensource.bukkit.gui.button.function.page.PlayerClickPageButtonInterface;
@@ -11,10 +10,7 @@ import me.huanmeng.opensource.bukkit.gui.impl.GuiPage;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.util.item.ItemUtil;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -243,36 +239,6 @@ public class PageButton implements Button {
             return Result.CANCEL;
         }
         return playerClickPageButtonInterface.onClick(gui, pageArea, buttonType, clickData);
-    }
-
-    @Override
-    @Deprecated
-    public @NonNull Result onClick(@NonNull AbstractGui<?> g, @NonNull Slot slot, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slotKey, int hotBarKey, @NonNull InventoryClickEvent e) {
-        if (ItemUtil.isAir(e.getCurrentItem())) {
-            return Result.CANCEL;
-        }
-        if (origin == null) {
-            return Result.CANCEL;
-        }
-        Result result = origin.onClick(gui, slot, player, click, action, slotType, slotKey, hotBarKey, e);
-        if (playerClickPageButtonInterface == null || types.isEmpty()) {
-            return result;
-        }
-        Iterator<PageButtonType> iterator = types.iterator();
-        PageButtonType buttonType = iterator.next();
-        if (iterator.hasNext()) {
-            while (iterator.hasNext()) {
-                PageButtonType type = iterator.next();
-                if (type.mainType() == buttonType.mainType() || type.subType() == click) {
-                    buttonType = type;
-                    break;
-                }
-            }
-        }
-        if (!buttonType.hasPage(pageArea)) {
-            return Result.CANCEL;
-        }
-        return playerClickPageButtonInterface.onClick(gui, pageArea, buttonType, slot, player, click, action, slotType, slotKey, hotBarKey);
     }
 
     /**

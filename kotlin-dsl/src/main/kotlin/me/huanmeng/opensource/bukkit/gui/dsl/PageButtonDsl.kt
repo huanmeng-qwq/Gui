@@ -3,6 +3,7 @@
 package me.huanmeng.opensource.bukkit.gui.dsl
 
 import me.huanmeng.opensource.bukkit.gui.button.Button
+import me.huanmeng.opensource.bukkit.gui.button.ClickData
 import me.huanmeng.opensource.bukkit.gui.button.function.page.PlayerClickPageButtonInterface
 import me.huanmeng.opensource.bukkit.gui.enums.Result
 import me.huanmeng.opensource.bukkit.gui.impl.AbstractGuiPage
@@ -11,11 +12,7 @@ import me.huanmeng.opensource.bukkit.gui.impl.page.PageArea
 import me.huanmeng.opensource.bukkit.gui.impl.page.PageButton
 import me.huanmeng.opensource.bukkit.gui.impl.page.PageButton.Builder
 import me.huanmeng.opensource.bukkit.gui.impl.page.PageButtonType
-import me.huanmeng.opensource.bukkit.gui.slot.Slot
 import org.bukkit.entity.Player
-import org.bukkit.event.inventory.ClickType
-import org.bukkit.event.inventory.InventoryAction
-import org.bukkit.event.inventory.InventoryType
 
 /**
  * 构建[PageButton]
@@ -36,7 +33,7 @@ fun Builder.setButton(lambda: ButtonDsl.() -> Unit) {
  */
 fun Builder.click(
     lambda: (
-        gui: AbstractGuiPage<*>, pageArea: PageArea, buttonType: PageButtonType, slot: Slot, player: Player, click: ClickType, action: InventoryAction, slotType: InventoryType.SlotType, slotKey: Int, hotBarKey: Int
+        gui: AbstractGuiPage<*>, pageArea: PageArea, buttonType: PageButtonType, clickData: ClickData
     ) -> Result
 ) {
     click(PlayerClickPageButtonInterface(lambda))
@@ -45,7 +42,7 @@ fun Builder.click(
 /**
  * 处理点击后的操作
  */
-fun Builder.handleClick(lambda: (player: Player, gui: AbstractGuiPage<*>, buttonType: PageButtonType) -> Unit) {
+fun Builder.handleClick(lambda: (player: Player, gui: AbstractGuiPage<*>, pageArea: PageArea, buttonType: PageButtonType, clickData: ClickData) -> Unit) {
     click(PageButtonClickDsl().apply { handleClick = lambda })
 }
 
@@ -57,21 +54,16 @@ fun Builder.onClick(lambda: PageButtonClickDsl.() -> Unit) {
 }
 
 class PageButtonClickDsl : PlayerClickPageButtonInterface {
-    var handleClick: ((player: Player, gui: AbstractGuiPage<*>, buttonType: PageButtonType) -> Unit)? = null
+    var handleClick: ((player: Player, gui: AbstractGuiPage<*>, pageArea: PageArea, buttonType: PageButtonType, clickData: ClickData) -> Unit)? =
+        null
+
     override fun onClick(
         gui: AbstractGuiPage<*>,
         pageArea: PageArea,
         buttonType: PageButtonType,
-        slot: Slot,
-        player: Player,
-        click: ClickType,
-        action: InventoryAction,
-        slotType: InventoryType.SlotType,
-        slotKey: Int,
-        hotBarKey: Int
+        clickData: ClickData
     ): Result {
-        handleClick?.invoke(player, gui, buttonType)
+        handleClick?.invoke(clickData.player, gui, pageArea, buttonType, clickData)
         return Result.CANCEL_UPDATE_ALL
     }
-
 }

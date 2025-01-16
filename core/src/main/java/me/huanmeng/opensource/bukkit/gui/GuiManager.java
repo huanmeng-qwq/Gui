@@ -195,6 +195,7 @@ public class GuiManager implements ListenerAdapter {
         processingClickEvent = true;
         UUID uuid = player.getUniqueId();
         if (!isOpenGui(uuid)) {
+            processingClickEvent = false;
             return;
         }
         try {
