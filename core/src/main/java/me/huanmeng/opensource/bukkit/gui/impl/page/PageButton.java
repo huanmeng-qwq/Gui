@@ -43,9 +43,9 @@ public class PageButton implements Button {
     @NonNull
     private PageSlot slot = (line, area, gui) -> {
         if (types != null) {
-            return types.stream().findFirst().map(type -> type.recommendSlot(line)).orElse(Slot.ofGame(1, line));
+            return types.stream().findFirst().map(type -> type.recommendSlot(line)).orElse(Slot.ofGame(line, 1));
         }
-        return Slot.ofGame(1, line);
+        return Slot.ofGame(line, 1);
     };
 
     private PageButton() {

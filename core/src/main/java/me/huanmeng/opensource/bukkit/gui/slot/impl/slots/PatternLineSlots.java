@@ -38,12 +38,12 @@ public class PatternLineSlots implements Slots {
     @NonNull
     protected static Slot[] applySlots(@NonNull String[] pattern, @NonNull List<Character> chars2) {
         List<Slot> list = new ArrayList<>(pattern.length);
-        for (int y = 0; y < pattern.length; y++) {
-            String line = pattern[y];
+        for (int row = 0; row < pattern.length; row++) {
+            String line = pattern[row];
             char[] chars = line.toCharArray();
-            for (int x = 0; x < chars.length; x++) {
-                if (chars2.contains(chars[x])) {
-                    list.add(Slot.ofBukkit(x, y));
+            for (int column = 0; column < chars.length; column++) {
+                if (chars2.contains(chars[column])) {
+                    list.add(Slot.ofBukkit(row, column));
                 }
             }
         }

@@ -35,20 +35,20 @@ public class GuiDraw<G extends AbstractGui<G>> {
     /**
      * 绘制按钮
      *
-     * @param x1     minX
-     * @param y1     minY
-     * @param x2     maxX
-     * @param y2     maxY
-     * @param button 按钮
+     * @param row1    minY
+     * @param column1 minX
+     * @param row2    maxY
+     * @param column2 maxX
+     * @param button  按钮
      * @return this
      */
     @NonNull
-    public GuiDraw<G> vertical(int x1, int y1, int x2, int y2, @Nullable Button button) {
-        int[] xRange = MathUtil.range(x1, x2);
-        int[] yRange = MathUtil.range(y1, y2);
-        for (int x : xRange) {
-            for (int y : yRange) {
-                set(x, y, button);
+    public GuiDraw<G> vertical(int row1, int column1, int row2, int column2, @Nullable Button button) {
+        int[] rowRange = MathUtil.range(row1, row2);
+        int[] columnRange = MathUtil.range(column1, column2);
+        for (int column : columnRange) {
+            for (int row : rowRange) {
+                set(row, column, button);
             }
         }
         return self();
@@ -57,14 +57,14 @@ public class GuiDraw<G extends AbstractGui<G>> {
     /**
      * 绘制按钮
      *
-     * @param x      x
-     * @param y      y
+     * @param column column
+     * @param row    row
      * @param button 按钮
      * @return this
      */
     @NonNull
-    public GuiDraw<G> set(int x, int y, @Nullable Button button) {
-        set(Slot.ofBukkit(x, y), button);
+    public GuiDraw<G> set(int row, int column, @Nullable Button button) {
+        set(Slot.ofBukkit(row, column), button);
         return self();
     }
 

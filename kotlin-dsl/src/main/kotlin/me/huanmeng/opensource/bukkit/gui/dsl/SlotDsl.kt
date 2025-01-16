@@ -73,9 +73,9 @@ private class SlotWrapper(private val index: Int, private val slotDsl: SlotDsl) 
     }
 
     override fun onClick(clickData: ClickData): Result {
-        return if(slotDsl.onClickData != null){
+        return if (slotDsl.onClickData != null) {
             slotDsl.onClickData!!(clickData)
-        }else super.onClick(clickData)
+        } else super.onClick(clickData)
     }
 
     override fun tryPlace(button: Button, player: Player): Boolean {
@@ -112,7 +112,7 @@ enum class IntSlotType {
                 }
 
                 Y -> {
-                    return Slot.ofBukkit(this.value, other.value)
+                    return Slot.ofBukkit(other.value, this.value)
                 }
 
                 GAME_X -> {
@@ -120,7 +120,7 @@ enum class IntSlotType {
                 }
 
                 GAME_Y -> {
-                    return Slot.ofGame(this.value + 1, other.value)
+                    return Slot.ofGame(other.value, this.value + 1)
                 }
             }
         }
@@ -129,7 +129,7 @@ enum class IntSlotType {
         override fun IntSlot.createSlot(other: IntSlot): Slot {
             when (other.type) {
                 X -> {
-                    return Slot.ofBukkit(other.value, this.value)
+                    return Slot.ofBukkit(this.value, other.value)
                 }
 
                 Y -> {
@@ -137,7 +137,7 @@ enum class IntSlotType {
                 }
 
                 GAME_X -> {
-                    return Slot.ofGame(other.value, this.value + 1)
+                    return Slot.ofGame(this.value + 1, other.value)
                 }
 
                 GAME_Y -> {
@@ -154,7 +154,7 @@ enum class IntSlotType {
                 }
 
                 Y -> {
-                    return Slot.ofGame(this.value, other.value + 1)
+                    return Slot.ofGame(other.value + 1, this.value)
                 }
 
                 GAME_X -> {
@@ -162,7 +162,7 @@ enum class IntSlotType {
                 }
 
                 GAME_Y -> {
-                    return Slot.ofGame(this.value, other.value)
+                    return Slot.ofGame(other.value, this.value)
                 }
             }
         }
@@ -171,7 +171,7 @@ enum class IntSlotType {
         override fun IntSlot.createSlot(other: IntSlot): Slot {
             when (other.type) {
                 X -> {
-                    return Slot.ofGame(other.value + 1, this.value)
+                    return Slot.ofGame(this.value, other.value + 1)
                 }
 
                 Y -> {
@@ -179,7 +179,7 @@ enum class IntSlotType {
                 }
 
                 GAME_X -> {
-                    return Slot.ofGame(other.value, this.value)
+                    return Slot.ofGame(this.value, other.value)
                 }
 
                 GAME_Y -> {
@@ -197,18 +197,23 @@ class IntSlot(val value: Int, val type: IntSlotType) {
     operator fun plus(other: IntSlot): Slot {
         return type.run { createSlot(other) }
     }
+
     operator fun plus(other: Int): IntSlot {
-        return IntSlot(value+ other, type)
+        return IntSlot(value + other, type)
     }
+
     operator fun minus(other: Int): IntSlot {
         return IntSlot(value - other, type)
     }
+
     operator fun times(other: Int): IntSlot {
         return IntSlot(value * other, type)
     }
+
     operator fun div(other: Int): IntSlot {
         return IntSlot(value / other, type)
     }
+
     operator fun rem(other: Int): IntSlot {
         return IntSlot(value % other, type)
     }

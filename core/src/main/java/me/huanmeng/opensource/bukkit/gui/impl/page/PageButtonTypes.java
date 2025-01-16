@@ -25,7 +25,7 @@ public enum PageButtonTypes implements PageButtonType {
         @NotNull
         @Override
         public Slot recommendSlot(int line) {
-            return Slot.ofGame(1, line);
+            return Slot.ofGame(line, 1);
         }
     },
     /**
@@ -45,7 +45,7 @@ public enum PageButtonTypes implements PageButtonType {
         @NotNull
         @Override
         public Slot recommendSlot(int line) {
-            return Slot.ofGame(9, line);
+            return Slot.ofGame(line, 9);
         }
     },
     /**
@@ -65,7 +65,7 @@ public enum PageButtonTypes implements PageButtonType {
         @NotNull
         @Override
         public Slot recommendSlot(int line) {
-            return Slot.ofGame(1, line);
+            return Slot.ofGame(line, 1);
         }
     },
     /**
@@ -85,7 +85,7 @@ public enum PageButtonTypes implements PageButtonType {
         @NotNull
         @Override
         public Slot recommendSlot(int line) {
-            return Slot.ofGame(9, line);
+            return Slot.ofGame(line, 9);
         }
     },
     ;
