@@ -1,21 +1,19 @@
 package me.huanmeng.gui.gui.impl;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import me.huanmeng.gui.adventure.ComponentConvert;
 import me.huanmeng.gui.gui.AbstractGui;
-import me.huanmeng.gui.gui.GuiManager;
-import me.huanmeng.gui.util.item.ItemUtil;
 import me.huanmeng.gui.scheduler.Schedulers;
+import me.huanmeng.gui.util.InventoryUtil;
+import me.huanmeng.gui.util.item.ItemUtil;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jetbrains.annotations.NotNull;
-
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
 
 /**
  * 2024/12/9<br>
@@ -86,22 +84,7 @@ public abstract class AbstractGuiCustom<G extends AbstractGuiCustom<@NonNull G>>
     @Override
     @NonNull
     protected Inventory build(@NonNull InventoryHolder holder) {
-        if (player == null) {
-            throw new IllegalArgumentException("player is null");
-        }
-        if (paperCreateTitle == null || componentClass == null || !componentClass.isInstance(title)) {
-            return createSpigotInventory(holder);
-        }
-        try {
-            return (Inventory) paperCreateTitle.invoke(holder, line * 9, title);
-        } catch (Throwable e) {
-            return createSpigotInventory(holder);
-        }
-    }
-
-    protected @NotNull Inventory createSpigotInventory(@NotNull InventoryHolder holder) {
-        ComponentConvert componentConvert = GuiManager.instance().componentConvert();
-        return Bukkit.createInventory(holder, line * 9, componentConvert.convert(player, title));
+        return InventoryUtil.createInventory(holder, InventoryType.CHEST, line * 9, title);
     }
 
     @Override

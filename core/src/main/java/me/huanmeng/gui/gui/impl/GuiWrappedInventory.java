@@ -1,12 +1,10 @@
 package me.huanmeng.gui.gui.impl;
 
-import me.huanmeng.gui.adventure.ComponentConvert;
 import me.huanmeng.gui.gui.slot.Slots;
 import me.huanmeng.gui.scheduler.Schedulers;
-import org.bukkit.Bukkit;
+import me.huanmeng.gui.util.InventoryUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -36,14 +34,7 @@ public class GuiWrappedInventory extends AbstractGuiCustom<GuiWrappedInventory> 
 
     @Override
     protected @NonNull Inventory build(@NonNull InventoryHolder holder) {
-        ComponentConvert componentConvert = manager.componentConvert();
-        Inventory build;
-        if (inventory.getType() != InventoryType.CHEST) {
-            build = Bukkit.createInventory(holder, inventory.getType(), componentConvert.convert(title));
-        } else {
-            build = Bukkit.createInventory(holder, inventory.getSize(), componentConvert.convert(title));
-        }
-        return build;
+        return InventoryUtil.createInventory(holder, inventory.getType(), inventory.getSize(), title);
     }
 
     @Override
@@ -70,7 +61,7 @@ public class GuiWrappedInventory extends AbstractGuiCustom<GuiWrappedInventory> 
     public void onClick(@NonNull InventoryClickEvent e) {
         super.onClick(e);
         setToInventory();
-        Schedulers.sync().runLater(this::setToInventory,1);
+        Schedulers.sync().runLater(this::setToInventory, 1);
     }
 
     private void setToInventory() {
