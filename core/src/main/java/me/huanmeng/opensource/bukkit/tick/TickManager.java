@@ -12,17 +12,17 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 @SuppressWarnings("unused")
 public class TickManager {
-    public static Scheduler.@NonNull Task tick(@NonNull ITickle tickle, boolean async, long tick) {
+    public static Scheduler.@NonNull Task tick(@NonNull Runnable tickle, boolean async, long tick) {
         Scheduler.Task task;
         if (async) {
-            task = Schedulers.async().runRepeating(tickle::tick, tick, tick);
+            task = Schedulers.async().runRepeating(tickle::run, tick, tick);
         } else {
-            task = Schedulers.sync().runRepeating(tickle::tick, tick, tick);
+            task = Schedulers.sync().runRepeating(tickle::run, tick, tick);
         }
         return task;
     }
 
-    public static Scheduler.@NonNull Task tick(@NonNull ITickle tickle, @NonNull Scheduler scheduler, long tick) {
-        return scheduler.runRepeating(tickle::tick, tick, tick);
+    public static Scheduler.@NonNull Task tick(@NonNull Runnable tickle, @NonNull Scheduler scheduler, long tick) {
+        return scheduler.runRepeating(tickle::run, tick, tick);
     }
 }

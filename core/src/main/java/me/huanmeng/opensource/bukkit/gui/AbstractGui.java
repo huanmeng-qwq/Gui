@@ -263,7 +263,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     @Override
-    public void tick() {
+    public void run() {
         if (close) {
             return;
         }

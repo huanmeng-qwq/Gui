@@ -7,15 +7,14 @@ import me.huanmeng.opensource.bukkit.gui.slot.impl.slots.ExcludeSlots;
 import me.huanmeng.opensource.bukkit.gui.slot.impl.slots.PatternLineSlots;
 import me.huanmeng.opensource.bukkit.gui.slot.impl.slots.PatternSlots;
 import me.huanmeng.opensource.bukkit.util.MathUtil;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Range;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
 /**
  * 2023/3/17<br>
@@ -25,6 +24,7 @@ import java.util.function.Function;
  */
 @SuppressWarnings("unused")
 public interface Slots {
+
     @NonNull
     PatternLineSlots PATTERN_LINE_DEFAULT = Slots.patternLine((line -> {
         List<String> list = new ArrayList<>(line);
@@ -145,6 +145,7 @@ public interface Slots {
 
     /**
      * 框选玩家背包槽位
+     *
      * @param a a点 不能低于0 不能大于35 不能大于b
      * @param b b点 不能低于0 不能大于35
      */

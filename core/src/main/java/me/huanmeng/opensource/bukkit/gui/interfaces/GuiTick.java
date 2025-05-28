@@ -1,6 +1,5 @@
 package me.huanmeng.opensource.bukkit.gui.interfaces;
 
-import me.huanmeng.opensource.bukkit.tick.ITickle;
 import me.huanmeng.opensource.scheduler.Scheduler;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -10,7 +9,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *
  * @author huanmeng_qwq
  */
-public interface GuiTick extends ITickle {
+public interface GuiTick extends Runnable {
     /**
      * 线程
      */

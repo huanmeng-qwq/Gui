@@ -48,6 +48,7 @@ public abstract class AbstractGuiPage<G extends AbstractGuiPage<@NonNull G>> ext
         buttons.clear();
         Set<GuiButton> buttons = new HashSet<>();
         for (PageArea pageArea : pageAreas) {
+        refresh(pageArea.slots());
             List<Button> buttonList = pageArea.getCurrentItems();
             ArrayList<Slot> slots = new ArrayList<>(Arrays.asList(Objects.requireNonNull(pageArea.slots()).slots(self())));
             for (Button button : buttonList) {
