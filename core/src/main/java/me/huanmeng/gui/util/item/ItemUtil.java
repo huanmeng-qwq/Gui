@@ -1,12 +1,17 @@
 package me.huanmeng.gui.util.item;
 
+import me.huanmeng.gui.util.AdventureUtil;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Collections;
-import java.util.List;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * 2023/8/24<br>
@@ -15,6 +20,17 @@ import java.util.List;
  * @author huanmeng_qwq
  */
 public final class ItemUtil {
+    private static MethodHandle displayName;
+    private static MethodHandle lore;
+
+    static {
+        try {
+            final MethodHandles.Lookup lookup = MethodHandles.lookup();
+            displayName = lookup.unreflect(ItemMeta.class.getDeclaredMethod("displayName", AdventureUtil.componentClass));
+            lore = lookup.unreflect(ItemMeta.class.getDeclaredMethod("lore", List.class));
+        } catch (Exception ignored) {
+        }
+    }
 
     public static ItemBuilder builder(ItemStack itemStack) {
         return new ItemBuilder(itemStack);
@@ -109,4 +125,31 @@ public final class ItemUtil {
         return Collections.emptyList();
     }
 
+    public static void setName(ItemStack itemStack, Component name) {
+        final ItemMeta itemMeta = itemStack.getItemMeta();
+        if (displayName != null) {
+            try {
+                displayName.bindTo(itemMeta).invoke(AdventureUtil.toComponent(name));
+                itemStack.setItemMeta(itemMeta);
+                return;
+            } catch (Throwable ignored) {
+            }
+        }
+        itemMeta.setDisplayName(AdventureUtil.toLegacyString(name));
+        itemStack.setItemMeta(itemMeta);
+    }
+
+    public static void setLore(ItemStack itemStack, List<Component> lores) {
+        final ItemMeta itemMeta = itemStack.getItemMeta();
+        if (lore != null) {
+            try {
+                lore.bindTo(itemMeta).invoke(lores.stream().map(AdventureUtil::toComponent).collect(Collectors.toList()));
+                itemStack.setItemMeta(itemMeta);
+                return;
+            } catch (Throwable ignored) {
+            }
+        }
+        itemMeta.setLore(lores.stream().map(AdventureUtil::toLegacyString).collect(Collectors.toList()));
+        itemStack.setItemMeta(itemMeta);
+    }
 }

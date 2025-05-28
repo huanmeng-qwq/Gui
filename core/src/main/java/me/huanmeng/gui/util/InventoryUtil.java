@@ -3,7 +3,6 @@ package me.huanmeng.gui.util;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -40,7 +39,7 @@ public class InventoryUtil {
     }
 
     private static @NotNull Inventory createSpigotInventory(@NotNull InventoryHolder holder, InventoryType type, int line, Component titleComponent) {
-        final String title = LegacyComponentSerializer.legacySection().serialize(titleComponent);
+        final String title = AdventureUtil.toLegacyString(titleComponent);
         if (type == InventoryType.CHEST) {
             return Bukkit.createInventory(holder, line * 9, title);
         }

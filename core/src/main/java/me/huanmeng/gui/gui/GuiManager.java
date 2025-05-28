@@ -2,7 +2,6 @@ package me.huanmeng.gui.gui;
 
 import com.google.common.base.Preconditions;
 import me.huanmeng.gui.Metrics;
-import me.huanmeng.gui.adventure.ComponentConvert;
 import me.huanmeng.gui.gui.event.InventorySwitchEvent;
 import me.huanmeng.gui.gui.holder.GuiHolder;
 import me.huanmeng.gui.gui.interfaces.GuiHandler;
@@ -53,8 +52,6 @@ public class GuiManager implements ListenerAdapter {
     private static GuiManager instance;
     @NonNull
     private final BukkitAudiences audiences;
-    @NonNull
-    private ComponentConvert componentConvert = ComponentConvert.getDefault();
     @NonNull
     private GuiHandler guiHandler = new GuiHandler.GuiHandlerDefaultImpl();
 
@@ -335,18 +332,6 @@ public class GuiManager implements ListenerAdapter {
                 instance().audiences().console().sendMessage(message);
             }
         }
-    }
-
-    /**
-     * @param componentConvert 转换器
-     */
-    public void setComponentConvert(@NonNull ComponentConvert componentConvert) {
-        this.componentConvert = componentConvert;
-    }
-
-    @NonNull
-    public ComponentConvert componentConvert() {
-        return componentConvert;
     }
 
     @NonNull

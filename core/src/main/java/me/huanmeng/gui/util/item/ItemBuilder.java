@@ -1,19 +1,30 @@
 package me.huanmeng.gui.util.item;
 
-import me.huanmeng.gui.adventure.ComponentConvert;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import net.kyori.adventure.text.Component;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.DyeColor;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.*;
+import org.bukkit.inventory.meta.BannerMeta;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.map.MapView;
 import org.bukkit.potion.PotionEffect;
-
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.util.*;
 
 /**
  * 2023/8/24<br>
@@ -90,11 +101,12 @@ public class ItemBuilder {
     }
 
     public ItemBuilder setName(Component component) {
-        return setName(ComponentConvert.getDefault().convert(component));
+        ItemUtil.setName(is, component);
+        return this;
     }
 
     public ItemBuilder addLore(List<Component> lores) {
-        addLore(lores.stream().map(c -> ComponentConvert.getDefault().convert(c)).toArray(String[]::new));
+        ItemUtil.setLore(is, lores);
         return this;
     }
 
