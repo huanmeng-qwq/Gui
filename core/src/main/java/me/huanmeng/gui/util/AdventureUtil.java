@@ -22,7 +22,7 @@ public class AdventureUtil {
             gsonComponentSerializerClass = Class.forName("net{}kyori{}adventure{}text{}serializer{}gson{}GsonComponentSerializer".replace("{}", "."));
 
             gsonComponentSerializerInstance = gsonComponentSerializerClass.getMethod("gson").invoke(null);
-            componentSerialize = lookup.unreflect(componentSerializerClass.getDeclaredMethod("serialize", Component.class));
+            componentSerialize = lookup.unreflect(componentSerializerClass.getDeclaredMethod("serialize", componentClass));
             componentDeserialize = lookup.unreflect(componentSerializerClass.getMethod("deserialize", Object.class));
 
         } catch (Exception ignored) {
