@@ -1,5 +1,5 @@
 [versions]
-adventure = "4.21.0"
+adventure = "4.23.0"
 adventure-bukkit = "4.4.0"
 bstats = "3.1.0"
 [libraries]
