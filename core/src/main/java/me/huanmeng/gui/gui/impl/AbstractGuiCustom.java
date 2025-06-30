@@ -22,18 +22,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * @author huanmeng_qwq
  */
 public abstract class AbstractGuiCustom<G extends AbstractGuiCustom<@NonNull G>> extends AbstractGui<@NonNull G> {
-    private static Class<?> componentClass;
-    private static MethodHandle paperCreateTitle;
-
-    static {
-        try {
-            componentClass = Class.forName("net{}kyori{}adventure{}text{}Component".replace("{}", "."));
-            paperCreateTitle = MethodHandles.lookup().unreflect(Bukkit.class.getDeclaredMethod("createInventory", InventoryHolder.class, int.class, componentClass));
-        } catch (Exception ignored) {
-        }
-    }
-
-
     protected int line = 6;
 
     public AbstractGuiCustom(@NonNull Player player) {
