@@ -1,0 +1,37 @@
+package me.huanmeng.gui.gui.button.function;
+
+import me.huanmeng.gui.gui.AbstractGui;
+import me.huanmeng.gui.gui.button.ClickData;
+import me.huanmeng.gui.gui.enums.Result;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryType;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+/**
+ * 2023/3/17<br>
+ * Gui<br>
+ *
+ * @author huanmeng_qwq
+ */
+@FunctionalInterface
+public interface PlayerClickCancelUpdateAllInterface extends PlayerClickInterface {
+    @Override
+    default Result onClick(@NonNull ClickData clickData) {
+        onPlayerClick(clickData.gui, clickData.player, clickData.click, clickData.action, clickData.slotType, clickData.slotKey, clickData.hotBarKey);
+        return Result.CANCEL_UPDATE_ALL;
+    }
+
+    /**
+     * 点击事件, 将会自动返回{@link Result#CANCEL_UPDATE_ALL}
+     *
+     * @param player    玩家
+     * @param click     点击类型
+     * @param action    点击事件
+     * @param slotType  位置
+     * @param slot      位置
+     * @param hotBarKey 热键
+     */
+    void onPlayerClick(@NonNull AbstractGui<?> gui, @NonNull Player player, @NonNull ClickType click, @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slot, int hotBarKey);
+}
