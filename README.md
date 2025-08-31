@@ -92,7 +92,7 @@ dependencies {
 
 shadowJar {
     // Replace 'com.yourpackage' with the package of your plugin
-    relocate 'me.huanmeng.opensource', 'com.yourpackage.huanmeng'
+    relocate 'me.huanmeng.gui', 'com.yourpackage.huanmeng.gui'
 }
 ```
 
