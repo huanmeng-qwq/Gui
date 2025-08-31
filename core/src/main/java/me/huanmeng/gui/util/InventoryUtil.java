@@ -10,28 +10,26 @@ import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 
 public class InventoryUtil {
-    private static Class<?> componentClass;
     private static MethodHandle componentCreateChest;
     private static MethodHandle componentCreateType;
 
     static {
         try {
-            componentClass = Class.forName("net{}kyori{}adventure{}text{}Component".replace("{}", "."));
-            componentCreateChest = MethodHandles.lookup().unreflect(Bukkit.class.getDeclaredMethod("createInventory", InventoryHolder.class, int.class, componentClass));
-            componentCreateType = MethodHandles.lookup().unreflect(Bukkit.class.getDeclaredMethod("createInventory", InventoryHolder.class, InventoryType.class, componentClass));
+            componentCreateChest = MethodHandles.lookup().unreflect(Bukkit.class.getDeclaredMethod("createInventory", InventoryHolder.class, int.class, AdventureUtil.class));
+            componentCreateType = MethodHandles.lookup().unreflect(Bukkit.class.getDeclaredMethod("createInventory", InventoryHolder.class, InventoryType.class, AdventureUtil.componentClass));
         } catch (Exception ignored) {
         }
     }
 
     public static Inventory createInventory(InventoryHolder holder, InventoryType type, int line, Component title) {
-        if (componentCreateChest == null || componentClass == null || /*maybe relocate?*/ !componentClass.isInstance(title)) {
+        if (componentCreateChest == null || AdventureUtil.componentClass == null) {
             return createSpigotInventory(holder, type, line, title);
         }
         try {
             if (type == InventoryType.CHEST) {
-                return (Inventory) componentCreateChest.invoke(holder, line * 9, title);
+                return (Inventory) componentCreateChest.invoke(holder, line * 9, AdventureUtil.toComponent(title));
             } else {
-                return (Inventory) componentCreateType.invoke(holder, type, title);
+                return (Inventory) componentCreateType.invoke(holder, type, AdventureUtil.toComponent(title));
             }
         } catch (Throwable e) {
             return createSpigotInventory(holder, type, line, title);

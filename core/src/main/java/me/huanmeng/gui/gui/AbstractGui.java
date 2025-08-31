@@ -43,7 +43,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     @Nullable
     protected Player player;
     @NonNull
-    protected Component title = Component.text("Chest");
+    protected Component title = Component.translatable("container.chest");
     //默认优先级
     @NonNull
     protected Set<GuiButton> buttons = new HashSet<>(10);

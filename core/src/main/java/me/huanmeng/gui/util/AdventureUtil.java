@@ -30,6 +30,9 @@ public class AdventureUtil {
     }
 
     public static Object toComponent(Component component) {
+        if (componentClass.isInstance(component)) {
+            return component;
+        }
         try {
             final String jsonString = GsonComponentSerializer.gson().serialize(component);
             return componentDeserialize.bindTo(gsonComponentSerializerInstance).invoke(jsonString);
