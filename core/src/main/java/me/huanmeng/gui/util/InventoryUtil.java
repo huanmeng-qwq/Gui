@@ -15,31 +15,31 @@ public class InventoryUtil {
 
     static {
         try {
-            componentCreateChest = MethodHandles.lookup().unreflect(Bukkit.class.getDeclaredMethod("createInventory", InventoryHolder.class, int.class, AdventureUtil.class));
+            componentCreateChest = MethodHandles.lookup().unreflect(Bukkit.class.getDeclaredMethod("createInventory", InventoryHolder.class, int.class, AdventureUtil.componentClass));
             componentCreateType = MethodHandles.lookup().unreflect(Bukkit.class.getDeclaredMethod("createInventory", InventoryHolder.class, InventoryType.class, AdventureUtil.componentClass));
         } catch (Exception ignored) {
         }
     }
 
-    public static Inventory createInventory(InventoryHolder holder, InventoryType type, int line, Component title) {
+    public static Inventory createInventory(InventoryHolder holder, InventoryType type, int size, Component title) {
         if (componentCreateChest == null || AdventureUtil.componentClass == null) {
-            return createSpigotInventory(holder, type, line, title);
+            return createSpigotInventory(holder, type, size, title);
         }
         try {
             if (type == InventoryType.CHEST) {
-                return (Inventory) componentCreateChest.invoke(holder, line * 9, AdventureUtil.toComponent(title));
+                return (Inventory) componentCreateChest.invoke(holder, size, AdventureUtil.toComponent(title));
             } else {
                 return (Inventory) componentCreateType.invoke(holder, type, AdventureUtil.toComponent(title));
             }
         } catch (Throwable e) {
-            return createSpigotInventory(holder, type, line, title);
+            return createSpigotInventory(holder, type, size, title);
         }
     }
 
-    private static @NotNull Inventory createSpigotInventory(@NotNull InventoryHolder holder, InventoryType type, int line, Component titleComponent) {
+    private static @NotNull Inventory createSpigotInventory(@NotNull InventoryHolder holder, InventoryType type, int size, Component titleComponent) {
         final String title = AdventureUtil.toLegacyString(titleComponent);
         if (type == InventoryType.CHEST) {
-            return Bukkit.createInventory(holder, line * 9, title);
+            return Bukkit.createInventory(holder, size, title);
         }
         return Bukkit.createInventory(holder, type, title);
     }
