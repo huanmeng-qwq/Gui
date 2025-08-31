@@ -33,6 +33,9 @@ indra {
             }
             withXml {
                 project.configurations.compileOnly.get().allDependencies.forEach { dep ->
+                    if (dep.version?.lowercase()?.contains("snapshot") == true) {
+                        return@forEach
+                    }
                     ((asNode().get("dependencies") as NodeList)[0] as Node).appendNode("dependency").apply {
                         appendNode("groupId", dep.group)
                         appendNode("artifactId", dep.name)
