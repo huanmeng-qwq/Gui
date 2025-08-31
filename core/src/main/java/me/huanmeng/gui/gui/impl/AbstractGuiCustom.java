@@ -4,9 +4,9 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import me.huanmeng.gui.gui.AbstractGui;
 import me.huanmeng.gui.scheduler.Schedulers;
 import me.huanmeng.gui.util.InventoryUtil;
+import me.huanmeng.gui.util.LocaleProvider;
 import me.huanmeng.gui.util.item.ItemUtil;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import net.kyori.adventure.translation.GlobalTranslator;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -72,7 +72,7 @@ public abstract class AbstractGuiCustom<G extends AbstractGuiCustom<@NonNull G>>
     @Override
     @NonNull
     protected Inventory build(@NonNull InventoryHolder holder) {
-        return InventoryUtil.createInventory(holder, InventoryType.CHEST, line * 9, title);
+        return InventoryUtil.createInventory(holder, InventoryType.CHEST, line * 9, GlobalTranslator.render(title, LocaleProvider.locale(player)));
     }
 
     @Override
