@@ -25,11 +25,22 @@ public interface PageSettings {
      */
     @NonNull
     static PageSetting normal(@NonNull AbstractGuiPage<?> gui, @NonNull PageArea pageArea) {
+        return normal(gui, pageArea, "§aPrevious Page", "§aNext Page");
+    }
+
+    /**
+     * 构建一个普通的{@link PageSetting}
+     *
+     * @param gui gui
+     * @return {@link PageSetting}
+     */
+    @NonNull
+    static PageSetting normal(@NonNull AbstractGuiPage<?> gui, @NonNull PageArea pageArea, String previousName, String nextName) {
         Button pre = Button.of(player ->
-                new ItemBuilder(Material.ARROW, "§a上一页").build()
+                new ItemBuilder(Material.ARROW, previousName).build()
         );
         Button next = Button.of(player ->
-                new ItemBuilder(Material.ARROW, "§a下一页").build()
+                new ItemBuilder(Material.ARROW, nextName).build()
         );
         return normal(gui, pageArea, pre, next);
     }

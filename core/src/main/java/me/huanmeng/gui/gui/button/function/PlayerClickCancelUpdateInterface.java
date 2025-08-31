@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryType;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * 2023/3/17<br>
@@ -16,6 +17,8 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * @author huanmeng_qwq
  */
 @SuppressWarnings("unused")
+@ApiStatus.ScheduledForRemoval(inVersion = "2.6.0")
+@Deprecated
 @FunctionalInterface
 public interface PlayerClickCancelUpdateInterface extends PlayerClickInterface {
     @Override

@@ -21,4 +21,22 @@ public interface PlayerItemInterface {
      */
     @Nullable
     ItemStack get(@NonNull Player player);
+
+    static PlayerItemInterface of(ItemStack itemStack) {
+        return new StaticItemProvider(itemStack);
+    }
+
+    class StaticItemProvider implements PlayerItemInterface {
+        @Nullable
+        private final ItemStack itemStack;
+
+        public StaticItemProvider(@Nullable final ItemStack itemStack) {
+            this.itemStack = itemStack;
+        }
+
+        @Override
+        public @Nullable ItemStack get(@NonNull Player player) {
+            return this.itemStack;
+        }
+    }
 }

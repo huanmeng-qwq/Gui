@@ -7,11 +7,15 @@ import me.huanmeng.gui.gui.impl.page.PageButton;
 import me.huanmeng.gui.gui.impl.page.PageSetting;
 import me.huanmeng.gui.gui.slot.Slot;
 import me.huanmeng.gui.gui.slot.Slots;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Supplier;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
-
-import java.util.*;
-import java.util.function.Supplier;
 
 /**
  * 2024/12/28<br>
@@ -48,7 +52,7 @@ public abstract class AbstractGuiPage<G extends AbstractGuiPage<@NonNull G>> ext
         buttons.clear();
         Set<GuiButton> buttons = new HashSet<>();
         for (PageArea pageArea : pageAreas) {
-        refresh(pageArea.slots());
+            refresh(pageArea.slots());
             List<Button> buttonList = pageArea.getCurrentItems();
             ArrayList<Slot> slots = new ArrayList<>(Arrays.asList(Objects.requireNonNull(pageArea.slots()).slots(self())));
             for (Button button : buttonList) {

@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * 2024/12/27<br>
@@ -13,6 +14,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author huanmeng_qwq
  */
+@ApiStatus.ScheduledForRemoval(inVersion = "2.6.0")
+@Deprecated
 public class SimpleItemButton implements Button {
     private final ItemStack itemStack;
     private final PlayerClickInterface clickable;

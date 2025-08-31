@@ -4,6 +4,7 @@ import me.huanmeng.gui.gui.button.ClickData;
 import me.huanmeng.gui.gui.enums.Result;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * 2025/1/8<br>
@@ -11,6 +12,8 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *
  * @author huanmeng_qwq
  */
+@ApiStatus.ScheduledForRemoval(inVersion = "2.6.0")
+@Deprecated
 @FunctionalInterface
 public interface PlayerClickDataInterface extends PlayerClickInterface {
 

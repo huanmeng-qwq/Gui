@@ -9,16 +9,15 @@ import me.huanmeng.gui.gui.impl.AbstractGuiPage;
 import me.huanmeng.gui.gui.impl.GuiPage;
 import me.huanmeng.gui.gui.slot.Slot;
 import me.huanmeng.gui.util.item.ItemUtil;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  * 2023/6/4<br>
@@ -226,13 +225,11 @@ public class PageButton implements Button {
         }
         Iterator<PageButtonType> iterator = types.iterator();
         PageButtonType buttonType = iterator.next();
-        if (iterator.hasNext()) {
-            while (iterator.hasNext()) {
-                PageButtonType type = iterator.next();
-                if (type.mainType() == buttonType.mainType() || type.subType() == clickData.click) {
-                    buttonType = type;
-                    break;
-                }
+        while (iterator.hasNext()) {
+            PageButtonType type = iterator.next();
+            if (type.mainType() == buttonType.mainType() || type.subType() == clickData.click) {
+                buttonType = type;
+                break;
             }
         }
         if (!buttonType.hasPage(pageArea)) {

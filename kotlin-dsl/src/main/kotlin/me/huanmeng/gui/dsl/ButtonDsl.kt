@@ -3,7 +3,9 @@
 package me.huanmeng.gui.dsl
 
 import me.huanmeng.gui.gui.button.Button
-import me.huanmeng.gui.gui.button.function.*
+import me.huanmeng.gui.gui.button.function.PlayerClickInterface
+import me.huanmeng.gui.gui.button.function.PlayerItemInterface
+import me.huanmeng.gui.gui.enums.Result
 import me.huanmeng.gui.gui.slot.Slot
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -46,7 +48,7 @@ class ButtonDsl {
      * @see me.huanmeng.gui.gui.enums.Result.CANCEL
      */
     fun cancelClick(lambda: (player: Player) -> Unit) {
-        click = PlayerSimpleCancelInterface(lambda)
+        click = PlayerClickInterface.handlePlayerClick(Result.CANCEL, lambda)
     }
 
     /**
@@ -54,20 +56,20 @@ class ButtonDsl {
      * @see me.huanmeng.gui.gui.enums.Result.CANCEL_UPDATE
      */
     fun updateClick(lambda: (player: Player) -> Unit) {
-        click = PlayerSimpleCancelUpdateInterface(lambda)
+        click = PlayerClickInterface.handlePlayerClick(Result.CANCEL_UPDATE, lambda)
     }
 
     /**
      * 处理点击并cancel事件且更新当前Gui所有[Slot]的物品
-     * @see me.huanmeng.gui.gui.enums.Result.CANCEL_UPDATE
+     * @see me.huanmeng.gui.gui.enums.Result.CANCEL_UPDATE_ALL
      */
     fun updateAllClick(lambda: (player: Player) -> Unit) {
-        click = PlayerSimpleCancelUpdateAllInterface(lambda)
+        click = PlayerClickInterface.handlePlayerClick(Result.CANCEL_UPDATE_ALL, lambda)
     }
 }
 
-class ButtonList(val list: MutableList<Button>) : MutableList<Button> by list {
-    constructor() : this(ArrayList())
+class ButtonList(list: List<Button>) : ArrayList<Button>(list) {
+    constructor() : this(arrayListOf())
 
     /**
      * 添加按钮

@@ -15,13 +15,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author huanmeng_qwq
  */
-public class ClickButton implements Button {
+public class BaseButton implements Button {
     @Nullable
     private final PlayerItemInterface userItemInterface;
     @Nullable
     private final PlayerClickInterface playerClickInterface;
 
-    public ClickButton(@Nullable PlayerItemInterface userItemInterface, @Nullable PlayerClickInterface playerClickInterface) {
+    public BaseButton(@Nullable PlayerItemInterface userItemInterface, @Nullable PlayerClickInterface playerClickInterface) {
         this.userItemInterface = userItemInterface;
         this.playerClickInterface = playerClickInterface;
     }
