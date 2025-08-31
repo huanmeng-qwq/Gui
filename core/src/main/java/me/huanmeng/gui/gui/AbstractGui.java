@@ -6,18 +6,39 @@ import me.huanmeng.gui.gui.button.ClickData;
 import me.huanmeng.gui.gui.draw.GuiDraw;
 import me.huanmeng.gui.gui.enums.Result;
 import me.huanmeng.gui.gui.holder.GuiHolder;
-import me.huanmeng.gui.gui.interfaces.*;
+import me.huanmeng.gui.gui.interfaces.CustomResultHandler;
+import me.huanmeng.gui.gui.interfaces.GuiBottomClick;
+import me.huanmeng.gui.gui.interfaces.GuiClick;
+import me.huanmeng.gui.gui.interfaces.GuiEmptyItemClick;
+import me.huanmeng.gui.gui.interfaces.GuiTick;
 import me.huanmeng.gui.gui.slot.Slot;
 import me.huanmeng.gui.gui.slot.Slots;
-import me.huanmeng.gui.tick.TickManager;
-import me.huanmeng.gui.util.item.ItemUtil;
 import me.huanmeng.gui.scheduler.Scheduler;
 import me.huanmeng.gui.scheduler.Schedulers;
+import me.huanmeng.gui.tick.TickManager;
+import me.huanmeng.gui.util.item.ItemUtil;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.logging.Level;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.*;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
@@ -25,12 +46,6 @@ import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.logging.Level;
 
 /**
  * 2023/3/17<br>
@@ -470,6 +485,10 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         }
         for (Slot slot : slots.slots(self())) {
             GuiButton button = getButton(slot);
+            // Ignore it directly, there is no button in the first place, so there is no need for refresh
+            if (button == null) {
+                continue;
+            }
             setItem(cacheInventory, button, button.getButton().getShowItem(player));
         }
         return self();
