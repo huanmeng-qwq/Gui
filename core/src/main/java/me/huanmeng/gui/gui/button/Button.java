@@ -115,6 +115,30 @@ public interface Button {
         return ofPlayerClick(item, Result.CANCEL, clickable);
     }
 
+    /**
+     * 点击型按钮
+     *
+     * @param item      物品
+     * @param clickable 点击事件
+     * @return {@link Button}
+     */
+    @Contract(value = "null, !null, !null -> new", pure = true)
+    static Button ofPlayerClick(ItemStack item, Result result, Consumer<Player> clickable) {
+        return new BaseButton(PlayerItemInterface.of(item), PlayerClickInterface.handlePlayerClick(result, clickable));
+    }
+
+    /**
+     * 点击型按钮
+     *
+     * @param item      物品
+     * @param clickable 点击事件
+     * @return {@link Button}
+     */
+    @Contract(value = "null, !null, -> new", pure = true)
+    static Button ofPlayerClick(ItemStack item, Consumer<Player> clickable) {
+        return ofPlayerClick(item, Result.CANCEL, clickable);
+    }
+
 
     /**
      * 点击型按钮
