@@ -8,6 +8,7 @@ import me.huanmeng.gui.gui.enums.Result;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.bukkit.entity.Player;
@@ -85,10 +86,35 @@ public interface Button {
      * @param clickable 点击事件
      * @return {@link Button}
      */
-    @Contract(value = "null, null -> new", pure = true)
+    @Contract(value = "_, _ -> new", pure = true)
     static Button of(PlayerItemInterface item, PlayerClickInterface clickable) {
         return new BaseButton(item, clickable);
     }
+
+    /**
+     * 点击型按钮
+     *
+     * @param item      物品
+     * @param clickable 点击事件
+     * @return {@link Button}
+     */
+    @Contract(value = "null, !null, !null -> new", pure = true)
+    static Button ofPlayerClick(PlayerItemInterface item, Result result, Consumer<Player> clickable) {
+        return new BaseButton(item, PlayerClickInterface.handlePlayerClick(result, clickable));
+    }
+
+    /**
+     * 点击型按钮
+     *
+     * @param item      物品
+     * @param clickable 点击事件
+     * @return {@link Button}
+     */
+    @Contract(value = "null, !null, -> new", pure = true)
+    static Button ofPlayerClick(PlayerItemInterface item, Consumer<Player> clickable) {
+        return ofPlayerClick(item, Result.CANCEL, clickable);
+    }
+
 
     /**
      * 点击型按钮
