@@ -4,6 +4,7 @@
 <div style="text-align: center;">
 
 ![Version](https://img.shields.io/github/v/release/huanmeng-qwq/Gui?style=plastic)
+[![javadoc](https://javadoc.io/badge2/com.huanmeng-qwq/bukkit-gui/javadoc.svg)](https://javadoc.io/doc/com.huanmeng-qwq/bukkit-gui)
 ![Servers](https://img.shields.io/bstats/servers/18670?style=flat-square)
 ![Code-Size](https://img.shields.io/github/languages/code-size/huanmeng-qwq/Gui?style=plastic)
 ![Repo-Size](https://img.shields.io/github/repo-size/huanmeng-qwq/Gui?style=plastic)
