@@ -56,7 +56,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        architecture: x64
     # Add any setup steps before running the `github/codeql-action/init` action.
     # This includes steps like installing compilers or runtimes (`actions/setup-node`
     # or others). This is typically only required for manual builds.
