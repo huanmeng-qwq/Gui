@@ -406,28 +406,34 @@ fun spacerButton(displayName: String = " ", block: ButtonDsl.() -> Unit): Button
  * Creates a new button with the same item but overrides the click handler.
  *
  * This allows you to take an existing button and add/replace its click behavior
- * without modifying the original button.
+ * without modifying the original button. Supports all Result types.
  *
  * Example:
  * ```kotlin
  * val baseButton = ItemStack(Material.DIAMOND).asButton
+ *
+ * // Keep original result behavior
  * val clickableButton = baseButton.withClick { player ->
  *     player.sendMessage("Clicked!")
  * }
+ *
+ * // Override with specific result
+ * val allowButton = baseButton.withClick(Result.ALLOW) { player ->
+ *     player.sendMessage("Allowed!")
+ * }
  * ```
  *
- * @param result The click result behavior (default: CANCEL_UPDATE)
+ * @param result The click result behavior (null = keep original button's result)
  * @param block The new click handler
  * @return A new Button with the overridden click handler
  */
-fun Button.withClick(result: Result = Result.CANCEL_UPDATE, block: (Player) -> Unit): Button {
+fun Button.withClick(result: Result? = null, block: (Player) -> Unit): Button {
+    val originalButton = this
     return buildButton {
-        item { player -> this@withClick.getShowItem(player) }
-        when (result) {
-            Result.CANCEL -> cancelClick(block)
-            Result.CANCEL_UPDATE -> updateClick(block)
-            Result.CANCEL_UPDATE_ALL -> updateAllClick(block)
-            else -> cancelClick(block)
+        item { player -> originalButton.getShowItem(player) }
+        click = PlayerClickInterface { clickData ->
+            block(clickData.player)
+            result ?: originalButton.onClick(clickData)
         }
     }
 }
