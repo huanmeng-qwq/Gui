@@ -17,7 +17,9 @@ import me.huanmeng.gui.gui.impl.page.PageSettings
 import me.huanmeng.gui.gui.impl.page.PageSlot
 import me.huanmeng.gui.gui.slot.Slot
 import me.huanmeng.gui.gui.slot.Slots
+import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import kotlin.math.min
 
 /**
@@ -626,14 +628,22 @@ fun Guis.ofPage(vararg patterns: String, lambda: PatternPageGuiDsl.() -> Unit): 
  * Example:
  * ```kotlin
  * gui.fillEmpty(ItemStack(Material.GRAY_STAINED_GLASS_PANE).asButton)
+ * gui.fillEmpty(button, except = listOf(0, 8)) // Fill all except specific slots
  * ```
  *
  * @param button The button to place in all empty slots
+ * @param except Optional list of slot indices to exclude from filling
+ * @param onlyFillInPattern Optional pattern to restrict filling to specific shapes
  */
-fun <G : AbstractGuiCustom<G>> G.fillEmpty(button: Button) {
+fun <G : AbstractGuiCustom<G>> G.fillEmpty(
+    button: Button,
+    except: List<Int> = emptyList()
+) {
     val totalSlots = size()
+    val excludedSlots = except.toSet()
+
     for (i in 0 until totalSlots) {
-        if (getButton(i) == null) {
+        if (i !in excludedSlots && getButton(i) == null) {
             draw().set(i, button)
         }
     }
@@ -647,25 +657,71 @@ fun <G : AbstractGuiCustom<G>> G.fillEmpty(button: Button) {
  * Example:
  * ```kotlin
  * gui.border(ItemStack(Material.BLACK_STAINED_GLASS_PANE).asButton)
+ * gui.border(button, thickness = 2) // Thick border
+ * gui.border(button, sides = setOf(BorderSide.TOP, BorderSide.BOTTOM)) // Only top and bottom
  * ```
  *
  * @param button The button to use for the border
+ * @param thickness Border thickness in slots (default: 1)
+ * @param sides Which sides to include (default: all sides)
+ * @param margin Optional margin from edges
  */
-fun <G : AbstractGuiCustom<G>> G.border(button: Button) {
-    val line = size() / 9
-    if (line < 2) return // Need at least 2 rows for a border
+fun <G : AbstractGuiCustom<G>> G.border(
+    button: Button,
+    thickness: Int = 1,
+    sides: Set<BorderSide> = setOf(BorderSide.TOP, BorderSide.BOTTOM, BorderSide.LEFT, BorderSide.RIGHT),
+    margin: Int = 0
+) {
+    val lines = size() / 9
+    if (lines < 2 || thickness < 1) return
 
     draw {
-        // Top and bottom rows
-        vertical(0, 0, 0, 8, button)
-        vertical(line - 1, 0, line - 1, 8, button)
+        if (BorderSide.TOP in sides) {
+            for (t in 0 until thickness) {
+                for (col in margin..8 - margin) {
+                    set(Slot.ofBukkit(margin + t, col), button)
+                }
+            }
+        }
 
-        // Left and right columns (excluding corners already filled)
-        if (line > 2) {
-            vertical(1, 0, line - 2, 0, button)
-            vertical(1, 8, line - 2, 8, button)
+        if (BorderSide.BOTTOM in sides) {
+            for (t in 0 until thickness) {
+                for (col in margin..8 - margin) {
+                    set(Slot.ofBukkit(lines - 1 - margin - t, col), button)
+                }
+            }
+        }
+
+        if (BorderSide.LEFT in sides) {
+            for (t in 0 until thickness) {
+                for (row in margin..lines - 1 - margin) {
+                    set(Slot.ofBukkit(row, margin + t), button)
+                }
+            }
+        }
+
+        if (BorderSide.RIGHT in sides) {
+            for (t in 0 until thickness) {
+                for (row in margin..lines - 1 - margin) {
+                    set(Slot.ofBukkit(row, 8 - margin - t), button)
+                }
+            }
         }
     }
+}
+
+/**
+ * Sides that can be included in a border.
+ */
+enum class BorderSide {
+    /** Top row */
+    TOP,
+    /** Bottom row */
+    BOTTOM,
+    /** Left column */
+    LEFT,
+    /** Right column */
+    RIGHT
 }
 
 /**
@@ -854,3 +910,230 @@ fun GuiPage.simpleNavigation(
         }
     })
 }
+
+/* Final Enhanced Utility Functions */
+
+/**
+ * Creates a pagination info display showing current page and total pages.
+ *
+ * Example:
+ * ```kotlin
+ * gui.pageInfo(page = 2, totalPages = 5, row = 5, startCol = 3, width = 3)
+ * ```
+ *
+ * @param page Current page number (1-based)
+ * @param totalPages Total number of pages
+ * @param row Row to place the info display
+ * @param startCol Starting column
+ * @param width Width of the display area
+ * @param backgroundColor Background button for the display
+ */
+fun <G : AbstractGuiCustom<G>> G.pageInfo(
+    page: Int,
+    totalPages: Int,
+    row: Int,
+    startCol: Int,
+    width: Int,
+    backgroundColor: Button = spacerButton()
+) {
+    require(page > 0) { "Page must be positive" }
+    require(totalPages > 0) { "Total pages must be positive" }
+    require(page <= totalPages) { "Page cannot exceed total pages" }
+
+    draw {
+        // Background
+        for (col in startCol until startCol + width) {
+            if (col < 9) {
+                set(Slot.ofBukkit(row, col), backgroundColor)
+            }
+        }
+
+        // Page text as a simple button
+        val pageInfo = ItemStack(Material.PAPER).apply {
+            itemMeta = itemMeta?.apply {
+                setDisplayName("§ePage $page/$totalPages")
+                lore = listOf("§7Use arrows to navigate")
+            }
+        }.asButton
+
+        val centerCol = startCol + width / 2
+        if (centerCol < 9) {
+            set(Slot.ofBukkit(row, centerCol), pageInfo)
+        }
+    }
+}
+
+/**
+ * Creates a quick action bar with common actions.
+ *
+ * Example:
+ * ```kotlin
+ * gui.quickActionBar(
+ *     row = 5,
+ *     actions = listOf(
+ *         QuickAction("Sort", Material.HOPPER) { player -> /* sort logic */ },
+ *         QuickAction("Filter", Material.COMPARATOR) { player -> /* filter logic */ },
+ *         QuickAction("Search", Material.COMPASS) { player -> /* search logic */ }
+ *     )
+ * )
+ * ```
+ *
+ * @param row Row to place the action bar
+ * @param actions List of quick actions
+ * @param spacing Spacing between action buttons
+ */
+fun <G : AbstractGuiCustom<G>> G.quickActionBar(
+    row: Int,
+    actions: List<QuickAction>,
+    spacing: Int = 1
+) {
+    require(row >= 0 && row < 6) { "Invalid row" }
+    require(actions.isNotEmpty()) { "Actions list cannot be empty" }
+
+    val totalSpacing = (actions.size - 1) * spacing
+    val totalWidth = actions.size + totalSpacing
+
+    require(totalWidth <= 9) { "Actions don't fit in one row with given spacing" }
+
+    val startCol = (9 - totalWidth) / 2
+
+    draw {
+        actions.forEachIndexed { index, action ->
+            val col = startCol + index * (spacing + 1)
+            if (col < 9) {
+                set(Slot.ofBukkit(row, col), action.button)
+            }
+        }
+    }
+}
+
+/**
+ * Represents a quick action in an action bar.
+ */
+data class QuickAction(
+    val name: String,
+    val material: Material,
+    val action: (Player) -> Unit
+) {
+    val button: Button
+        get() = ItemStack(material).apply {
+            itemMeta = itemMeta?.apply {
+                setDisplayName("§e$name")
+            }
+        }.onPlayerClick { player ->
+            action(player)
+        }
+}
+
+/**
+ * Creates a status indicator with color-coded states.
+ *
+ * Example:
+ * ```kotlin
+ * gui.statusIndicator(
+ *     row = 0,
+ *     col = 8,
+ *     status = Status.SUCCESS,
+ *     label = "Operation"
+ * )
+ * ```
+ *
+ * @param row Row for the indicator
+ * @param col Column for the indicator
+ * @param status Status to display
+ * @param label Optional label for the status
+ */
+fun <G : AbstractGuiCustom<G>> G.statusIndicator(
+    row: Int,
+    col: Int,
+    status: Status,
+    label: String? = null
+) {
+    require(row in 0..5) { "Invalid row" }
+    require(col in 0..8) { "Invalid column" }
+
+    val material = when (status) {
+        Status.SUCCESS -> Material.GREEN_WOOL
+        Status.WARNING -> Material.YELLOW_WOOL
+        Status.ERROR -> Material.RED_WOOL
+        Status.INFO -> Material.BLUE_WOOL
+        Status.NONE -> Material.GRAY_WOOL
+    }
+    val color = when (status) {
+        Status.SUCCESS -> "§a"
+        Status.WARNING -> "§e"
+        Status.ERROR -> "§c"
+        Status.INFO -> "§b"
+        Status.NONE -> "§7"
+    }
+
+    val displayName = if (label != null) "${color}${label}" else "${color}Status"
+
+    val statusButton = ItemStack(material).apply {
+        itemMeta = itemMeta?.apply {
+            setDisplayName(displayName)
+            lore = listOf("§7Status: ${status.name.lowercase().replaceFirstChar { it.uppercase() }}")
+        }
+    }.asButton
+
+    draw().set(Slot.ofBukkit(row, col), statusButton)
+}
+
+/**
+ * Status types for indicators.
+ */
+enum class Status {
+    /** Operation completed successfully */
+    SUCCESS,
+    /** Warning or caution */
+    WARNING,
+    /** Error or failure */
+    ERROR,
+    /** Information message */
+    INFO,
+    /** No status/neutral */
+    NONE
+}
+
+/**
+ * Clears all buttons from specific slots.
+ *
+ * Example:
+ * ```kotlin
+ * gui.clearSlots(0, 1, 2, 8) // Clear specific slots
+ * gui.clearSlots(row = 0, startCol = 1, endCol = 7) // Clear range
+ * ```
+ *
+ * @param slots Individual slot indices to clear
+ * @param row Optional row for range clearing
+ * @param startCol Optional start column for range clearing
+ * @param endCol Optional end column for range clearing
+ */
+fun <G : AbstractGuiCustom<G>> G.clearSlots(
+    vararg slots: Int,
+    row: Int? = null,
+    startCol: Int? = null,
+    endCol: Int? = null
+) {
+    draw {
+        when {
+            row != null && startCol != null && endCol != null -> {
+                // Clear range in a row
+                for (col in startCol..endCol) {
+                    if (col in 0..8) {
+                        set(Slot.ofBukkit(row, col), EMPTY_BUTTON)
+                    }
+                }
+            }
+            slots.isNotEmpty() -> {
+                // Clear individual slots
+                slots.forEach { slotIndex ->
+                    if (slotIndex >= 0 && slotIndex < size()) {
+                        set(slotIndex, EMPTY_BUTTON)
+                    }
+                }
+            }
+        }
+    }
+}
+

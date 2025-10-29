@@ -26,36 +26,96 @@ import kotlin.math.sqrt
  *
  * @param button1 First button in the checkerboard pattern
  * @param button2 Second button in the checkerboard pattern
+ * @param startRow Optional starting row (default: 0)
+ * @param startCol Optional starting column (default: 0)
+ * @param endRow Optional ending row (default: last row)
+ * @param endCol Optional ending column (default: 8)
  */
-fun <G : AbstractGuiCustom<G>> G.checkerboard(button1: Button, button2: Button) {
+fun <G : AbstractGuiCustom<G>> G.checkerboard(
+    button1: Button,
+    button2: Button,
+    startRow: Int = 0,
+    startCol: Int = 0,
+    endRow: Int = -1,
+    endCol: Int = 8
+) {
     val totalSlots = size()
     val rows = totalSlots / 9
+    val actualEndRow = if (endRow == -1) rows - 1 else minOf(endRow, rows - 1)
+    val actualEndCol = minOf(endCol, 8)
 
-    for (row in 0 until rows) {
-        for (col in 0..8) {
-            val button = if ((row + col) % 2 == 0) button1 else button2
-            draw().set(Slot.ofBukkit(row, col), button)
+    draw {
+        for (row in startRow..actualEndRow) {
+            for (col in startCol..actualEndCol) {
+                val button = if ((row + col) % 2 == 0) button1 else button2
+                set(Slot.ofBukkit(row, col), button)
+            }
         }
     }
 }
 
 /**
- * Creates a diagonal line from top-left to bottom-right.
+ * Creates diagonal lines with customizable direction and thickness.
  *
  * Example:
  * ```kotlin
- * gui.diagonalLine(ItemStack(Material.GOLD_INGOT).asButton)
+ * gui.diagonalLine(ItemStack(Material.GOLD_INGOT).asButton) // Primary diagonal
+ * gui.diagonalLine(button = myButton, direction = DiagonalDirection.ANTI) // Anti-diagonal
+ * gui.diagonalLine(button = myButton, thickness = 2) // Thick diagonal
  * ```
  *
  * @param button The button to use for the diagonal line
+ * @param direction Direction of the diagonal (PRIMARY or ANTI)
+ * @param thickness Thickness of the diagonal line (in slots)
+ * @param startRow Optional starting row offset
+ * @param startCol Optional starting column offset
  */
-fun <G : AbstractGuiCustom<G>> G.diagonalLine(button: Button) {
+fun <G : AbstractGuiCustom<G>> G.diagonalLine(
+    button: Button,
+    direction: DiagonalDirection = DiagonalDirection.PRIMARY,
+    thickness: Int = 1,
+    startRow: Int = 0,
+    startCol: Int = 0
+) {
     val rows = size() / 9
     val maxIndex = minOf(rows, 9)
 
-    for (i in 0 until maxIndex) {
-        draw().set(Slot.ofBukkit(i, i), button)
+    draw {
+        when (direction) {
+            DiagonalDirection.PRIMARY -> {
+                for (i in 0 until maxIndex) {
+                    for (t in 0 until thickness) {
+                        val row = startRow + i
+                        val col = startCol + i + t
+                        if (row < rows && col < 9) {
+                            set(Slot.ofBukkit(row, col), button)
+                        }
+                    }
+                }
+            }
+            DiagonalDirection.ANTI -> {
+                for (i in 0 until maxIndex) {
+                    for (t in 0 until thickness) {
+                        val row = startRow + i
+                        val col = 8 - startCol - i - t
+                        if (row < rows && col >= 0) {
+                            set(Slot.ofBukkit(row, col), button)
+                        }
+                    }
+                }
+            }
+        }
     }
+}
+
+/**
+ * Direction for diagonal lines.
+ */
+enum class DiagonalDirection {
+    /** Top-left to bottom-right */
+    PRIMARY,
+    /** Top-right to bottom-left */
+    ANTI
 }
 
 /**
@@ -67,33 +127,55 @@ fun <G : AbstractGuiCustom<G>> G.diagonalLine(button: Button) {
  *     sideButton = ItemStack(Material.IRON_BARS).asButton,
  *     cornerButton = ItemStack(Material.GOLD_BLOCK).asButton
  * )
+ * gui.frame(sideButton = side, cornerButton = corner, thickness = 2) // Thick frame
  * ```
  *
  * @param sideButton Button for the sides
  * @param cornerButton Button for the corners
+ * @param thickness Frame thickness in slots (default: 1)
+ * @param margin Optional margin from edges
  */
-fun <G : AbstractGuiCustom<G>> G.frame(sideButton: Button, cornerButton: Button) {
+fun <G : AbstractGuiCustom<G>> G.frame(
+    sideButton: Button,
+    cornerButton: Button,
+    thickness: Int = 1,
+    margin: Int = 0
+) {
     val lines = size() / 9
-    if (lines < 2) return
+    if (lines < 2 || thickness < 1) return
 
     draw {
+        val innerMargin = thickness - 1 + margin
+
         // Corners
-        set(Slot.ofBukkit(0, 0), cornerButton)
-        set(Slot.ofBukkit(0, 8), cornerButton)
-        set(Slot.ofBukkit(lines - 1, 0), cornerButton)
-        set(Slot.ofBukkit(lines - 1, 8), cornerButton)
+        for (t in 0 until thickness) {
+            for (t2 in 0 until thickness) {
+                set(Slot.ofBukkit(margin + t, margin + t2), cornerButton)
+                set(Slot.ofBukkit(margin + t, 8 - margin - t2), cornerButton)
+                if (lines > margin + thickness + t) {
+                    set(Slot.ofBukkit(lines - 1 - margin - t, margin + t2), cornerButton)
+                    set(Slot.ofBukkit(lines - 1 - margin - t, 8 - margin - t2), cornerButton)
+                }
+            }
+        }
 
         // Top and bottom sides (excluding corners)
-        for (col in 1..7) {
-            set(Slot.ofBukkit(0, col), sideButton)
-            set(Slot.ofBukkit(lines - 1, col), sideButton)
+        for (col in margin + thickness..8 - margin - thickness) {
+            for (t in 0 until thickness) {
+                set(Slot.ofBukkit(margin + t, col), sideButton)
+                if (lines > margin + thickness + t) {
+                    set(Slot.ofBukkit(lines - 1 - margin - t, col), sideButton)
+                }
+            }
         }
 
         // Left and right sides (excluding corners)
-        if (lines > 2) {
-            for (row in 1 until lines - 1) {
-                set(Slot.ofBukkit(row, 0), sideButton)
-                set(Slot.ofBukkit(row, 8), sideButton)
+        if (lines > margin + thickness * 2) {
+            for (row in margin + thickness until lines - 1 - margin - thickness) {
+                for (t in 0 until thickness) {
+                    set(Slot.ofBukkit(row, margin + t), sideButton)
+                    set(Slot.ofBukkit(row, 8 - margin - t), sideButton)
+                }
             }
         }
     }
@@ -343,4 +425,314 @@ class AnimatedButton(private val frames: List<ItemStack>, private val intervalTi
  */
 fun List<ItemStack>.asAnimatedButton(intervalTicks: Int = 20): AnimatedButton {
     return AnimatedButton(this, intervalTicks)
+}
+
+/* Additional Advanced Layout Functions */
+
+/**
+ * Creates a cross pattern (+) with customizable size.
+ *
+ * Example:
+ * ```kotlin
+ * gui.cross(ItemStack(Material.RED_WOOL).asButton, centerRow = 2, centerCol = 4, size = 1)
+ * ```
+ *
+ * @param button The button to use for the cross
+ * @param centerRow Center row of the cross
+ * @param centerCol Center column of the cross
+ * @param size Size of the cross arms (in each direction)
+ */
+fun <G : AbstractGuiCustom<G>> G.cross(
+    button: Button,
+    centerRow: Int,
+    centerCol: Int,
+    size: Int = 1
+) {
+    val rows = size() / 9
+
+    draw {
+        // Horizontal line
+        for (col in maxOf(0, centerCol - size)..minOf(8, centerCol + size)) {
+            set(Slot.ofBukkit(centerRow, col), button)
+        }
+
+        // Vertical line
+        for (row in maxOf(0, centerRow - size)..minOf(rows - 1, centerRow + size)) {
+            set(Slot.ofBukkit(row, centerCol), button)
+        }
+    }
+}
+
+/**
+ * Creates an X pattern (diagonal cross).
+ *
+ * Example:
+ * ```kotlin
+ * gui.xPattern(ItemStack(Material.DIAMOND_BLOCK).asButton, centerRow = 2, centerCol = 4, size = 2)
+ * ```
+ *
+ * @param button The button to use for the X pattern
+ * @param centerRow Center row of the X
+ * @param centerCol Center column of the X
+ * @param size Size of the X arms (in each direction)
+ */
+fun <G : AbstractGuiCustom<G>> G.xPattern(
+    button: Button,
+    centerRow: Int,
+    centerCol: Int,
+    size: Int = 1
+) {
+    val rows = size() / 9
+
+    draw {
+        // Primary diagonal
+        for (i in -size..size) {
+            val row = centerRow + i
+            val col = centerCol + i
+            if (row in 0 until rows && col in 0..8) {
+                set(Slot.ofBukkit(row, col), button)
+            }
+        }
+
+        // Anti-diagonal
+        for (i in -size..size) {
+            val row = centerRow + i
+            val col = centerCol - i
+            if (row in 0 until rows && col in 0..8) {
+                set(Slot.ofBukkit(row, col), button)
+            }
+        }
+    }
+}
+
+/**
+ * Creates a filled rectangle with specified dimensions.
+ *
+ * Example:
+ * ```kotlin
+ * gui.rectangle(1, 1, 3, 7, ItemStack(Material.STONE).asButton)
+ * ```
+ *
+ * @param startRow Starting row (0-based)
+ * @param startCol Starting column (0-based)
+ * @param width Width of the rectangle
+ * @param height Height of the rectangle
+ * @param button Button to fill the rectangle with
+ */
+fun <G : AbstractGuiCustom<G>> G.rectangle(
+    startRow: Int,
+    startCol: Int,
+    width: Int,
+    height: Int,
+    button: Button
+) {
+    val rows = size() / 9
+    val endRow = minOf(startRow + height - 1, rows - 1)
+    val endCol = minOf(startCol + width - 1, 8)
+
+    draw {
+        for (row in startRow..endRow) {
+            for (col in startCol..endCol) {
+                set(Slot.ofBukkit(row, col), button)
+            }
+        }
+    }
+}
+
+/**
+ * Creates a hollow rectangle (outline only).
+ *
+ * Example:
+ * ```kotlin
+ * gui.hollowRectangle(1, 1, 7, 5, borderButton, fillButton)
+ * ```
+ *
+ * @param startRow Starting row (0-based)
+ * @param startCol Starting column (0-based)
+ * @param width Width of the rectangle
+ * @param height Height of the rectangle
+ * @param borderButton Button for the border
+ * @param fillButton Optional button for the interior (if provided, fills the interior)
+ */
+fun <G : AbstractGuiCustom<G>> G.hollowRectangle(
+    startRow: Int,
+    startCol: Int,
+    width: Int,
+    height: Int,
+    borderButton: Button,
+    fillButton: Button? = null
+) {
+    val rows = size() / 9
+    val endRow = minOf(startRow + height - 1, rows - 1)
+    val endCol = minOf(startCol + width - 1, 8)
+
+    draw {
+        // Top and bottom borders
+        for (col in startCol..endCol) {
+            set(Slot.ofBukkit(startRow, col), borderButton)
+            set(Slot.ofBukkit(endRow, col), borderButton)
+        }
+
+        // Left and right borders
+        for (row in startRow + 1 until endRow) {
+            set(Slot.ofBukkit(row, startCol), borderButton)
+            set(Slot.ofBukkit(row, endCol), borderButton)
+        }
+
+        // Fill interior if fillButton is provided
+        if (fillButton != null && height > 2 && width > 2) {
+            for (row in startRow + 1 until endRow) {
+                for (col in startCol + 1 until endCol) {
+                    set(Slot.ofBukkit(row, col), fillButton)
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Creates a zigzag pattern.
+ *
+ * Example:
+ * ```kotlin
+ * gui.zigzag(ItemStack(Material.YELLOW_WOOL).asButton, startRow = 0, amplitude = 3)
+ * ```
+ *
+ * @param button The button to use for the zigzag
+ * @param startRow Starting row for the pattern
+ * @param amplitude Maximum horizontal displacement from center
+ * @param wavelength Vertical distance between peaks
+ */
+fun <G : AbstractGuiCustom<G>> G.zigzag(
+    button: Button,
+    startRow: Int = 0,
+    amplitude: Int = 3,
+    wavelength: Int = 2
+) {
+    val rows = size() / 9
+
+    draw {
+        for (row in startRow until rows) {
+            val phase = (row / wavelength) % 2
+            val offset = if (phase == 0) amplitude else -amplitude
+            val col = 4 + offset // Center column + offset
+
+            if (col in 0..8) {
+                set(Slot.ofBukkit(row, col), button)
+            }
+        }
+    }
+}
+
+/**
+ * Creates a gradient pattern using different buttons.
+ *
+ * Example:
+ * ```kotlin
+ * gui.gradient(startButton, endButton, direction = GradientDirection.HORIZONTAL)
+ * ```
+ *
+ * @param startButton Button for the start of the gradient
+ * @param endButton Button for the end of the gradient
+ * @param direction Direction of the gradient
+ * @param steps Number of steps in the gradient (default: auto-calculate)
+ */
+fun <G : AbstractGuiCustom<G>> G.gradient(
+    startButton: Button,
+    endButton: Button,
+    direction: GradientDirection = GradientDirection.HORIZONTAL,
+    steps: Int = -1
+) {
+    val rows = size() / 9
+    val actualSteps = if (steps == -1) {
+        when (direction) {
+            GradientDirection.HORIZONTAL -> 9
+            GradientDirection.VERTICAL -> rows
+            GradientDirection.DIAGONAL -> minOf(9, rows)
+        }
+    } else steps
+
+    draw {
+        when (direction) {
+            GradientDirection.HORIZONTAL -> {
+                for (col in 0 until actualSteps) {
+                    val button = if (col < actualSteps / 2) startButton else endButton
+                    for (row in 0 until rows) {
+                        set(Slot.ofBukkit(row, col), button)
+                    }
+                }
+            }
+            GradientDirection.VERTICAL -> {
+                for (row in 0 until actualSteps) {
+                    val button = if (row < actualSteps / 2) startButton else endButton
+                    for (col in 0..8) {
+                        set(Slot.ofBukkit(row, col), button)
+                    }
+                }
+            }
+            GradientDirection.DIAGONAL -> {
+                for (i in 0 until actualSteps) {
+                    val button = if (i < actualSteps / 2) startButton else endButton
+                    set(Slot.ofBukkit(i, i), button)
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Direction for gradient patterns.
+ */
+enum class GradientDirection {
+    /** Left to right */
+    HORIZONTAL,
+    /** Top to bottom */
+    VERTICAL,
+    /** Top-left to bottom-right */
+    DIAGONAL
+}
+
+/**
+ * Creates a heart shape pattern.
+ *
+ * Example:
+ * ```kotlin
+ * gui.heart(ItemStack(Material.RED_WOOL).asButton, centerRow = 2, centerCol = 4)
+ * ```
+ *
+ * @param button The button to use for the heart
+ * @param centerRow Center row of the heart
+ * @param centerCol Center column of the heart
+ * @param size Size of the heart (default: 1)
+ */
+fun <G : AbstractGuiCustom<G>> G.heart(
+    button: Button,
+    centerRow: Int,
+    centerCol: Int,
+    size: Int = 1
+) {
+    val rows = size() / 9
+
+    // Heart pattern coordinates (simplified)
+    val heartPattern = listOf(
+        Pair(0, -1), Pair(0, 1),  // Top bumps
+        Pair(-1, -2), Pair(-1, -1), Pair(-1, 0), Pair(-1, 1), Pair(-1, 2),  // Upper row
+        Pair(-2, -2), Pair(-2, -1), Pair(-2, 0), Pair(-2, 1), Pair(-2, 2),  // Middle row
+        Pair(-3, -1), Pair(-3, 0), Pair(-3, 1),  // Lower middle
+        Pair(-4, 0)  // Bottom point
+    )
+
+    draw {
+        for ((dr, dc) in heartPattern) {
+            for (s in 0 until size) {
+                for (s2 in 0 until size) {
+                    val row = centerRow + dr * size + s
+                    val col = centerCol + dc * size + s2
+                    if (row in 0 until rows && col in 0..8) {
+                        set(Slot.ofBukkit(row, col), button)
+                    }
+                }
+            }
+        }
+    }
 }

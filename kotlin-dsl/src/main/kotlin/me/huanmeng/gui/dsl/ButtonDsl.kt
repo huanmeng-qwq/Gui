@@ -116,9 +116,9 @@ class ButtonDsl {
      * Sets a player-dependent item supplier for the button.
      * The ItemStack can vary based on the viewing player.
      *
-     * @param lambda Function that takes a player and returns the ItemStack to display
+     * @param lambda Function that takes a player and returns the ItemStack to display (can be null)
      */
-    fun item(lambda: (player: Player) -> ItemStack) {
+    fun item(lambda: (player: Player) -> ItemStack?) {
         showingItem = PlayerItemInterface(lambda)
     }
 
