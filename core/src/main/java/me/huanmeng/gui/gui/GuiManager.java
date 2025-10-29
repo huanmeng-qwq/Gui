@@ -162,7 +162,7 @@ public class GuiManager implements ListenerAdapter {
         this.plugin = plugin;
         this.audiences = BukkitAudiences.create(plugin);
         if (!Boolean.getBoolean("gui.disable-bStats")) {
-            metrics = new Metrics(plugin, 18670, "2.5.3");
+            metrics = new Metrics(plugin, 18670, "2.5.4");
         }
         if (registerListener) {
             try {
