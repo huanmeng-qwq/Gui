@@ -17,41 +17,118 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 
 /**
- * 2023/3/17<br>
- * Gui<br>
- * <p>
- * 简易的Gui包装类
+ * High-level GUI wrapper providing convenient methods for GUI creation and navigation history.
+ *
+ * <p>This abstract class provides:
+ * <ul>
+ *   <li>Automatic back button navigation support using a linked node structure</li>
+ *   <li>Context management for player-specific GUI state</li>
+ *   <li>Constructor reflection for creating new instances when navigating back</li>
+ *   <li>Page state preservation when navigating between paginated GUIs</li>
+ * </ul>
+ *
+ * <p><b>Navigation System:</b>
+ * <br>When {@code allowBack} is true, this class maintains a linked list of GUI states
+ * that allows players to navigate backwards through their GUI history. Each node stores
+ * the constructor information needed to recreate the previous GUI.
+ *
+ * <p><b>Usage Example:</b>
+ * <pre>{@code
+ * public class MyGui extends HGui {
+ *     public MyGui(Player player, boolean allowBack) {
+ *         super(player, allowBack);
+ *     }
+ *
+ *     @Override
+ *     protected AbstractGui<?> gui() {
+ *         GuiCustom gui = new GuiCustom(context.getPlayer());
+ *         gui.line(3);
+ *         gui.title("My GUI");
+ *         return gui;
+ *     }
+ * }
+ *
+ * // Open the GUI
+ * new MyGui(player, true).open();
+ * }</pre>
  *
  * @author huanmeng_qwq
+ * @since 2023/3/17
  */
 @SuppressWarnings({"unused"})
 public abstract class HGui {
+    /**
+     * The previous GUI in the navigation history, if any.
+     */
     @Nullable
     protected HGui from;
+
+    /**
+     * The AbstractGui instance from the previous GUI in the navigation history.
+     */
     @Nullable
     protected AbstractGui<?> fromGui;
+
+    /**
+     * Context containing player-specific information and the GUI instance.
+     */
     @NonNull
     protected final PackageGuiContext context;
+
+    /**
+     * Whether this GUI supports back navigation to the previous GUI.
+     */
     protected boolean allowBack;
 
+    /**
+     * Method handle for the constructor, used to recreate instances when navigating back.
+     */
     @Nullable
     protected MethodHandle constructorHandle;
 
+    /**
+     * Function that provides constructor arguments when creating new instances.
+     */
     protected BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction;
 
+    /**
+     * Global map storing navigation history nodes for each player.
+     * <br>Maps each player to their current position in the GUI navigation history.
+     */
     public static final Map<Player, Node> BACK_NODE_MAP = new ConcurrentHashMap<>();
 
+    /**
+     * Creates a new HGui without back navigation support.
+     *
+     * <p>Equivalent to calling {@code HGui(player, false)}.
+     *
+     * @param player the player who will view this GUI
+     */
     public HGui(@NonNull Player player) {
         this(player, false);
         setConstructor(MethodType.methodType(void.class, Player.class), Arrays::asList);
     }
 
+    /**
+     * Creates a new HGui with optional back navigation support.
+     *
+     * @param player the player who will view this GUI
+     * @param allowBack whether to enable back navigation to previous GUIs
+     */
     public HGui(@NonNull Player player, boolean allowBack) {
         this.context = new PackageGuiContext(player);
         this.allowBack = allowBack;
         setConstructor(MethodType.methodType(void.class, Player.class, boolean.class), Arrays::asList);
     }
 
+    /**
+     * Sets the constructor information for recreating this GUI instance.
+     *
+     * <p>Used internally to enable back navigation by storing constructor metadata.
+     *
+     * @param methodType the method type signature of the constructor
+     * @param newInstanceValuesFunction function that provides constructor arguments
+     */
     @SuppressWarnings("SameParameterValue")
     protected void setConstructor(MethodType methodType, BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction) {
         this.newInstanceValuesFunction = newInstanceValuesFunction;
@@ -63,10 +140,22 @@ public abstract class HGui {
         }
     }
 
+    /**
+     * Sets the function that provides constructor arguments when creating new instances.
+     *
+     * @param newInstanceValuesFunction function that takes a player and allowBack flag,
+     *                                   returning a list of constructor arguments
+     */
     public void setNewInstanceValuesFunction(BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction) {
         this.newInstanceValuesFunction = newInstanceValuesFunction;
     }
 
+    /**
+     * Sets the constructor information using a Constructor object.
+     *
+     * @param constructor the constructor to use for recreating instances
+     * @param newInstanceValuesFunction function that provides constructor arguments
+     */
     protected void setConstructor(Constructor<?> constructor, BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction) {
         this.newInstanceValuesFunction = newInstanceValuesFunction;
         try {
@@ -77,9 +166,30 @@ public abstract class HGui {
         }
     }
 
+    /**
+     * Creates and returns the underlying AbstractGui instance.
+     *
+     * <p>This method must be implemented by subclasses to define what GUI
+     * should be displayed when this HGui is opened.
+     *
+     * @return the GUI to display, or null if the GUI cannot be created
+     */
     @Nullable
     protected abstract AbstractGui<?> gui();
 
+    /**
+     * Opens this GUI for the player.
+     *
+     * <p>This method:
+     * <ul>
+     *   <li>Creates the underlying GUI via {@link #gui()}</li>
+     *   <li>Preserves page state if navigating between paginated GUIs</li>
+     *   <li>Sets up navigation history if back navigation is enabled</li>
+     *   <li>Registers back button handler if applicable</li>
+     *   <li>Opens the GUI inventory for the player</li>
+     *   <li>Calls {@link #whenOpen()} callback</li>
+     * </ul>
+     */
     public final void open() {
         AbstractGui<?> g = gui();
         if (g == null) {
@@ -150,23 +260,64 @@ public abstract class HGui {
         whenOpen();
     }
 
+    /**
+     * Callback invoked after the GUI is opened.
+     *
+     * <p>Override this method to perform actions after the GUI is displayed to the player.
+     */
     protected void whenOpen() {
 
     }
 
+    /**
+     * Returns the previous HGui in the navigation history.
+     *
+     * @return the previous HGui, or null if this is the first GUI in the history
+     */
     @Nullable
     protected HGui from() {
         return from;
     }
 
+    /**
+     * Returns the AbstractGui instance from the previous GUI in the navigation history.
+     *
+     * @return the previous AbstractGui, or null if this is the first GUI in the history
+     */
     @Nullable
     protected AbstractGui<?> getFromGui() {
         return fromGui;
     }
 
+    /**
+     * Navigation history node in the linked list structure.
+     *
+     * <p>Each node contains:
+     * <ul>
+     *   <li>References to the previous and next nodes in the history</li>
+     *   <li>Constructor information for recreating the GUI at this history point</li>
+     *   <li>Function for providing constructor arguments</li>
+     * </ul>
+     */
     public static class Node {
-        private Node prev, next;
+        /**
+         * Previous node in the navigation history.
+         */
+        private Node prev;
+
+        /**
+         * Next node in the navigation history.
+         */
+        private Node next;
+
+        /**
+         * Method handle for the GUI constructor.
+         */
         private MethodHandle methodHandle;
+
+        /**
+         * Function that provides constructor arguments for recreating the GUI.
+         */
         private BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction;
     }
 }

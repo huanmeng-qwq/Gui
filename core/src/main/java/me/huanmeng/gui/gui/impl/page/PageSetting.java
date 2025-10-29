@@ -12,21 +12,37 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * 2023/6/4<br>
- * Gui<br>
+ * Configuration class that defines the collection of navigation buttons for a paginated GUI.
+ * <p>
+ * PageSetting contains a list of {@link PageButton}s that provide navigation functionality
+ * such as previous page, next page, first page, and last page buttons. These buttons are
+ * applied to a {@link PageArea} to enable page navigation in the GUI.
+ *
+ * <p>
+ * Use the {@link Builder} to construct a PageSetting with desired navigation buttons, or
+ * use the convenient factory methods in {@link PageSettings} for common configurations.
+ *
  *
  * @author huanmeng_qwq
+ * @since 2023/6/4
+ * @see PageButton
+ * @see PageSettings
  */
 @SuppressWarnings("unused")
 public class PageSetting {
     /**
-     * 按钮集合
+     * The collection of page navigation button suppliers.
      */
     private List<@NonNull Supplier<@NonNull PageButton>> pageButtons;
 
     private PageSetting() {
     }
 
+    /**
+     * Creates a new Builder instance for constructing a PageSetting.
+     *
+     * @return a new Builder instance
+     */
     @Contract(value = " -> new", pure = true)
     @NonNull
     public static Builder builder() {
@@ -34,7 +50,9 @@ public class PageSetting {
     }
 
     /**
-     * @return 按钮集合
+     * Gets the collection of page navigation button suppliers.
+     *
+     * @return an immutable list of button suppliers
      */
     @NonNull
     public List<@NonNull Supplier<@NonNull PageButton>> pageButtons() {
@@ -42,16 +60,20 @@ public class PageSetting {
     }
 
 
+    /**
+     * Builder class for constructing PageSetting instances with navigation buttons.
+     */
     public static class Builder {
         /**
-         * 按钮集合
+         * The collection of page navigation button suppliers being built.
          */
         private List<@NonNull Supplier<@NonNull PageButton>> pageButtons;
 
         /**
-         * 添加按钮
+         * Adds a page navigation button supplier to this setting.
          *
-         * @param supplier 按钮
+         * @param supplier the button supplier to add
+         * @return this Builder for method chaining
          */
         @NonNull
         public Builder button(@NonNull Supplier<@NonNull PageButton> supplier) {
@@ -63,10 +85,11 @@ public class PageSetting {
         }
 
         /**
-         * 添加按钮
+         * Adds a page navigation button to this setting.
          *
-         * @param gui    gui
-         * @param button 按钮
+         * @param gui    the GUI this button belongs to
+         * @param button the button to add
+         * @return this Builder for method chaining
          */
         @NonNull
         public Builder button(@NonNull GuiPage gui, @NonNull Button button) {
@@ -74,27 +97,34 @@ public class PageSetting {
         }
 
         /**
-         * 添加按钮
+         * Adds a page navigation button with a display condition to this setting.
          *
-         * @param gui             gui
-         * @param firstPageButton 按钮
-         * @param condition       允许绘制的条件
+         * @param gui       the GUI this button belongs to
+         * @param button    the button to add
+         * @param condition the condition that determines when this button should be displayed
+         * @return this Builder for method chaining
          */
         @NonNull
-        public Builder button(@NonNull GuiPage gui, @NonNull Button firstPageButton, @NonNull PageCondition condition) {
-            return button(PageButton.of(gui, firstPageButton, condition));
+        public Builder button(@NonNull GuiPage gui, @NonNull Button button, @NonNull PageCondition condition) {
+            return button(PageButton.of(gui, button, condition));
         }
 
         /**
-         * 添加按钮
+         * Adds a PageButton instance to this setting.
          *
-         * @param button 按钮
+         * @param button the PageButton to add
+         * @return this Builder for method chaining
          */
         @NonNull
         public Builder button(@NonNull PageButton button) {
             return this.button(FreezeSupplier.of(button));
         }
 
+        /**
+         * Builds and returns the configured PageSetting instance.
+         *
+         * @return a new PageSetting with the configured buttons
+         */
         @NonNull
         public PageSetting build() {
             PageSetting pageSetting = new PageSetting();

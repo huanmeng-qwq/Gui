@@ -48,103 +48,190 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * 2023/3/17<br>
- * Gui<br>
+ * Abstract base class for all GUI implementations in the library.
+ * <p>
+ * This class provides the core functionality for creating and managing custom inventory GUIs in Bukkit/Paper.
+ * It handles button management with priority levels, event handling (click, drag, close), inventory lifecycle,
+ * and player inventory interaction controls.
  *
+ * <p>
+ * <b>Button Priority System:</b>
+ * <ul>
+ *   <li>{@link #editButtons} - Highest priority (internal modifications)</li>
+ *   <li>{@link #attachedButtons} - Medium priority (dynamically attached buttons)</li>
+ *   <li>{@link #buttons} - Default priority (standard buttons)</li>
+ * </ul>
+ *
+ * <p>
+ * <b>Event Cancellation Flags:</b>
+ * The class provides fine-grained control over inventory interactions through various cancellation flags:
+ * {@link #cancelClickOther}, {@link #cancelClickBottom}, {@link #cancelMoveHotBarItemToSelf},
+ * {@link #cancelMoveItemToSelf}, {@link #cancelMoveItemToBottom}.
+ *
+ *
+ * @param <G> Self-bounded generic type for method chaining with the correct subclass type
  * @author huanmeng_qwq
+ * @since 2023/3/17
  */
 @SuppressWarnings("ALL")
 public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> implements GuiTick {
+    /** The player viewing this GUI */
     @Nullable
     protected Player player;
+
+    /** The title displayed in the inventory GUI */
     @NonNull
     protected Component title = Component.translatable("container.chest");
-    //默认优先级
+
+    /** Default priority button set */
     @NonNull
     protected Set<GuiButton> buttons = new HashSet<>(10);
-    //大于默认(buttons)的优先级
+
+    /** Higher priority buttons than the default set (dynamically attached) */
     @NonNull
     protected Set<GuiButton> attachedButtons = new HashSet<>(10);
-    //内部修改优先级最高
+
+    /** Highest priority buttons for internal modifications */
     @NonNull
     protected Set<GuiButton> editButtons = new HashSet<>(10);
+
+    /** Cached inventory instance */
     @Nullable
     protected Inventory cacheInventory;
+
+    /** Function to retrieve the parent/back GUI for navigation */
     @Nullable
     protected Function<@NonNull Player, @NonNull AbstractGui<?>> backGuiGetter;
+
+    /** Runnable to execute when navigating back (alternative to backGuiGetter) */
     @Nullable
     protected Runnable backGuiRunner;
+
+    /** The size of the inventory in slots */
     private int size;
+
     /**
-     * 如果点击空白地方是否取消事件
+     * Whether to cancel click events on empty slots.
+     * If true, clicking empty areas will be cancelled.
      */
     protected boolean cancelClickOther = true;
+
     /**
-     * 是否取消点击{@link InventoryView}下面部分的{@link Inventory}或切换副手
+     * Whether to cancel clicks in the bottom {@link InventoryView} (player inventory) or offhand swaps.
+     * If true, bottom inventory interactions are cancelled.
      */
     protected boolean cancelClickBottom = true;
+
     /**
-     * 是否取消玩家用按键将背包物品移动至当前gui
+     * Whether to cancel hotbar key presses that would move items from player inventory to this GUI.
+     * If true, pressing number keys (1-9) to swap items is cancelled.
      */
     protected boolean cancelMoveHotBarItemToSelf = true;
+
     /**
-     * 是否取消玩家用鼠标选中拿起的物品移动至当前gui
-     * 或者Shift点击将背包物品移动至当前gui
+     * Whether to cancel moving items from player inventory to this GUI via mouse or shift-click.
+     * If true, prevents placing held items or shift-clicking items into the GUI.
      *
      * @see #cancelClickBottom
      */
     protected boolean cancelMoveItemToSelf = true;
+
+    /** Whether to cancel moving items from this GUI to the player's bottom inventory */
     protected boolean cancelMoveItemToBottom = true;
+
+    /** Whether player inventory slots can have interactive buttons */
     protected boolean enablePlayerInventory = false;
 
+    /** Flag indicating if a click event is currently being processed */
     protected boolean processingClickEvent;
+
     /**
-     * 是否禁用点击事件, 为true时将直接取消{@link InventoryClickEvent}事件并不做任何处理 谨慎使用, 否则正常处理
+     * Whether to disable all click event processing.
+     * If true, all {@link InventoryClickEvent}s will be cancelled immediately without any handling.
+     * Use with caution as this bypasses all button interactions.
      */
     protected boolean disableClick = false;
 
+    /** Whether this GUI can be reopened after closing */
     protected boolean allowReopen = true;
+
+    /** Whether the GUI is currently closed */
     boolean close = true;
+
+    /** Whether the GUI is in the process of closing */
     boolean closing = true;
 
+    /** List of tick callbacks to execute periodically */
     @NonNull
     protected List<Consumer<G>> tickles = new ArrayList<>();
+
+    /** Interval in ticks between periodic updates (default: 100 ticks = 5 seconds) */
     protected int intervalTick = 20 * 5;
+
+    /** Whether to automatically refresh the GUI on each tick */
     protected boolean tickRefresh = true;
+
+    /** Custom click handler for the GUI */
     @Nullable
     protected GuiClick guiClick;
+
+    /** Handler for clicks on empty slots */
     @Nullable
     protected GuiEmptyItemClick guiEmptyItemClick;
+
+    /** Handler for clicks in the bottom inventory (player inventory) */
     @Nullable
     protected GuiBottomClick guiBottomClick;
+
+    /** Callback to execute when the GUI is closed */
     @Nullable
     protected Consumer<@NonNull G> whenClose;
+
+    /** Custom result handler for processing button click results */
     @Nullable
     protected CustomResultHandler customResultHandler;
 
+    /** The scheduled tick task for periodic GUI updates */
     protected Scheduler.@Nullable Task tickTask;
+
+    /**
+     * Error message provider when inventory click processing fails.
+     * Returns a localized error message based on the player's locale.
+     */
     @NonNull
     protected Function<@NonNull HumanEntity, @Nullable Component> errorMessage =
-            p -> Component.text("§c无法处理您的点击请求，请联系管理员。");
+            p -> Component.text("§cUnable to process your click request, please contact an administrator.");
+
+    /** Metadata storage for custom data associated with this GUI */
     protected Map<String, Object> metadata = new HashMap<>(2);
+
+    /** The GuiManager instance managing this GUI */
     protected GuiManager manager = GuiManager.instance();
 
     /**
-     * 设置目标玩家
+     * Sets the target player for this GUI.
+     *
+     * @param player The player who will view this GUI
      */
     public void setPlayer(@NonNull Player player) {
         this.player = player;
     }
 
     /**
-     * 获取目标玩家
+     * Gets the target player viewing this GUI.
+     *
+     * @return The player viewing this GUI, or null if not set
      */
     public Player getPlayer() {
         return player;
     }
 
     /**
-     * 设置title与size
+     * Initializes the GUI with a title and size.
+     *
+     * @param title    The title to display
+     * @param itemSize The number of slots in the inventory
+     * @deprecated Use {@link #init(Component, int)} for Adventure Component support
      */
     @Deprecated
     protected void init(@NonNull String title, int itemSize) {
@@ -152,7 +239,10 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     /**
-     * 设置title与size
+     * Initializes the GUI with a title and size.
+     *
+     * @param title    The Adventure Component title to display
+     * @param itemSize The number of slots in the inventory
      */
     protected void init(@NonNull Component title, int itemSize) {
         this.title = title;
@@ -160,18 +250,32 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     /**
-     * 打开{@link Inventory}
+     * Opens the GUI inventory for the player.
+     * This method must be implemented by subclasses to handle the specific inventory type.
+     *
+     * @return This GUI instance for method chaining
      */
     @NonNull
     @CanIgnoreReturnValue
     public abstract G openGui();
 
     /**
-     * 创建一个空的{@link Inventory}
+     * Creates an empty {@link Inventory} with the specified holder.
+     * This method must be implemented by subclasses to create the appropriate inventory type.
+     *
+     * @param holder The inventory holder
+     * @return The created inventory
      */
     @NonNull
     protected abstract Inventory build(@NonNull InventoryHolder holder);
 
+    /**
+     * Called when the GUI is opened.
+     * Initializes the GUI state and starts the tick task if configured.
+     * <p>
+     * This is an internal method called by {@link GuiManager} during the inventory open event.
+     * </p>
+     */
     void onOpen() {
         close = false;
         closing = false;
@@ -180,6 +284,12 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         }
     }
 
+    /**
+     * Sets whether the GUI should automatically refresh on each tick.
+     *
+     * @param tickRefresh true to enable automatic refresh, false to disable
+     * @return This GUI instance for method chaining
+     */
     @NonNull
     @CanIgnoreReturnValue
     public G setTickRefresh(boolean tickRefresh) {
@@ -188,7 +298,11 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     /**
-     * 当关闭时, 调用来自{@link InventoryCloseEvent}, 或在打开时更新title导致的重新reopen触发
+     * Called when the GUI is closed.
+     * <p>
+     * This method is invoked from {@link InventoryCloseEvent}, or when reopening due to a title update.
+     * It stops the tick task and executes any registered close callbacks.
+     * </p>
      */
     public void onClose() {
         close = true;
@@ -204,13 +318,20 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         }
     }
 
+    /**
+     * Closes the GUI with options to open parent GUI and force close.
+     *
+     * @param openParent Whether to open the parent/back GUI after closing this one
+     * @param force      Whether to force close even if the GUI is already closing or the parent doesn't allow reopening
+     */
     public void close(boolean openParent, boolean force) {
         if (!force && (close || closing)) {
             return;
         }
         closing = true;
         if (processingClickEvent || !Bukkit.isPrimaryThread()) {
-            // 在处理点击事件时将close方法延迟到下一tick, 因为下一tick的时候当前的点击事件已经处理完毕
+            // Delay the close method to the next tick when processing click events,
+            // because by the next tick the current click event will have finished processing
             Schedulers.sync().runLater(() -> {
                 closing = false;
                 close(openParent, force);
@@ -236,26 +357,38 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         }
     }
 
+    /**
+     * Closes this GUI without opening a parent GUI.
+     * Equivalent to {@code close(false, false)}.
+     */
     public void close() {
         close(false, false);
     }
 
     /**
-     * 返回上一个gui, 没有则关闭
+     * Navigates back to the parent GUI.
+     * If no parent GUI is configured, closes the current GUI.
      */
     public void back() {
         back(false);
     }
 
     /**
-     * 返回上一个gui, 没有则关闭
+     * Navigates back to the parent GUI with optional force flag.
+     * If no parent GUI is configured, closes the current GUI.
      *
-     * @param force 强制返回上一个gui, 即使上一个gui不允许被重新打开
+     * @param force Whether to force navigation back even if the parent GUI doesn't allow reopening
      */
     public void back(boolean force) {
         close(true, force);
     }
 
+    /**
+     * Adds a tick callback to be executed periodically.
+     *
+     * @param tickle The callback to execute on each tick
+     * @return This GUI instance for method chaining
+     */
     @NonNull
     @CanIgnoreReturnValue
     public G addTick(@NonNull Consumer<G> tickle) {
@@ -263,6 +396,12 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         return self();
     }
 
+    /**
+     * Sets the tick interval for periodic updates.
+     *
+     * @param tick The interval in ticks (20 ticks = 1 second)
+     * @return This GUI instance for method chaining
+     */
     @NonNull
     @CanIgnoreReturnValue
     public G tick(int tick) {
@@ -270,6 +409,12 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         return self();
     }
 
+    /**
+     * Sets a custom error message provider for when click processing fails.
+     *
+     * @param errorMessage Function that generates an error message for a given player
+     * @return This GUI instance for method chaining
+     */
     @NonNull
     @CanIgnoreReturnValue
     public G errorMessage(@NonNull Function<@NonNull HumanEntity, @Nullable Component> errorMessage) {
@@ -277,6 +422,10 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         return self();
     }
 
+    /**
+     * Executes all registered tick callbacks and optionally refreshes the GUI.
+     * This method is called periodically by the {@link TickManager} based on the configured interval.
+     */
     @Override
     public void run() {
         if (close) {
@@ -305,13 +454,23 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     /**
-     * 是否允许返回到当前菜单
+     * Checks if this GUI allows being reopened from another GUI.
+     *
+     * @param gui The GUI requesting to navigate back to this GUI
+     * @param <G> The type of the requesting GUI
+     * @return true if reopening is allowed, false otherwise
      */
     @NonNull
     protected <G extends AbstractGui<G>> boolean isAllowReopenFrom(@NonNull G gui) {
         return allowReopen;
     }
 
+    /**
+     * Pre-caches this GUI as the next GUI to be opened for the player.
+     * Used internally during the GUI open process.
+     *
+     * @return This GUI instance for method chaining
+     */
     @NonNull
     @CanIgnoreReturnValue
     protected G precache() {
@@ -319,6 +478,13 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         return self();
     }
 
+    /**
+     * Caches the inventory and registers this GUI as currently open for the player.
+     * Used internally after creating an inventory.
+     *
+     * @param inventory The inventory to cache
+     * @return This GUI instance for method chaining
+     */
     @NonNull
     @CanIgnoreReturnValue
     protected G cache(@NonNull Inventory inventory) {
@@ -330,7 +496,11 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
 
 
     /**
-     * 重新填充所有物品
+     * Refreshes and refills all items in the inventory.
+     *
+     * @param all Whether to clear the entire inventory before refilling.
+     *            If true, clears all slots; if false, only updates existing button slots.
+     * @return This GUI instance for method chaining
      */
     @NonNull
     @CanIgnoreReturnValue
@@ -339,6 +509,12 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         return self();
     }
 
+    /**
+     * Removes this GUI from the cache, unregistering it from the {@link GuiManager}.
+     * Used internally during GUI cleanup.
+     *
+     * @return This GUI instance for method chaining
+     */
     @NonNull
     @CanIgnoreReturnValue
     protected G unCache() {
@@ -352,21 +528,44 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         return self();
     }
 
+    /**
+     * Creates a {@link GuiHolder} for this GUI.
+     * The holder is used to identify GUI inventories and access the GUI instance from inventory events.
+     *
+     * @return A new GuiHolder instance
+     */
     @NonNull
     protected final InventoryHolder createHolder() {
         return new GuiHolder<>(player, self());
     }
 
+    /**
+     * Gets the default priority button set to be filled in the inventory.
+     *
+     * @return The set of buttons to fill
+     */
     @NonNull
     protected Set<GuiButton> getFillItems() {
         return buttons;
     }
 
+    /**
+     * Gets the set of dynamically attached buttons (medium priority).
+     *
+     * @return The set of attached buttons
+     */
     @NonNull
     public Set<GuiButton> getAttachedItems() {
         return attachedButtons;
     }
 
+    /**
+     * Adds or updates an attached button in the GUI.
+     * If a button already exists at the same slot, it will be replaced.
+     *
+     * @param button The button to attach
+     * @return This GUI instance for method chaining
+     */
     @NonNull
     public G addAttachedButton(@NonNull GuiButton button) {
         attachedButtons.remove(button);
@@ -374,6 +573,13 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         return self();
     }
 
+    /**
+     * Sets a button at the specified slot with highest priority (edit priority).
+     * This will override any existing buttons at this slot from lower priority sets.
+     *
+     * @param slot   The slot position
+     * @param button The button to set, or null to clear the slot
+     */
     protected void setButton(@NonNull Slot slot, @Nullable Button button) {
         GuiButton guiButton = new GuiButton(slot, button);
         buttons.remove(guiButton);
@@ -381,6 +587,14 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         editButtons.add(guiButton);
     }
 
+    /**
+     * Gets the button at a specific inventory index with custom filtering.
+     * Searches in priority order: editButtons → buttons → attachedButtons.
+     *
+     * @param index     The inventory slot index
+     * @param predicate Filter predicate to apply when searching for buttons
+     * @return The button at the index, or null if none found
+     */
     @Nullable
     public GuiButton getButton(int index, Predicate<GuiButton> predicate) {
         return editButtons
@@ -405,26 +619,70 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
                 );
     }
 
+    /**
+     * Gets the button at a specific inventory index.
+     *
+     * @param index The inventory slot index
+     * @return The button at the index, or null if none found
+     */
     public GuiButton getButton(int index) {
         return getButton(index, t -> true);
     }
 
+    /**
+     * Gets the button at a specific slot.
+     *
+     * @param slot The slot position
+     * @return The button at the slot, or null if none found
+     */
     public GuiButton getButton(Slot slot) {
         return getButton(slot.getIndex(), btn -> btn.isPlayerInventory() == slot.isPlayer());
     }
 
+    /**
+     * Gets the ItemStack at a specific inventory index.
+     *
+     * @param index The inventory slot index
+     * @return The ItemStack at the index, or null if empty
+     */
     public ItemStack getItem(int index) {
         return cacheInventory.getItem(index);
     }
 
+    /**
+     * Gets the ItemStack at a specific slot.
+     *
+     * @param slot The slot position
+     * @return The ItemStack at the slot, or null if empty
+     */
     public ItemStack getItem(Slot slot) {
         return getItem(slot.getIndex());
     }
 
+    /**
+     * Gets all ItemStacks from multiple slots.
+     *
+     * @param slots The slots to retrieve items from
+     * @return An array of ItemStacks corresponding to the slots
+     */
     public ItemStack[] getItems(Slots slots) {
         return Arrays.stream(slots.slots(self())).map(this::getItem).toArray(ItemStack[]::new);
     }
 
+    /**
+     * Fills the inventory with all buttons from the three priority sets.
+     * <p>
+     * Buttons are applied in priority order:
+     * 1. Default buttons (lowest priority)
+     * 2. Attached buttons (medium priority)
+     * 3. Edit buttons (highest priority - overrides all others)
+     * </p>
+     *
+     * @param inventory The inventory to fill
+     * @param all       Whether to clear the inventory before filling.
+     *                  If true, clears both the GUI inventory and player inventory (if enabled).
+     * @return This GUI instance for method chaining
+     */
     @NonNull
     @CanIgnoreReturnValue
     protected G fillItems(@NonNull Inventory inventory, @Nullable boolean all) {
@@ -466,6 +724,14 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         return self();
     }
 
+    /**
+     * Sets an item in the inventory at the position specified by the GuiButton.
+     * Delegates to the {@link me.huanmeng.gui.gui.interfaces.GuiHandler} for actual item placement.
+     *
+     * @param inventory The inventory to modify
+     * @param guiButton The button defining the slot position
+     * @param itemStack The ItemStack to place, or null to clear
+     */
     private void setItem(@NotNull Inventory inventory, GuiButton guiButton, ItemStack itemStack) {
         if (!guiButton.isPlayerInventory()) {
             manager.guiHandler().onSetItem(this, inventory, guiButton, itemStack);
@@ -475,7 +741,11 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     /**
-     * 刷新指定的物品
+     * Refreshes specific slots in the inventory.
+     * Only updates the display items for buttons at the specified slots.
+     *
+     * @param slots The slots to refresh
+     * @return This GUI instance for method chaining
      */
     @NonNull
     @CanIgnoreReturnValue
@@ -494,19 +764,50 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         return self();
     }
 
+    /**
+     * Checks if a button can be placed for the current player.
+     * Delegates to the button's placement condition.
+     *
+     * @param guiButton The button to check
+     * @return true if the button can be placed, false otherwise
+     */
     protected final boolean check(@NonNull GuiButton guiButton) {
         return guiButton.canPlace(player);
     }
 
+    /**
+     * Gets the cached inventory for this GUI.
+     *
+     * @return The cached inventory instance
+     */
     @NonNull
     public Inventory getInventory() {
         return cacheInventory;
     }
 
+    /**
+     * Gets the size of the inventory in slots.
+     *
+     * @return The number of slots in the inventory
+     */
     public int size() {
         return size;
     }
 
+    /**
+     * Checks if a click should be allowed for a specific button.
+     * Delegates to the custom {@link GuiClick} handler if configured.
+     *
+     * @param player    The player who clicked
+     * @param button    The button that was clicked
+     * @param clickType The type of click
+     * @param action    The inventory action
+     * @param slotType  The type of slot clicked
+     * @param slot      The slot index
+     * @param hotBar    The hotbar button pressed (-1 if none)
+     * @param e         The click event
+     * @return true if the click should be processed, false to ignore it
+     */
     public boolean allowClick(@NonNull Player player, @NonNull GuiButton button, @NonNull ClickType clickType,
                               @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slot, int hotBar,
                               @NonNull InventoryClickEvent e) {
@@ -516,6 +817,18 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         return true;
     }
 
+    /**
+     * Handles inventory click events for this GUI.
+     * <p>
+     * This method processes all click interactions including:
+     * - Button clicks in the GUI inventory
+     * - Clicks in the player's bottom inventory
+     * - Item movement between inventories
+     * - Hotbar key presses and offhand swaps
+     * </p>
+     *
+     * @param e The inventory click event
+     */
     public void onClick(@NonNull InventoryClickEvent e) {
         if (disableClick) {
             e.setCancelled(true);

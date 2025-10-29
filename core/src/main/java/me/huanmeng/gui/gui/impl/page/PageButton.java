@@ -20,24 +20,74 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * 2023/6/4<br>
- * Gui<br>
+ * A specialized button implementation for page navigation in paginated GUIs.
+ * <p>
+ * PageButton wraps an origin {@link Button} and adds pagination-specific behavior such as
+ * page navigation (previous, next, first, last), conditional rendering based on page state,
+ * and custom click handling for pagination operations.
+ *
+ * <p>
+ * PageButtons are configured with one or more {@link PageButtonType}s that define their
+ * navigation behavior (e.g., PREVIOUS, NEXT, FIRST, LAST). They can also have a
+ * {@link PageCondition} that controls when they should be displayed (e.g., hide the "Next"
+ * button when on the last page).
+ *
+ * <p>
+ * Example usage:
+ * <pre>{@code
+ * PageButton nextButton = PageButton.builder(gui)
+ *     .button(Button.of(new ItemStack(Material.ARROW)))
+ *     .condition(PageCondition.simple())
+ *     .click(PlayerClickPageButtonInterface.simple())
+ *     .types(PageButtonTypes.NEXT)
+ *     .build();
+ * }</pre>
+ *
  *
  * @author huanmeng_qwq
+ * @since 2023/6/4
+ * @see PageButtonType
+ * @see PageCondition
+ * @see PageArea
  */
 @SuppressWarnings("unused")
 public class PageButton implements Button {
+    /**
+     * The GUI this page button belongs to.
+     */
     private AbstractGuiPage<?> gui;
+
+    /**
+     * The page area this button navigates.
+     */
     private PageArea pageArea;
+
+    /**
+     * The underlying button that provides the visual representation and base behavior.
+     */
     @Nullable
     private Button origin;
+
+    /**
+     * The condition that determines when this button should be displayed.
+     */
     @Nullable
     private PageCondition condition;
+
+    /**
+     * The click handler for this page button.
+     */
     @Nullable
     private PlayerClickPageButtonInterface playerClickPageButtonInterface;
-    private Set<@NonNull PageButtonType> types;
+
     /**
-     * 通过行数获取对应的槽位
+     * The set of page button types (PREVIOUS, NEXT, FIRST, LAST) this button responds to.
+     */
+    private Set<@NonNull PageButtonType> types;
+
+    /**
+     * Defines the slot position for this button based on the GUI line count.
+     * Defaults to using the first button type's recommended slot.
      */
     @NonNull
     private PageSlot slot = (line, area, gui) -> {
@@ -51,7 +101,9 @@ public class PageButton implements Button {
     }
 
     /**
-     * @return 获取Builder
+     * Creates a Builder instance initialized with this PageButton's current configuration.
+     *
+     * @return a Builder pre-populated with this button's settings
      */
     @NonNull
     public Builder toBuilder() {
@@ -65,10 +117,10 @@ public class PageButton implements Button {
     }
 
     /**
-     * 构建器
+     * Creates a new Builder for constructing a PageButton.
      *
-     * @param gui gui
-     * @return {@link Builder}
+     * @param gui the paginated GUI this button belongs to
+     * @return a new Builder instance
      */
     @NonNull
     public static Builder builder(@NonNull GuiPage gui) {
@@ -76,10 +128,11 @@ public class PageButton implements Button {
     }
 
     /**
-     * 构建器
+     * Creates a new Builder for constructing a PageButton with a specific page area.
      *
-     * @param gui gui
-     * @return {@link Builder}
+     * @param gui      the paginated GUI this button belongs to
+     * @param area     the page area this button will navigate
+     * @return a new Builder instance
      */
     @NonNull
     public static Builder builder(@NonNull AbstractGuiPage<?> gui, PageArea area) {
@@ -87,11 +140,11 @@ public class PageButton implements Button {
     }
 
     /**
-     * 构建器
+     * Creates a simple PageButton wrapping the given button.
      *
-     * @param gui    gui
-     * @param button 按钮
-     * @return {@link Builder}
+     * @param gui    the paginated GUI this button belongs to
+     * @param button the button to wrap
+     * @return a new PageButton instance
      */
     @NonNull
     public static PageButton of(@NonNull GuiPage gui, @NonNull Button button) {
@@ -104,12 +157,13 @@ public class PageButton implements Button {
     }
 
     /**
-     * 构建器
+     * Creates a PageButton with a display condition.
      *
-     * @param gui       gui
-     * @param button    按钮
-     * @param condition 允许绘制的条件
-     * @return {@link Builder}
+     * @param gui       the paginated GUI this button belongs to
+     * @param pageArea  the page area this button will navigate
+     * @param button    the button to wrap
+     * @param condition the condition that controls when this button is displayed
+     * @return a new PageButton instance
      */
     @NonNull
     public static PageButton of(@NonNull AbstractGuiPage<?> gui, @NonNull PageArea pageArea, @NonNull Button button, @NonNull PageCondition condition) {
@@ -122,14 +176,15 @@ public class PageButton implements Button {
     }
 
     /**
-     * 构建器
+     * Creates a fully configured PageButton with condition, click handler, and types.
      *
-     * @param gui       gui
-     * @param button    按钮
-     * @param condition 允许绘制的条件
-     * @param click     点击事件
-     * @param types     按钮类型
-     * @return {@link Builder}
+     * @param gui       the paginated GUI this button belongs to
+     * @param pageArea  the page area this button will navigate
+     * @param button    the button to wrap
+     * @param condition the condition that controls when this button is displayed
+     * @param click     the click handler for pagination actions
+     * @param types     the navigation types this button handles (PREVIOUS, NEXT, etc.)
+     * @return a new PageButton instance
      */
     @NonNull
     public static PageButton of(@NonNull AbstractGuiPage<?> gui, @NonNull PageArea pageArea, @NonNull Button button, @NonNull PageCondition condition, @NonNull PlayerClickPageButtonInterface click, @NonNull PageButtonType... types) {
@@ -146,15 +201,16 @@ public class PageButton implements Button {
     }
 
     /**
-     * 构建器
+     * Creates a fully configured PageButton with all options including custom slot positioning.
      *
-     * @param gui       gui
-     * @param button    按钮
-     * @param condition 允许绘制的条件
-     * @param click     点击事件
-     * @param slot      通过行数获取对应的槽位
-     * @param types     按钮类型
-     * @return {@link Builder}
+     * @param gui       the paginated GUI this button belongs to
+     * @param pageArea  the page area this button will navigate
+     * @param button    the button to wrap
+     * @param condition the condition that controls when this button is displayed
+     * @param click     the click handler for pagination actions
+     * @param slot      the slot position provider for this button
+     * @param types     the navigation types this button handles (PREVIOUS, NEXT, etc.)
+     * @return a new PageButton instance
      */
     @NonNull
     public static PageButton of(@NonNull AbstractGuiPage<?> gui, @NonNull PageArea pageArea, @NonNull Button button, @NonNull PageCondition condition,
@@ -176,7 +232,9 @@ public class PageButton implements Button {
     }
 
     /**
-     * @return 原始按钮
+     * Gets the underlying button that provides visual representation.
+     *
+     * @return the origin button, or {@code null} if not set
      */
     @Nullable
     public Button origin() {
@@ -184,7 +242,9 @@ public class PageButton implements Button {
     }
 
     /**
-     * @return 允许绘制的条件
+     * Gets the condition that determines when this button should be displayed.
+     *
+     * @return the page condition, or a dummy condition if not set
      */
     @NonNull
     public PageCondition condition() {
@@ -192,7 +252,9 @@ public class PageButton implements Button {
     }
 
     /**
-     * @return 通过行数获取对应的槽位
+     * Gets the slot position provider for this button.
+     *
+     * @return the page slot provider
      */
     @NonNull
     public PageSlot slot() {
@@ -239,13 +301,18 @@ public class PageButton implements Button {
     }
 
     /**
-     * @return 按钮类型
+     * Gets the set of page button types this button handles.
+     *
+     * @return the immutable set of button types (PREVIOUS, NEXT, FIRST, LAST)
      */
     @NonNull
     public Set<@NonNull PageButtonType> types() {
         return types;
     }
 
+    /**
+     * Builder class for constructing PageButton instances with fluent API.
+     */
     public static class Builder {
         private final AbstractGuiPage<?> gui;
         private final PageArea pageArea;
@@ -266,7 +333,10 @@ public class PageButton implements Button {
         }
 
         /**
-         * 原始按钮
+         * Sets the underlying button that provides visual representation.
+         *
+         * @param origin the button to wrap
+         * @return this Builder for method chaining
          */
         @NonNull
         public Builder button(Button origin) {
@@ -275,7 +345,10 @@ public class PageButton implements Button {
         }
 
         /**
-         * 允许绘制的条件
+         * Sets the condition that determines when this button should be displayed.
+         *
+         * @param condition the page condition
+         * @return this Builder for method chaining
          */
         @NonNull
         public Builder condition(PageCondition condition) {
@@ -284,7 +357,10 @@ public class PageButton implements Button {
         }
 
         /**
-         * 点击事件
+         * Sets the click handler for pagination actions.
+         *
+         * @param playerClickPageButtonInterface the click handler
+         * @return this Builder for method chaining
          */
         @NonNull
         public Builder click(PlayerClickPageButtonInterface playerClickPageButtonInterface) {
@@ -293,7 +369,10 @@ public class PageButton implements Button {
         }
 
         /**
-         * 按钮类型
+         * Adds one or more page button types (PREVIOUS, NEXT, FIRST, LAST) this button handles.
+         *
+         * @param types the navigation types to add
+         * @return this Builder for method chaining
          */
         @NonNull
         public Builder types(@NonNull PageButtonType... types) {
@@ -302,7 +381,10 @@ public class PageButton implements Button {
         }
 
         /**
-         * 通过行数获取对应的槽位
+         * Sets the slot position provider for this button.
+         *
+         * @param slot the page slot provider, or null to use default positioning
+         * @return this Builder for method chaining
          */
         @NonNull
         public Builder slot(@Nullable PageSlot slot) {
@@ -311,7 +393,9 @@ public class PageButton implements Button {
         }
 
         /**
-         * 构建
+         * Builds and returns the configured PageButton instance.
+         *
+         * @return a new PageButton with the configured settings
          */
         @NonNull
         public PageButton build() {
