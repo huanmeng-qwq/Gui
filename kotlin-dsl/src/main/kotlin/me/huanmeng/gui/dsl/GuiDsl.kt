@@ -14,6 +14,7 @@ import me.huanmeng.gui.gui.impl.page.PageButton
 import me.huanmeng.gui.gui.impl.page.PageButtonTypes
 import me.huanmeng.gui.gui.impl.page.PageSetting
 import me.huanmeng.gui.gui.impl.page.PageSettings
+import me.huanmeng.gui.gui.impl.page.PageSlot
 import me.huanmeng.gui.gui.slot.Slot
 import me.huanmeng.gui.gui.slot.Slots
 import org.bukkit.entity.Player
@@ -612,4 +613,244 @@ fun Guis.ofPage(vararg patterns: String, lambda: PatternPageGuiDsl.() -> Unit): 
             "allItems is null"
         }
     }
+}
+
+/* Additional Utility Extension Functions */
+
+
+/**
+ * Fills all empty slots in the GUI with a specific button.
+ *
+ * This is useful for creating borders or filling backgrounds.
+ *
+ * Example:
+ * ```kotlin
+ * gui.fillEmpty(ItemStack(Material.GRAY_STAINED_GLASS_PANE).asButton)
+ * ```
+ *
+ * @param button The button to place in all empty slots
+ */
+fun <G : AbstractGuiCustom<G>> G.fillEmpty(button: Button) {
+    val totalSlots = size()
+    for (i in 0 until totalSlots) {
+        if (getButton(i) == null) {
+            draw().set(i, button)
+        }
+    }
+}
+
+/**
+ * Creates a border around the GUI using a specific button.
+ *
+ * This fills the top row, bottom row, left column, and right column with the button.
+ *
+ * Example:
+ * ```kotlin
+ * gui.border(ItemStack(Material.BLACK_STAINED_GLASS_PANE).asButton)
+ * ```
+ *
+ * @param button The button to use for the border
+ */
+fun <G : AbstractGuiCustom<G>> G.border(button: Button) {
+    val line = size() / 9
+    if (line < 2) return // Need at least 2 rows for a border
+
+    draw {
+        // Top and bottom rows
+        vertical(0, 0, 0, 8, button)
+        vertical(line - 1, 0, line - 1, 8, button)
+
+        // Left and right columns (excluding corners already filled)
+        if (line > 2) {
+            vertical(1, 0, line - 2, 0, button)
+            vertical(1, 8, line - 2, 8, button)
+        }
+    }
+}
+
+/**
+ * Adds a close button that closes the inventory when clicked.
+ *
+ * Example:
+ * ```kotlin
+ * gui.closeButton(Slot.of(8), ItemStack(Material.BARRIER).apply {
+ *     itemMeta = itemMeta?.apply { setDisplayName("§cClose") }
+ * })
+ * ```
+ *
+ * @param slot The slot where the close button should be placed
+ * @param item The ItemStack to display for the close button
+ */
+fun <G : AbstractGuiCustom<G>> G.closeButton(slot: Slot, item: org.bukkit.inventory.ItemStack) {
+    draw {
+        set(slot, item.onClick { player.closeInventory() })
+    }
+}
+
+/**
+ * Adds a close button at a specific slot index.
+ *
+ * @param slotIndex The slot index (0-based)
+ * @param item The ItemStack to display
+ */
+fun <G : AbstractGuiCustom<G>> G.closeButton(slotIndex: Int, item: org.bukkit.inventory.ItemStack) {
+    closeButton(Slot.of(slotIndex), item)
+}
+
+/**
+ * Sets a rectangular area of slots with the same button.
+ *
+ * Example:
+ * ```kotlin
+ * gui.area(
+ *     row1 = 1, col1 = 1,
+ *     row2 = 2, col2 = 7,
+ *     button = emptyButton
+ * )
+ * ```
+ *
+ * @param row1 Starting row (0-based)
+ * @param col1 Starting column (0-based)
+ * @param row2 Ending row (0-based, inclusive)
+ * @param col2 Ending column (0-based, inclusive)
+ * @param button The button to fill the area with
+ */
+fun <G : AbstractGuiCustom<G>> G.area(
+    row1: Int, col1: Int,
+    row2: Int, col2: Int,
+    button: Button
+) {
+    draw().vertical(row1, col1, row2, col2, button)
+}
+
+/**
+ * Creates a row of buttons at a specific row index.
+ *
+ * Example:
+ * ```kotlin
+ * gui.row(0, myButton) // Fill entire first row
+ * ```
+ *
+ * @param row The row index (0-based)
+ * @param button The button to place in the row
+ */
+fun <G : AbstractGuiCustom<G>> G.row(row: Int, button: Button) {
+    draw().vertical(row, 0, row, 8, button)
+}
+
+/**
+ * Creates a column of buttons at a specific column index.
+ *
+ * Example:
+ * ```kotlin
+ * gui.column(0, borderButton) // Fill entire first column
+ * ```
+ *
+ * @param col The column index (0-based)
+ * @param button The button to place in the column
+ */
+fun <G : AbstractGuiCustom<G>> G.column(col: Int, button: Button) {
+    val lines = size() / 9
+    draw().vertical(0, col, lines - 1, col, button)
+}
+
+/**
+ * Adds multiple buttons in sequence starting from a specific slot.
+ *
+ * Example:
+ * ```kotlin
+ * gui.sequence(0, listOf(button1, button2, button3)) // Slots 0, 1, 2
+ * ```
+ *
+ * @param startSlot The starting slot index
+ * @param buttons The list of buttons to place sequentially
+ */
+fun <G : AbstractGuiCustom<G>> G.sequence(startSlot: Int, buttons: List<Button>) {
+    buttons.forEachIndexed { index, button ->
+        draw().set(Slot.of(startSlot + index), button)
+    }
+}
+
+/**
+ * Centers a single button in a specific row.
+ *
+ * Example:
+ * ```kotlin
+ * gui.centerInRow(1, myButton) // Centers button in row 1
+ * ```
+ *
+ * @param row The row index (0-based)
+ * @param button The button to center
+ */
+fun <G : AbstractGuiCustom<G>> G.centerInRow(row: Int, button: Button) {
+    draw().set(Slot.ofBukkit(row, 4), button)
+}
+
+/**
+ * Creates corners with a specific button (top-left, top-right, bottom-left, bottom-right).
+ *
+ * Example:
+ * ```kotlin
+ * gui.corners(ItemStack(Material.DIAMOND).asButton)
+ * ```
+ *
+ * @param button The button to place at all corners
+ */
+fun <G : AbstractGuiCustom<G>> G.corners(button: Button) {
+    val lines = size() / 9
+    if (lines < 1) return
+
+    draw {
+        set(Slot.ofBukkit(0, 0), button) // Top-left
+        set(Slot.ofBukkit(0, 8), button) // Top-right
+        if (lines > 1) {
+            set(Slot.ofBukkit(lines - 1, 0), button) // Bottom-left
+            set(Slot.ofBukkit(lines - 1, 8), button) // Bottom-right
+        }
+    }
+}
+
+/* GuiPage Utility Functions */
+
+/**
+ * Configures simple page navigation with custom buttons.
+ *
+ * Example:
+ * ```kotlin
+ * gui.simpleNavigation(
+ *     previousButton = ItemStack(Material.ARROW).apply { setDisplayName("§ePrevious") },
+ *     nextButton = ItemStack(Material.ARROW).apply { setDisplayName("§eNext") },
+ *     previousSlot = 45,
+ *     nextSlot = 53
+ * )
+ * ```
+ *
+ * @param previousButton ItemStack for the previous page button
+ * @param nextButton ItemStack for the next page button
+ * @param previousSlot Slot for previous button (default: 45)
+ * @param nextSlot Slot for next button (default: 53)
+ */
+fun GuiPage.simpleNavigation(
+    previousButton: org.bukkit.inventory.ItemStack,
+    nextButton: org.bukkit.inventory.ItemStack,
+    previousSlot: Int = 45,
+    nextSlot: Int = 53
+) {
+    pageSetting(PageSettings.normal(this).apply {
+        pageButtons().clear()
+        pageButtons().add {
+            PageButton.builder(this@simpleNavigation)
+                .button(Button.of(previousButton))
+                .types(PageButtonTypes.PREVIOUS)
+                .slot(PageSlot.of(Slot.of(previousSlot)))
+                .build()
+        }
+        pageButtons().add {
+            PageButton.builder(this@simpleNavigation)
+                .button(Button.of(nextButton))
+                .types(PageButtonTypes.NEXT)
+                .slot(PageSlot.of(Slot.of(nextSlot)))
+                .build()
+        }
+    })
 }

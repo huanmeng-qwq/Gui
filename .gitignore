@@ -40,4 +40,5 @@ build/
 **/gui/**/Test*
 **/resources/plugin.yml
 
+.claude/
 /CLAUDE.md
