@@ -3,9 +3,9 @@ plugins {
 }
 
 dependencies {
-    implementation("net.kyori:adventure-api:4.14.0")
-    implementation("net.kyori:adventure-platform-bukkit:4.3.1")
-    implementation("net.kyori:adventure-text-serializer-legacy:4.14.0")
+    implementation(libs.adventure.api)
+    implementation(libs.adventure.bukkit)
+    implementation(libs.adventure.text.serializer.legacy)
     compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT")
 }
 

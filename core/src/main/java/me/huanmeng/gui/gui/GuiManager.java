@@ -149,7 +149,7 @@ public class GuiManager implements ListenerAdapter {
      *   <li>Event listeners (Paper or Bukkit based on server version)</li>
      * </ul>
      *
-     * @param plugin the plugin instance that owns this manager
+     * @param plugin           the plugin instance that owns this manager
      * @param registerListener whether to automatically register Bukkit event listeners
      */
     public GuiManager(@NonNull JavaPlugin plugin, boolean registerListener) {
@@ -161,9 +161,7 @@ public class GuiManager implements ListenerAdapter {
         }
         this.plugin = plugin;
         this.audiences = BukkitAudiences.create(plugin);
-        if (!Boolean.getBoolean("gui.disable-bStats")) {
-            metrics = new Metrics(plugin, 18670, "2.5.5");
-        }
+        metrics = new Metrics(plugin, 18670, "2.5.5");
         if (registerListener) {
             try {
                 Class.forName("org.bukkit.event.inventory.InventoryCloseEvent$Reason");
@@ -217,7 +215,7 @@ public class GuiManager implements ListenerAdapter {
      * Associates a GUI with a player's UUID.
      *
      * @param uuid the player's unique identifier
-     * @param gui the GUI to associate with the player
+     * @param gui  the GUI to associate with the player
      */
     public void setUserOpenGui(@NonNull UUID uuid, @NonNull AbstractGui<?> gui) {
         userOpenGui.put(uuid, gui);
@@ -246,7 +244,7 @@ public class GuiManager implements ListenerAdapter {
     /**
      * Verifies that the given inventory matches the player's currently open GUI.
      *
-     * @param uuid the player's unique identifier
+     * @param uuid      the player's unique identifier
      * @param inventory the inventory to check
      * @return true if the inventory belongs to the player's open GUI
      * @throws NullPointerException if uuid or inventory is null
@@ -282,7 +280,7 @@ public class GuiManager implements ListenerAdapter {
      * Checks if a player has a specific GUI open.
      *
      * @param user the player's unique identifier
-     * @param gui the GUI to check for
+     * @param gui  the GUI to check for
      * @return true if the specified GUI is currently open for the player
      */
     public boolean isOpenGui(@NonNull UUID user, @NonNull AbstractGui<?> gui) {
@@ -350,7 +348,7 @@ public class GuiManager implements ListenerAdapter {
      * If an error occurs during processing, the player's inventory is closed and
      * they are notified of the error.
      *
-     * @param e the inventory click event
+     * @param e      the inventory click event
      * @param player the player who clicked
      */
     protected void onInventoryClick(@NonNull InventoryClickEvent e, @NonNull Player player) {
