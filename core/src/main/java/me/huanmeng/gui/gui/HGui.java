@@ -1,36 +1,39 @@
 package me.huanmeng.gui.gui;
 
-import me.huanmeng.gui.gui.impl.GuiPage;
-import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Constructor;
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
+import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * High-level GUI wrapper providing convenient methods for GUI creation and navigation history.
  *
  * <p>This abstract class provides:
  * <ul>
- *   <li>Automatic back button navigation support using a linked node structure</li>
+ *   <li>Automatic back button navigation support using a stack structure</li>
  *   <li>Context management for player-specific GUI state</li>
  *   <li>Constructor reflection for creating new instances when navigating back</li>
  *   <li>Page state preservation when navigating between paginated GUIs</li>
  * </ul>
  *
  * <p><b>Navigation System:</b>
- * <br>When {@code allowBack} is true, this class maintains a linked list of GUI states
- * that allows players to navigate backwards through their GUI history. Each node stores
- * the constructor information needed to recreate the previous GUI.
+ * <br>The navigation uses a simple stack model:
+ * <ul>
+ *   <li>Stack stores GUIs that can be returned to (NOT the current GUI)</li>
+ *   <li>When opening a new GUI from an existing one, the current GUI is pushed to stack</li>
+ *   <li>When going back, pop from stack and rebuild that GUI</li>
+ * </ul>
  *
  * <p><b>Usage Example:</b>
  * <pre>{@code
@@ -57,14 +60,15 @@ import java.util.function.BiFunction;
  */
 @SuppressWarnings({"unused"})
 public abstract class HGui {
+
     /**
-     * The previous GUI in the navigation history, if any.
+     * The previous HGui in the navigation history (set when navigating back).
      */
     @Nullable
     protected HGui from;
 
     /**
-     * The AbstractGui instance from the previous GUI in the navigation history.
+     * The AbstractGui instance from the previous GUI (for page state preservation).
      */
     @Nullable
     protected AbstractGui<?> fromGui;
@@ -76,7 +80,7 @@ public abstract class HGui {
     protected final PackageGuiContext context;
 
     /**
-     * Whether this GUI supports back navigation to the previous GUI.
+     * Whether this GUI supports back navigation.
      */
     protected boolean allowBack;
 
@@ -92,85 +96,78 @@ public abstract class HGui {
     protected BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction;
 
     /**
-     * Global map storing navigation history nodes for each player.
-     * <br>Maps each player to their current position in the GUI navigation history.
+     * Global map storing navigation history stack for each player.
+     * <br>Stack contains GUIs that can be returned to (NOT the current GUI).
      */
-    public static final Map<Player, Node> BACK_NODE_MAP = new ConcurrentHashMap<>();
+    public static final Map<Player, Deque<Node>> BACK_STACK = new ConcurrentHashMap<>();
 
     /**
      * Creates a new HGui without back navigation support.
-     *
-     * <p>Equivalent to calling {@code HGui(player, false)}.
      *
      * @param player the player who will view this GUI
      */
     public HGui(@NonNull Player player) {
         this(player, false);
-        setConstructor(MethodType.methodType(void.class, Player.class), Arrays::asList);
+        initConstructor(MethodType.methodType(void.class, Player.class), Arrays::asList);
     }
 
     /**
      * Creates a new HGui with optional back navigation support.
      *
-     * @param player the player who will view this GUI
+     * @param player    the player who will view this GUI
      * @param allowBack whether to enable back navigation to previous GUIs
      */
     public HGui(@NonNull Player player, boolean allowBack) {
         this.context = new PackageGuiContext(player);
         this.allowBack = allowBack;
-        setConstructor(MethodType.methodType(void.class, Player.class, boolean.class), Arrays::asList);
+        initConstructor(MethodType.methodType(void.class, Player.class, boolean.class), Arrays::asList);
+    }
+
+    /**
+     * Initializes the constructor handle for this GUI class.
+     */
+    private void initConstructor(MethodType methodType, BiFunction<Player, Boolean, List<Object>> argsFunction) {
+        this.newInstanceValuesFunction = argsFunction;
+        try {
+            Class<?>[] paramTypes = methodType.parameterArray();
+            Constructor<?> constructor = getClass().getDeclaredConstructor(paramTypes);
+            constructor.setAccessible(true);
+            this.constructorHandle = MethodHandles.lookup().unreflectConstructor(constructor);
+        } catch (NoSuchMethodException | IllegalAccessException e) {
+            this.constructorHandle = null;
+        }
     }
 
     /**
      * Sets the constructor information for recreating this GUI instance.
      *
-     * <p>Used internally to enable back navigation by storing constructor metadata.
-     *
-     * @param methodType the method type signature of the constructor
-     * @param newInstanceValuesFunction function that provides constructor arguments
+     * @param methodType   the method type signature of the constructor
+     * @param argsFunction function that provides constructor arguments
      */
     @SuppressWarnings("SameParameterValue")
-    protected void setConstructor(MethodType methodType, BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction) {
-        this.newInstanceValuesFunction = newInstanceValuesFunction;
-        try {
-            MethodHandles.Lookup lookup = MethodHandles.lookup();
-            constructorHandle = lookup.findConstructor(getClass(), methodType);
-        } catch (NoSuchMethodException | IllegalAccessException e) {
-            constructorHandle = null;
-        }
-    }
-
-    /**
-     * Sets the function that provides constructor arguments when creating new instances.
-     *
-     * @param newInstanceValuesFunction function that takes a player and allowBack flag,
-     *                                   returning a list of constructor arguments
-     */
-    public void setNewInstanceValuesFunction(BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction) {
-        this.newInstanceValuesFunction = newInstanceValuesFunction;
+    protected void setConstructor(MethodType methodType, BiFunction<Player, Boolean, List<Object>> argsFunction) {
+        initConstructor(methodType, argsFunction);
     }
 
     /**
      * Sets the constructor information using a Constructor object.
      *
-     * @param constructor the constructor to use for recreating instances
-     * @param newInstanceValuesFunction function that provides constructor arguments
+     * @param constructor  the constructor to use for recreating instances
+     * @param argsFunction function that provides constructor arguments
      */
-    protected void setConstructor(Constructor<?> constructor, BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction) {
-        this.newInstanceValuesFunction = newInstanceValuesFunction;
+    protected void setConstructor(Constructor<?> constructor, BiFunction<Player, Boolean, List<Object>> argsFunction) {
+        this.newInstanceValuesFunction = argsFunction;
         try {
-            MethodHandles.Lookup lookup = MethodHandles.lookup();
-            constructorHandle = lookup.unreflectConstructor(constructor);
+            constructor.setAccessible(true);
+            this.constructorHandle = MethodHandles.lookup().unreflectConstructor(constructor);
         } catch (IllegalAccessException e) {
-            constructorHandle = null;
+            this.constructorHandle = null;
         }
     }
 
     /**
      * Creates and returns the underlying AbstractGui instance.
-     *
-     * <p>This method must be implemented by subclasses to define what GUI
-     * should be displayed when this HGui is opened.
+     * <br>Subclasses must implement this to define the GUI content.
      *
      * @return the GUI to display, or null if the GUI cannot be created
      */
@@ -179,100 +176,126 @@ public abstract class HGui {
 
     /**
      * Opens this GUI for the player.
-     *
-     * <p>This method:
-     * <ul>
-     *   <li>Creates the underlying GUI via {@link #gui()}</li>
-     *   <li>Preserves page state if navigating between paginated GUIs</li>
-     *   <li>Sets up navigation history if back navigation is enabled</li>
-     *   <li>Registers back button handler if applicable</li>
-     *   <li>Opens the GUI inventory for the player</li>
-     *   <li>Calls {@link #whenOpen()} callback</li>
-     * </ul>
      */
     public final void open() {
+        // Get the current HGui from the currently open GUI (if any)
+        HGui fromHGui = null;
+        AbstractGui<?> currentGui = GuiManager.instance().getUserOpenGui(context.getPlayer().getUniqueId());
+        if (currentGui != null && currentGui.metadata.containsKey("wrapper")) {
+            fromHGui = (HGui) currentGui.metadata.get("wrapper");
+        }
+        openInternal(false, fromHGui);
+    }
+
+    /**
+     * Internal method to open the GUI.
+     *
+     * @param isBack   whether this is a back navigation
+     * @param fromHGui the HGui we are navigating from (to push to stack), or null
+     */
+    private void openInternal(boolean isBack, @Nullable HGui fromHGui) {
         AbstractGui<?> g = gui();
         if (g == null) {
             return;
         }
-        try {
-            if (fromGui != null && fromGui instanceof GuiPage && g instanceof GuiPage) {
-                ((GuiPage) g).page(Math.min(((GuiPage) fromGui).page(), ((GuiPage) fromGui).pagination().getMaxPage()));
-            }
-        } catch (Throwable ignored) {
-        }
+
         g.setPlayer(context.getPlayer());
         context.gui(g);
-        if ((allowBack && constructorHandle != null)) {
-            if (!BACK_NODE_MAP.containsKey(context.getPlayer())) {
-                BACK_NODE_MAP.put(context.getPlayer(), new Node());
-            } else {
-                Node node = BACK_NODE_MAP.get(context.getPlayer());
-                node.next = new Node();
-                node.next.prev = node;
-                BACK_NODE_MAP.put(context.getPlayer(), node.next);
-            }
-            if (from == null) {
-                Node node = BACK_NODE_MAP.get(context.getPlayer());
-                node.methodHandle = constructorHandle;
-                node.newInstanceValuesFunction = newInstanceValuesFunction;
-            }
+
+        // Push the fromHGui to stack if provided and not back navigation
+        if (!isBack && fromHGui != null && fromHGui.constructorHandle != null && allowBack) {
+            Deque<Node> stack = BACK_STACK.computeIfAbsent(context.getPlayer(), k -> new ArrayDeque<>());
+            stack.push(new Node(fromHGui.constructorHandle, fromHGui.newInstanceValuesFunction, fromHGui.context.getMetadata()));
         }
+
+        // Store reference to this wrapper
         g.metadata.put("wrapper", this);
-        g.backRunner(() -> {
-            Node node = BACK_NODE_MAP.get(context.getPlayer());
-            if ((node == null || node.prev == null)) {
-                g.close(false, true);
-                BACK_NODE_MAP.remove(g.player);
-                return;
-            }
-            try {
-                Node prev = node.prev;
-                MethodHandle methodHandle = prev.methodHandle;
-                HGui gui;
-                if (prev.newInstanceValuesFunction != null) {
-                    gui = (HGui) methodHandle.invokeWithArguments(prev.newInstanceValuesFunction.apply(context.getPlayer(), true));
-                } else {
-                    gui = (HGui) methodHandle.invoke(context.getPlayer(), true);
-                }
-                gui.from = this;
-                gui.fromGui = g;
-                gui.open();
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
-            }
-        });
-        g.whenClose(gui -> g.scheduler().runLater(() -> {
-            UUID uuid = context.getPlayer().getUniqueId();
-            if (!GuiManager.instance().isOpenGui(uuid)) {
-                BACK_NODE_MAP.remove(context.getPlayer());
-                return;
-            }
-            AbstractGui<?> nowGui = GuiManager.instance().getUserOpenGui(uuid);
-            if (nowGui == null) {
-                return;
-            }
-            if (!nowGui.metadata.containsKey("wrapper")) {
-                BACK_NODE_MAP.remove(context.getPlayer());
-            }
-        }, 1));
+
+        // Setup back navigation handler
+        setupBackHandler(g);
+
+        // Setup cleanup on close
+        setupCloseHandler(g);
+
+        // Open the GUI
         g.openGui();
         whenOpen();
     }
 
     /**
+     * Sets up the back navigation handler.
+     */
+    private void setupBackHandler(AbstractGui<?> g) {
+        g.backRunner(() -> {
+            Player player = context.getPlayer();
+            Deque<Node> stack = BACK_STACK.get(player);
+
+            // No history to go back to
+            if (stack == null || stack.isEmpty()) {
+                BACK_STACK.remove(player);
+                g.close(false, true);
+                return;
+            }
+
+            try {
+                // Pop and rebuild the previous GUI
+                Node prev = stack.pop();
+                HGui prevGui = rebuildGui(prev, player);
+
+                // Set navigation context (for page state preservation)
+                prevGui.from = this;
+                prevGui.fromGui = g;
+                prevGui.context.getMetadata().putAll(prev.metadata);
+
+                // Open the previous GUI (isBack=true, no fromHGui needed)
+                prevGui.openInternal(true, null);
+            } catch (Throwable e) {
+                throw new RuntimeException("Failed to navigate back", e);
+            }
+        });
+    }
+
+    /**
+     * Rebuilds a GUI from a stack node.
+     */
+    private HGui rebuildGui(Node node, Player player) throws Throwable {
+        MethodHandle handle = node.methodHandle;
+        BiFunction<Player, Boolean, List<Object>> argsFunc = node.newInstanceValuesFunction;
+
+        if (argsFunc != null) {
+            List<Object> args = argsFunc.apply(player, true);
+            return (HGui) handle.invokeWithArguments(args);
+        } else {
+            return (HGui) handle.invoke(player, true);
+        }
+    }
+
+    /**
+     * Sets up cleanup when GUI is closed.
+     */
+    private void setupCloseHandler(AbstractGui<?> g) {
+        g.whenClose(gui -> g.scheduler().runLater(() -> {
+            Player player = context.getPlayer();
+            UUID uuid = player.getUniqueId();
+
+            // If player has no GUI open, clean up the stack
+            if (!GuiManager.instance().isOpenGui(uuid)) {
+                BACK_STACK.remove(player);
+            }
+        }, 1));
+    }
+
+    /**
      * Callback invoked after the GUI is opened.
-     *
-     * <p>Override this method to perform actions after the GUI is displayed to the player.
+     * <br>Override this method to perform actions after the GUI is displayed.
      */
     protected void whenOpen() {
-
     }
 
     /**
      * Returns the previous HGui in the navigation history.
      *
-     * @return the previous HGui, or null if this is the first GUI in the history
+     * @return the previous HGui, or null if this is the first GUI
      */
     @Nullable
     protected HGui from() {
@@ -280,9 +303,9 @@ public abstract class HGui {
     }
 
     /**
-     * Returns the AbstractGui instance from the previous GUI in the navigation history.
+     * Returns the AbstractGui instance from the previous GUI.
      *
-     * @return the previous AbstractGui, or null if this is the first GUI in the history
+     * @return the previous AbstractGui, or null if this is the first GUI
      */
     @Nullable
     protected AbstractGui<?> getFromGui() {
@@ -290,34 +313,38 @@ public abstract class HGui {
     }
 
     /**
-     * Navigation history node in the linked list structure.
+     * Clears the navigation stack for a player.
+     * <br>Call this when you want to reset the navigation history.
      *
-     * <p>Each node contains:
-     * <ul>
-     *   <li>References to the previous and next nodes in the history</li>
-     *   <li>Constructor information for recreating the GUI at this history point</li>
-     *   <li>Function for providing constructor arguments</li>
-     * </ul>
+     * @param player the player whose stack to clear
+     */
+    public static void clearStack(Player player) {
+        BACK_STACK.remove(player);
+    }
+
+    /**
+     * Gets the current stack size for a player.
+     *
+     * @param player the player
+     * @return the number of GUIs in the back stack
+     */
+    public static int getStackSize(Player player) {
+        Deque<Node> stack = BACK_STACK.get(player);
+        return stack == null ? 0 : stack.size();
+    }
+
+    /**
+     * Navigation history node containing constructor information.
      */
     public static class Node {
-        /**
-         * Previous node in the navigation history.
-         */
-        private Node prev;
+        private final MethodHandle methodHandle;
+        private final BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction;
+        private final Map<String, Object> metadata;
 
-        /**
-         * Next node in the navigation history.
-         */
-        private Node next;
-
-        /**
-         * Method handle for the GUI constructor.
-         */
-        private MethodHandle methodHandle;
-
-        /**
-         * Function that provides constructor arguments for recreating the GUI.
-         */
-        private BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction;
+        public Node(final MethodHandle methodHandle, final BiFunction<Player, Boolean, List<Object>> newInstanceValuesFunction, final Map<String, Object> metadata) {
+            this.methodHandle = methodHandle;
+            this.newInstanceValuesFunction = newInstanceValuesFunction;
+            this.metadata = metadata;
+        }
     }
 }
