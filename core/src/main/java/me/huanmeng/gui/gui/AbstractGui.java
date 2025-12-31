@@ -30,6 +30,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -68,46 +69,63 @@ import org.jetbrains.annotations.NotNull;
  * {@link #cancelClickOther}, {@link #cancelClickBottom}, {@link #cancelMoveHotBarItemToSelf},
  * {@link #cancelMoveItemToSelf}, {@link #cancelMoveItemToBottom}.
  *
- *
  * @param <G> Self-bounded generic type for method chaining with the correct subclass type
  * @author huanmeng_qwq
  * @since 2023/3/17
  */
 @SuppressWarnings("ALL")
 public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> implements GuiTick {
-    /** The player viewing this GUI */
+    /**
+     * The player viewing this GUI
+     */
     @Nullable
     protected Player player;
 
-    /** The title displayed in the inventory GUI */
+    /**
+     * The title displayed in the inventory GUI
+     */
     @NonNull
     protected Component title = Component.translatable("container.chest");
 
-    /** Default priority button set */
+    /**
+     * Default priority button set
+     */
     @NonNull
     protected Set<GuiButton> buttons = new HashSet<>(10);
 
-    /** Higher priority buttons than the default set (dynamically attached) */
+    /**
+     * Higher priority buttons than the default set (dynamically attached)
+     */
     @NonNull
     protected Set<GuiButton> attachedButtons = new HashSet<>(10);
 
-    /** Highest priority buttons for internal modifications */
+    /**
+     * Highest priority buttons for internal modifications
+     */
     @NonNull
     protected Set<GuiButton> editButtons = new HashSet<>(10);
 
-    /** Cached inventory instance */
+    /**
+     * Cached inventory instance
+     */
     @Nullable
     protected Inventory cacheInventory;
 
-    /** Function to retrieve the parent/back GUI for navigation */
+    /**
+     * Function to retrieve the parent/back GUI for navigation
+     */
     @Nullable
     protected Function<@NonNull Player, @NonNull AbstractGui<?>> backGuiGetter;
 
-    /** Runnable to execute when navigating back (alternative to backGuiGetter) */
+    /**
+     * Runnable to execute when navigating back (alternative to backGuiGetter)
+     */
     @Nullable
     protected Runnable backGuiRunner;
 
-    /** The size of the inventory in slots */
+    /**
+     * The size of the inventory in slots
+     */
     private int size;
 
     /**
@@ -136,13 +154,19 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      */
     protected boolean cancelMoveItemToSelf = true;
 
-    /** Whether to cancel moving items from this GUI to the player's bottom inventory */
+    /**
+     * Whether to cancel moving items from this GUI to the player's bottom inventory
+     */
     protected boolean cancelMoveItemToBottom = true;
 
-    /** Whether player inventory slots can have interactive buttons */
+    /**
+     * Whether player inventory slots can have interactive buttons
+     */
     protected boolean enablePlayerInventory = false;
 
-    /** Flag indicating if a click event is currently being processed */
+    /**
+     * Flag indicating if a click event is currently being processed
+     */
     protected boolean processingClickEvent;
 
     /**
@@ -152,46 +176,70 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      */
     protected boolean disableClick = false;
 
-    /** Whether this GUI can be reopened after closing */
+    /**
+     * Whether this GUI can be reopened after closing
+     */
     protected boolean allowReopen = true;
 
-    /** Whether the GUI is currently closed */
+    /**
+     * Whether the GUI is currently closed
+     */
     boolean close = true;
 
-    /** Whether the GUI is in the process of closing */
+    /**
+     * Whether the GUI is in the process of closing
+     */
     boolean closing = true;
 
-    /** List of tick callbacks to execute periodically */
+    /**
+     * List of tick callbacks to execute periodically
+     */
     @NonNull
     protected List<Consumer<G>> tickles = new ArrayList<>();
 
-    /** Interval in ticks between periodic updates (default: 100 ticks = 5 seconds) */
+    /**
+     * Interval in ticks between periodic updates (default: 100 ticks = 5 seconds)
+     */
     protected int intervalTick = 20 * 5;
 
-    /** Whether to automatically refresh the GUI on each tick */
+    /**
+     * Whether to automatically refresh the GUI on each tick
+     */
     protected boolean tickRefresh = true;
 
-    /** Custom click handler for the GUI */
+    /**
+     * Custom click handler for the GUI
+     */
     @Nullable
     protected GuiClick guiClick;
 
-    /** Handler for clicks on empty slots */
+    /**
+     * Handler for clicks on empty slots
+     */
     @Nullable
     protected GuiEmptyItemClick guiEmptyItemClick;
 
-    /** Handler for clicks in the bottom inventory (player inventory) */
+    /**
+     * Handler for clicks in the bottom inventory (player inventory)
+     */
     @Nullable
     protected GuiBottomClick guiBottomClick;
 
-    /** Callback to execute when the GUI is closed */
+    /**
+     * Callback to execute when the GUI is closed
+     */
     @Nullable
     protected Consumer<@NonNull G> whenClose;
 
-    /** Custom result handler for processing button click results */
+    /**
+     * Custom result handler for processing button click results
+     */
     @Nullable
     protected CustomResultHandler customResultHandler;
 
-    /** The scheduled tick task for periodic GUI updates */
+    /**
+     * The scheduled tick task for periodic GUI updates
+     */
     protected Scheduler.@Nullable Task tickTask;
 
     /**
@@ -202,10 +250,14 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     protected Function<@NonNull HumanEntity, @Nullable Component> errorMessage =
             p -> Component.text("§cUnable to process your click request, please contact an administrator.");
 
-    /** Metadata storage for custom data associated with this GUI */
+    /**
+     * Metadata storage for custom data associated with this GUI
+     */
     protected Map<String, Object> metadata = new HashMap<>(2);
 
-    /** The GuiManager instance managing this GUI */
+    /**
+     * The GuiManager instance managing this GUI
+     */
     protected GuiManager manager = GuiManager.instance();
 
     /**
@@ -1010,7 +1062,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     @NonNull
     @CanIgnoreReturnValue
     public G title(@NonNull String title) {
-        return title(Component.text(title));
+        return title(LegacyComponentSerializer.legacySection().deserialize(title));
     }
 
     @NonNull
