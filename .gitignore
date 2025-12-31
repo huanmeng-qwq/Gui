@@ -42,3 +42,4 @@ build/
 
 .claude/
 /CLAUDE.md
+**/run/
