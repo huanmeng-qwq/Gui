@@ -2,16 +2,15 @@
 
 package me.huanmeng.gui.dsl
 
-import me.huanmeng.gui.gui.button.Button
-import me.huanmeng.gui.gui.button.ClickData
-import me.huanmeng.gui.gui.button.function.page.PlayerClickPageButtonInterface
-import me.huanmeng.gui.gui.enums.Result
-import me.huanmeng.gui.gui.impl.AbstractGuiPage
-import me.huanmeng.gui.gui.impl.GuiPage
-import me.huanmeng.gui.gui.impl.page.PageArea
-import me.huanmeng.gui.gui.impl.page.PageButton
-import me.huanmeng.gui.gui.impl.page.PageButton.Builder
-import me.huanmeng.gui.gui.impl.page.PageButtonType
+import me.huanmeng.gui.button.ClickData
+import me.huanmeng.gui.button.function.page.PlayerClickPageButtonInterface
+import me.huanmeng.gui.enums.Result
+import me.huanmeng.gui.impl.AbstractGuiPage
+import me.huanmeng.gui.impl.GuiPage
+import me.huanmeng.gui.impl.page.PageArea
+import me.huanmeng.gui.impl.page.PageButton
+import me.huanmeng.gui.impl.page.PageButton.Builder
+import me.huanmeng.gui.impl.page.PageButtonType
 import org.bukkit.entity.Player
 
 /**

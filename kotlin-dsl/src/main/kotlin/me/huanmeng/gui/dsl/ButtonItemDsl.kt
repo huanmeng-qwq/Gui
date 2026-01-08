@@ -2,7 +2,7 @@
 
 package me.huanmeng.gui.dsl
 
-import me.huanmeng.gui.gui.button.function.PlayerItemInterface
+import me.huanmeng.gui.button.function.PlayerItemInterface
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 

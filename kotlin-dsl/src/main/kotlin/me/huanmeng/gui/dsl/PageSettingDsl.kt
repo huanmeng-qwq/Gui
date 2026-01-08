@@ -2,8 +2,8 @@
 
 package me.huanmeng.gui.dsl
 
-import me.huanmeng.gui.gui.impl.page.PageSetting
-import me.huanmeng.gui.gui.impl.page.PageSetting.Builder
+import me.huanmeng.gui.impl.page.PageSetting
+import me.huanmeng.gui.impl.page.PageSetting.Builder
 
 /**
  * Builds a [PageSetting] using a DSL configuration block.

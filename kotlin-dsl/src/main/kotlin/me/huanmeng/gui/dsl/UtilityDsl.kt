@@ -2,10 +2,9 @@
 
 package me.huanmeng.gui.dsl
 
-import me.huanmeng.gui.gui.button.Button
-import me.huanmeng.gui.gui.impl.AbstractGuiCustom
-import me.huanmeng.gui.gui.slot.Slot
-import me.huanmeng.gui.gui.slot.Slots
+import me.huanmeng.gui.button.Button
+import me.huanmeng.gui.impl.AbstractGuiCustom
+import me.huanmeng.gui.slot.Slot
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player

@@ -1,6 +1,6 @@
 package me.huanmeng.gui.util;
 
-import me.huanmeng.gui.gui.SlotUtil;
+import me.huanmeng.gui.SlotUtil;
 
 import java.util.stream.IntStream;
 

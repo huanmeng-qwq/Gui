@@ -1,10 +1,10 @@
 package me.huanmeng.gui.example.shop;
 
-import me.huanmeng.gui.gui.AbstractGui;
-import me.huanmeng.gui.gui.HGui;
-import me.huanmeng.gui.gui.button.Button;
-import me.huanmeng.gui.gui.impl.GuiCustom;
-import me.huanmeng.gui.gui.slot.Slot;
+import me.huanmeng.gui.AbstractGui;
+import me.huanmeng.gui.HGui;
+import me.huanmeng.gui.button.Button;
+import me.huanmeng.gui.impl.GuiCustom;
+import me.huanmeng.gui.slot.Slot;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,7 +12,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.invoke.MethodType;
 import java.util.Arrays;
-import java.util.HashMap;
 
 /**
  * Level 4: Purchase wizard for customizable items.

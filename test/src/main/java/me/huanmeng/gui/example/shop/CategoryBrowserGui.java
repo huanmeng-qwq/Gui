@@ -1,13 +1,13 @@
 package me.huanmeng.gui.example.shop;
 
-import me.huanmeng.gui.gui.AbstractGui;
-import me.huanmeng.gui.gui.HGui;
-import me.huanmeng.gui.gui.button.Button;
-import me.huanmeng.gui.gui.impl.GuiPage;
-import me.huanmeng.gui.gui.impl.page.PageSettings;
-import me.huanmeng.gui.gui.slot.Slot;
-import me.huanmeng.gui.gui.slot.Slots;
-import me.huanmeng.gui.gui.slot.impl.slots.PatternSlots;
+import me.huanmeng.gui.AbstractGui;
+import me.huanmeng.gui.HGui;
+import me.huanmeng.gui.button.Button;
+import me.huanmeng.gui.impl.GuiPage;
+import me.huanmeng.gui.impl.page.PageSettings;
+import me.huanmeng.gui.slot.Slot;
+import me.huanmeng.gui.slot.Slots;
+import me.huanmeng.gui.slot.impl.slots.PatternSlots;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

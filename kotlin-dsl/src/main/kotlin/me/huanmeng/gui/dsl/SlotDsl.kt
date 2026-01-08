@@ -2,12 +2,12 @@
 
 package me.huanmeng.gui.dsl
 
-import me.huanmeng.gui.gui.AbstractGui
-import me.huanmeng.gui.gui.button.Button
-import me.huanmeng.gui.gui.button.ClickData
-import me.huanmeng.gui.gui.enums.Result
-import me.huanmeng.gui.gui.slot.Slot
-import me.huanmeng.gui.gui.slot.Slots
+import me.huanmeng.gui.AbstractGui
+import me.huanmeng.gui.button.Button
+import me.huanmeng.gui.button.ClickData
+import me.huanmeng.gui.enums.Result
+import me.huanmeng.gui.slot.Slot
+import me.huanmeng.gui.slot.Slots
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryAction

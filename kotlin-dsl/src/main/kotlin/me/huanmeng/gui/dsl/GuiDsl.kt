@@ -2,21 +2,21 @@
 
 package me.huanmeng.gui.dsl
 
-import me.huanmeng.gui.gui.AbstractGui
-import me.huanmeng.gui.gui.GuiButton
-import me.huanmeng.gui.gui.button.Button
-import me.huanmeng.gui.gui.draw.GuiDraw
-import me.huanmeng.gui.gui.impl.AbstractGuiCustom
-import me.huanmeng.gui.gui.impl.CustomGuiPage
-import me.huanmeng.gui.gui.impl.GuiCustom
-import me.huanmeng.gui.gui.impl.GuiPage
-import me.huanmeng.gui.gui.impl.page.PageButton
-import me.huanmeng.gui.gui.impl.page.PageButtonTypes
-import me.huanmeng.gui.gui.impl.page.PageSetting
-import me.huanmeng.gui.gui.impl.page.PageSettings
-import me.huanmeng.gui.gui.impl.page.PageSlot
-import me.huanmeng.gui.gui.slot.Slot
-import me.huanmeng.gui.gui.slot.Slots
+import me.huanmeng.gui.AbstractGui
+import me.huanmeng.gui.GuiButton
+import me.huanmeng.gui.button.Button
+import me.huanmeng.gui.draw.GuiDraw
+import me.huanmeng.gui.impl.AbstractGuiCustom
+import me.huanmeng.gui.impl.CustomGuiPage
+import me.huanmeng.gui.impl.GuiCustom
+import me.huanmeng.gui.impl.GuiPage
+import me.huanmeng.gui.impl.page.PageButton
+import me.huanmeng.gui.impl.page.PageButtonTypes
+import me.huanmeng.gui.impl.page.PageSetting
+import me.huanmeng.gui.impl.page.PageSettings
+import me.huanmeng.gui.impl.page.PageSlot
+import me.huanmeng.gui.slot.Slot
+import me.huanmeng.gui.slot.Slots
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack

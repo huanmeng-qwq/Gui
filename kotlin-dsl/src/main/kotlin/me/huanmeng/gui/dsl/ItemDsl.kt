@@ -1,9 +1,9 @@
 package me.huanmeng.gui.dsl
 
-import me.huanmeng.gui.gui.button.Button
-import me.huanmeng.gui.gui.button.ClickData
-import me.huanmeng.gui.gui.button.function.PlayerClickInterface
-import me.huanmeng.gui.gui.enums.Result
+import me.huanmeng.gui.button.Button
+import me.huanmeng.gui.button.ClickData
+import me.huanmeng.gui.button.function.PlayerClickInterface
+import me.huanmeng.gui.enums.Result
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack

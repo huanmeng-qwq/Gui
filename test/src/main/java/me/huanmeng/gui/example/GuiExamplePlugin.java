@@ -1,6 +1,6 @@
 package me.huanmeng.gui.example;
 
-import me.huanmeng.gui.gui.GuiManager;
+import me.huanmeng.gui.GuiManager;
 import me.huanmeng.gui.example.navigation.MainMenuGui;
 import me.huanmeng.gui.example.shop.MainShopGui;
 import org.bukkit.command.Command;

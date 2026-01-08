@@ -1,5 +1,6 @@
 package me.huanmeng.gui.scheduler;
 
+import me.huanmeng.gui.GuiManager;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.Contract;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.Contract;
  * </ul>
  *
  * <p>
- * <b>Initialization:</b> These schedulers are automatically initialized by {@link me.huanmeng.gui.gui.GuiManager}
+ * <b>Initialization:</b> These schedulers are automatically initialized by {@link GuiManager}
  * during plugin startup. Manual initialization is typically not required.
  *
  * <p>
@@ -43,7 +44,7 @@ import org.jetbrains.annotations.Contract;
  * @author huanmeng_qwq
  * @since 2023/3/17
  * @see Scheduler
- * @see me.huanmeng.gui.gui.GuiManager
+ * @see GuiManager
  */
 public class Schedulers {
     @Nullable
@@ -52,7 +53,7 @@ public class Schedulers {
     /**
      * Sets the global synchronous scheduler instance.
      * <p>
-     * This method is called internally by {@link me.huanmeng.gui.gui.GuiManager} during
+     * This method is called internally by {@link GuiManager} during
      * initialization. Manual invocation is typically not required.
      * </p>
      *
@@ -65,7 +66,7 @@ public class Schedulers {
     /**
      * Sets the global asynchronous scheduler instance.
      * <p>
-     * This method is called internally by {@link me.huanmeng.gui.gui.GuiManager} during
+     * This method is called internally by {@link GuiManager} during
      * initialization. Manual invocation is typically not required.
      * </p>
      *
@@ -88,7 +89,7 @@ public class Schedulers {
      * </p>
      *
      * @return the asynchronous scheduler, never null
-     * @throws NullPointerException if called before initialization by {@link me.huanmeng.gui.gui.GuiManager}
+     * @throws NullPointerException if called before initialization by {@link GuiManager}
      */
     @Contract(value = " -> !null", pure = true)
     public static Scheduler async() {
@@ -103,7 +104,7 @@ public class Schedulers {
      * </p>
      *
      * @return the synchronous scheduler, never null
-     * @throws NullPointerException if called before initialization by {@link me.huanmeng.gui.gui.GuiManager}
+     * @throws NullPointerException if called before initialization by {@link GuiManager}
      */
     @Contract(value = " -> !null", pure = true)
     public static Scheduler sync() {
