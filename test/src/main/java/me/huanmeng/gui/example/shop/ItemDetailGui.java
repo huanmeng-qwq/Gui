@@ -46,7 +46,7 @@ public class ItemDetailGui extends HGui {
 
         // Quick purchase buttons (different quantities)
         ItemStack buy1 = createItem(Material.GOLD_NUGGET, "§aBuy 1", "§7Price: §e" + item.getBasePrice() + " coins");
-        gui.draw().set(Slot.of(20), Button.of(buy1, click -> {
+        gui.draw().set(Slot.of(20), Button.ofPlayerClick(buy1, p -> {
             ShopItem.PurchaseConfig config = new ShopItem.PurchaseConfig(item, 1);
             if (item.isCustomizable()) {
                 // Navigate to purchase wizard (Level 4)
@@ -58,7 +58,7 @@ public class ItemDetailGui extends HGui {
         }));
 
         ItemStack buy4 = createItem(Material.GOLD_INGOT, "§aBuy 4", "§7Price: §e" + (item.getBasePrice() * 4) + " coins");
-        gui.draw().set(Slot.of(22), Button.of(buy4, click -> {
+        gui.draw().set(Slot.of(22), Button.ofPlayerClick(buy4, p -> {
             ShopItem.PurchaseConfig config = new ShopItem.PurchaseConfig(item, 4);
             if (item.isCustomizable()) {
                 new PurchaseWizardGui(context.getPlayer(), true, config).open();
@@ -68,7 +68,7 @@ public class ItemDetailGui extends HGui {
         }));
 
         ItemStack buy16 = createItem(Material.GOLD_BLOCK, "§aBuy 16", "§7Price: §e" + (item.getBasePrice() * 16) + " coins");
-        gui.draw().set(Slot.of(24), Button.of(buy16, click -> {
+        gui.draw().set(Slot.of(24), Button.ofPlayerClick(buy16, p -> {
             ShopItem.PurchaseConfig config = new ShopItem.PurchaseConfig(item, 16);
             if (item.isCustomizable()) {
                 new PurchaseWizardGui(context.getPlayer(), true, config).open();
@@ -102,7 +102,7 @@ public class ItemDetailGui extends HGui {
 
         // Back button
         ItemStack backItem = createItem(Material.ARROW, "§c§lBack to Category", "§7Return to items list");
-        gui.draw().set(Slot.of(36), Button.of(backItem, click -> gui.back()));
+        gui.draw().set(Slot.of(36), Button.ofPlayerClick(backItem, p -> gui.back()));
 
         // Statistics/Info
         ItemStack statsItem = createItem(

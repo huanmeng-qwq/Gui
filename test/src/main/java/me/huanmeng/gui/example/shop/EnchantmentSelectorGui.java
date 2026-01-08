@@ -61,7 +61,7 @@ public class EnchantmentSelectorGui extends HGui {
             ItemStack enchItem = createEnchantmentItem(opt, currentLevel);
             int slot = enchSlots[i];
 
-            gui.draw().set(Slot.of(slot), Button.of(enchItem, click -> {
+            gui.draw().set(Slot.of(slot), Button.ofPlayerClick(enchItem, p -> {
                 // Cycle through levels: 0 → 1 → 2 → ... → max → 0
                 int newLevel = (currentLevel + 1) % (opt.getMaxLevel() + 1);
 
@@ -103,7 +103,7 @@ public class EnchantmentSelectorGui extends HGui {
             "",
             "§eClick to continue"
         );
-        gui.draw().set(Slot.of(48), Button.of(confirmItem, click -> {
+        gui.draw().set(Slot.of(48), Button.ofPlayerClick(confirmItem, p -> {
             // Create new config with selected enchantments
             ShopItem.PurchaseConfig finalConfig = new ShopItem.PurchaseConfig(
                 baseConfig.getItem(),
@@ -122,7 +122,7 @@ public class EnchantmentSelectorGui extends HGui {
             "§c§lClear All",
             "§7Remove all enchantments"
         );
-        gui.draw().set(Slot.of(45), Button.of(clearItem, click -> {
+        gui.draw().set(Slot.of(45), Button.ofPlayerClick(clearItem, p -> {
             selectedEnchantments.clear();
             context.getPlayer().closeInventory();
             new EnchantmentSelectorGui(context.getPlayer(), true, baseConfig).open();
@@ -134,7 +134,7 @@ public class EnchantmentSelectorGui extends HGui {
             "§c§lBack to Wizard",
             "§7Return to purchase options"
         );
-        gui.draw().set(Slot.of(46), Button.of(backItem, click -> gui.back()));
+        gui.draw().set(Slot.of(46), Button.ofPlayerClick(backItem, p -> gui.back()));
 
         return gui;
     }

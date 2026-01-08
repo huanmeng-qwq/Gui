@@ -55,7 +55,7 @@ public class PurchaseWizardGui extends HGui {
             "",
             "§eClick to proceed to checkout"
         );
-        gui.draw().set(Slot.of(20), Button.of(skipEnch, click -> {
+        gui.draw().set(Slot.of(20), Button.ofPlayerClick(skipEnch, p -> {
             // Skip to summary (Level 6)
             new TransactionSummaryGui(context.getPlayer(), true, purchaseConfig).open();
         }));
@@ -71,7 +71,7 @@ public class PurchaseWizardGui extends HGui {
                 "",
                 "§eClick to select enchantments"
             );
-            gui.draw().set(Slot.of(24), Button.of(addEnch, click -> {
+            gui.draw().set(Slot.of(24), Button.ofPlayerClick(addEnch, p -> {
                 // Navigate to enchantment selector (Level 5)
                 new EnchantmentSelectorGui(context.getPlayer(), true, purchaseConfig).open();
             }));
@@ -109,7 +109,7 @@ public class PurchaseWizardGui extends HGui {
             "§c§lBack to Item Details",
             "§7Return to previous screen"
         );
-        gui.draw().set(Slot.of(36), Button.of(backItem, click -> gui.back()));
+        gui.draw().set(Slot.of(36), Button.ofPlayerClick(backItem, p -> gui.back()));
 
         return gui;
     }

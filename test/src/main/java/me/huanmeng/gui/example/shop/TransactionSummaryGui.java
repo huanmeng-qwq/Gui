@@ -63,17 +63,17 @@ public class TransactionSummaryGui extends HGui {
             "",
             "§aClick to buy!"
         );
-        gui.draw().set(Slot.of(32), Button.of(confirmButton, click -> {
+        gui.draw().set(Slot.of(32), Button.ofPlayerClick(confirmButton, p -> {
             // Simulate purchase
-            context.getPlayer().sendMessage("§a§l✔ Purchase successful!");
-            context.getPlayer().sendMessage("§7You bought §e" + purchaseConfig.getQuantity() +
+            p.sendMessage("§a§l✔ Purchase successful!");
+            p.sendMessage("§7You bought §e" + purchaseConfig.getQuantity() +
                 "x " + purchaseConfig.getItem().getName() + " §7for §6" +
                 purchaseConfig.getTotalPrice() + " coins§7!");
 
             if (!purchaseConfig.getSelectedEnchantments().isEmpty()) {
-                context.getPlayer().sendMessage("§b§lEnchantments:");
+                p.sendMessage("§b§lEnchantments:");
                 for (Map.Entry<Enchantment, Integer> entry : purchaseConfig.getSelectedEnchantments().entrySet()) {
-                    context.getPlayer().sendMessage("§7• " + entry.getKey().getName() + " " + entry.getValue());
+                    p.sendMessage("§7• " + entry.getKey().getName() + " " + entry.getValue());
                 }
             }
 
@@ -88,7 +88,7 @@ public class TransactionSummaryGui extends HGui {
             "",
             "§cClick to cancel purchase"
         );
-        gui.draw().set(Slot.of(33), Button.of(cancelButton, click -> gui.back()));
+        gui.draw().set(Slot.of(33), Button.ofPlayerClick(cancelButton, p -> gui.back()));
 
         // Navigation depth indicator
         ItemStack depthIndicator = createItem(

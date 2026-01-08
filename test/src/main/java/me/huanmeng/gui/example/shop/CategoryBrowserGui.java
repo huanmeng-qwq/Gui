@@ -52,9 +52,9 @@ public class CategoryBrowserGui extends HGui {
         List<Button> itemButtons = new ArrayList<>();
         for (ShopItem item : items) {
             ItemStack displayItem = createItemDisplay(item);
-            itemButtons.add(Button.of(displayItem, click -> {
+            itemButtons.add(Button.ofPlayerClick(displayItem, p -> {
                 // Navigate to item details (Level 3)
-                new ItemDetailGui(context.getPlayer(), true, item).open();
+                new ItemDetailGui(p, true, item).open();
             }));
         }
 
@@ -80,7 +80,7 @@ public class CategoryBrowserGui extends HGui {
             "§c§lBack to Categories",
             "§7Return to main shop"
         );
-        gui.draw().set(Slot.of(36), Button.of(backItem, click -> gui.back()));
+        gui.draw().set(Slot.of(36), Button.ofPlayerClick(backItem, p -> gui.back()));
 
         // Add category info
         ItemStack infoItem = createItem(

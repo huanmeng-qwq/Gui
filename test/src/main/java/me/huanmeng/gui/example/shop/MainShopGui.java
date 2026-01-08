@@ -49,7 +49,7 @@ public class MainShopGui extends HGui {
                 "§eClick to browse!"
             );
 
-            gui.draw().set(Slot.of(slots[index++]), Button.of(item, click -> {
+            gui.draw().set(Slot.of(slots[index++]), Button.ofPlayerClick(item, p -> {
                 // Navigate to category browser (Level 2)
                 new CategoryBrowserGui(context.getPlayer(), true, category).open();
             }));
