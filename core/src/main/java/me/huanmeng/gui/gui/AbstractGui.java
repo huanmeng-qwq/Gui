@@ -30,6 +30,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
@@ -248,7 +249,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      */
     @NonNull
     protected Function<@NonNull HumanEntity, @Nullable Component> errorMessage =
-            p -> Component.text("§cUnable to process your click request, please contact an administrator.");
+            p -> Component.text("Unable to process your click request, please contact an administrator.", NamedTextColor.RED);
 
     /**
      * Metadata storage for custom data associated with this GUI
@@ -287,7 +288,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      */
     @Deprecated
     protected void init(@NonNull String title, int itemSize) {
-        init(Component.text(title), itemSize);
+        init(LegacyComponentSerializer.legacySection().deserialize(title), itemSize);
     }
 
     /**
