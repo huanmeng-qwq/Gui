@@ -164,7 +164,7 @@ public class GuiManager implements ListenerAdapter {
         }
         this.plugin = plugin;
         this.audiences = player -> player instanceof Audience ? (Audience) player : null;
-        metrics = new Metrics(plugin, 18670, "2.6.0");
+        metrics = new Metrics(plugin, 18670, "2.6.1");
         if (registerListener) {
             try {
                 Class.forName("org.bukkit.event.inventory.InventoryCloseEvent$Reason");
