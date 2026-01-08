@@ -33,7 +33,7 @@ allprojects {
     }
 
     group = "com.huanmeng-qwq"
-    version = "2.6.1"
+    version = "3.0.0-snapshot"
 
     java {
         withSourcesJar()
