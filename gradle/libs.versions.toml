@@ -5,8 +5,10 @@ bstats = "3.1.0"
 [libraries]
 
 adventure-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
+adventure-platform-api = { group = "net.kyori", name = "adventure-platform-api", version.ref = "adventure-bukkit" }
 adventure-bukkit = { group = "net.kyori", name = "adventure-platform-bukkit", version.ref = "adventure-bukkit" }
 adventure-text-serializer-legacy = { group = "net.kyori", name = "adventure-text-serializer-legacy", version.ref = "adventure" }
+adventure-text-serializer-gson = { group = "net.kyori", name = "adventure-text-serializer-gson", version.ref = "adventure" }
 bstats = { group = "org.bstats", name = "bstats-bukkit", version.ref = "bstats" }
 
 indra = { module = "net.kyori:indra-common", version = "3.1.3" }
