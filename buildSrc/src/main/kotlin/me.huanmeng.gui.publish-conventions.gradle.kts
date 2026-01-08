@@ -32,11 +32,18 @@ indra {
                 }
             }
             withXml {
+                val root = asNode()
+                val dependenciesList = root.get("dependencies") as NodeList
+                val dependenciesNode = if (dependenciesList.isEmpty()) {
+                    root.appendNode("dependencies")
+                } else {
+                    dependenciesList[0] as Node
+                }
                 project.configurations.compileOnly.get().allDependencies.forEach { dep ->
                     if (dep.version?.lowercase()?.contains("snapshot") == true) {
                         return@forEach
                     }
-                    ((asNode().get("dependencies") as NodeList)[0] as Node).appendNode("dependency").apply {
+                    dependenciesNode.appendNode("dependency").apply {
                         appendNode("groupId", dep.group)
                         appendNode("artifactId", dep.name)
                         appendNode("version", dep.version)
