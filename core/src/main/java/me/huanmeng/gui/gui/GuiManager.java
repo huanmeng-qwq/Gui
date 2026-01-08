@@ -1,5 +1,6 @@
 package me.huanmeng.gui.gui;
 
+import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import me.huanmeng.gui.Metrics;
 import me.huanmeng.gui.gui.event.InventorySwitchEvent;
@@ -16,8 +17,10 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -92,7 +95,7 @@ public class GuiManager implements ListenerAdapter {
      * Adventure audiences for sending modern text components to players.
      */
     @NonNull
-    private final BukkitAudiences audiences;
+    private Function<CommandSender, @Nullable Audience> audiences;
 
     /**
      * Custom handler for GUI-specific events and behaviors.
@@ -160,7 +163,7 @@ public class GuiManager implements ListenerAdapter {
             Schedulers.setAsync(new SchedulerAsync());
         }
         this.plugin = plugin;
-        this.audiences = BukkitAudiences.create(plugin);
+        this.audiences = player -> player instanceof Audience ? (Audience) player : null;
         metrics = new Metrics(plugin, 18670, "2.6.0");
         if (registerListener) {
             try {
@@ -178,10 +181,12 @@ public class GuiManager implements ListenerAdapter {
      * <p>This method:
      * <ul>
      *   <li>Unregisters all event listeners</li>
-     *   <li>Closes Adventure audiences</li>
      *   <li>Shuts down bStats metrics</li>
      *   <li>Clears the singleton instance</li>
      * </ul>
+     *
+     * <p><b>Note:</b> If you used {@link #setupAdventurePlatform(AudienceProvider)} with a
+     * {@code BukkitAudiences} instance, you are responsible for closing it separately.
      *
      * <p><b>Important:</b> Must be called in your plugin's {@code onDisable()} method.
      */
@@ -190,7 +195,6 @@ public class GuiManager implements ListenerAdapter {
             HandlerList.unregisterAll(registeredListener);
             registeredListener = null;
         }
-        audiences.close();
         if (metrics != null) {
             metrics.shutdown();
             metrics = null;
@@ -516,12 +520,16 @@ public class GuiManager implements ListenerAdapter {
     }
 
     /**
-     * Returns the Adventure audiences instance for sending modern text components.
+     * Returns the function that resolves a {@link CommandSender} to an Adventure {@link Audience}.
      *
-     * @return the Adventure audiences
+     * <p>By default, this function checks if the sender is already an {@link Audience} instance
+     * (as on Paper servers). Use {@link #setAudiences(Function)} or {@link #setupAdventurePlatform(AudienceProvider)}
+     * to customize the audience resolution behavior.
+     *
+     * @return the function that converts CommandSender to Audience, may return null for unsupported senders
      */
     @NonNull
-    public BukkitAudiences audiences() {
+    public Function<CommandSender, @Nullable Audience> audiences() {
         return audiences;
     }
 
@@ -534,14 +542,15 @@ public class GuiManager implements ListenerAdapter {
      * @param messages the Adventure components to send
      */
     public static void sendMessage(CommandSender receiver, Component... messages) {
-        if (receiver instanceof Player) {
-            for (Component message : messages) {
-                instance().audiences().player((Player) receiver).sendMessage(message);
+        final Audience audience = instance().audiences().apply(receiver);
+        if (audience == null) {
+            for (final Component message : messages) {
+                receiver.sendMessage(LegacyComponentSerializer.legacySection().serialize(message));
             }
-        } else if (receiver instanceof ConsoleCommandSender) {
-            for (Component message : messages) {
-                instance().audiences().console().sendMessage(message);
-            }
+            return;
+        }
+        for (final Component message : messages) {
+            audience.sendMessage(message);
         }
     }
 
@@ -573,6 +582,64 @@ public class GuiManager implements ListenerAdapter {
      */
     public void setGuiHandler(@NonNull GuiHandler guiHandler) {
         this.guiHandler = guiHandler;
+    }
+
+    /**
+     * Sets a custom function for resolving {@link CommandSender} to Adventure {@link Audience}.
+     *
+     * <p>This allows plugins to provide their own audience resolution logic for sending
+     * Adventure components to players and other command senders.
+     *
+     * <p><b>Example:</b>
+     * <pre>{@code
+     * guiManager.setAudiences(sender -> {
+     *     if (sender instanceof Player) {
+     *         return myAudienceProvider.player(((Player) sender).getUniqueId());
+     *     }
+     *     return null;
+     * });
+     * }</pre>
+     *
+     * @param audiences the function that converts CommandSender to Audience
+     * @see #setupAdventurePlatform(AudienceProvider)
+     */
+    public void setAudiences(@NonNull Function<CommandSender, Audience> audiences) {
+        this.audiences = audiences;
+    }
+
+    /**
+     * Configures the audience resolution using an Adventure {@link AudienceProvider}.
+     *
+     * <p>This is a convenience method for plugins using adventure-platform to set up
+     * audience resolution. It automatically handles {@link Player} and {@link ConsoleCommandSender}.
+     *
+     * <p><b>Note:</b> This method requires the adventure-platform-bukkit library.
+     * Add the following dependency to your build.gradle:
+     * <pre>{@code
+     * implementation("net.kyori:adventure-platform-bukkit:<version>")
+     * }</pre>
+     *
+     * <p><b>Example:</b>
+     * <pre>{@code
+     * BukkitAudiences audiences = BukkitAudiences.create(plugin);
+     * guiManager.setupAdventurePlatform(audiences);
+     *
+     * // Remember to close BukkitAudiences in onDisable()
+     * audiences.close();
+     * }</pre>
+     *
+     * @param audienceProvider the Adventure audience provider (e.g., BukkitAudiences)
+     * @see #setAudiences(Function)
+     */
+    public void setupAdventurePlatform(@NonNull AudienceProvider audienceProvider) {
+        this.audiences = commandSender -> {
+            if (commandSender instanceof Player) {
+                return audienceProvider.player(((Player) commandSender).getUniqueId());
+            } else if (commandSender instanceof ConsoleCommandSender) {
+                return audienceProvider.console();
+            }
+            return null;
+        };
     }
 
 }
