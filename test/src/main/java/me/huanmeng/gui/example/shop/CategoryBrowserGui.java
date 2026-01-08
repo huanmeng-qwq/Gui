@@ -1,7 +1,7 @@
 package me.huanmeng.gui.example.shop;
 
 import me.huanmeng.gui.AbstractGui;
-import me.huanmeng.gui.HGui;
+import me.huanmeng.gui.StackableGui;
 import me.huanmeng.gui.button.Button;
 import me.huanmeng.gui.impl.GuiPage;
 import me.huanmeng.gui.impl.page.PageSettings;
@@ -28,7 +28,7 @@ import java.util.List;
  * - Custom constructor parameters
  * - State preservation across navigation
  */
-public class CategoryBrowserGui extends HGui {
+public class CategoryBrowserGui extends StackableGui {
 
     private final ShopCategory category;
 

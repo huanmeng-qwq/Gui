@@ -37,7 +37,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * <p><b>Usage Example:</b>
  * <pre>{@code
- * public class MyGui extends HGui {
+ * public class MyGui extends StackableGui {
  *     public MyGui(Player player, boolean allowBack) {
  *         super(player, allowBack);
  *     }
@@ -59,13 +59,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @since 2023/3/17
  */
 @SuppressWarnings({"unused"})
-public abstract class HGui {
+public abstract class StackableGui {
 
     /**
-     * The previous HGui in the navigation history (set when navigating back).
+     * The previous StackableGui in the navigation history (set when navigating back).
      */
     @Nullable
-    protected HGui from;
+    protected StackableGui from;
 
     /**
      * The AbstractGui instance from the previous GUI (for page state preservation).
@@ -102,22 +102,22 @@ public abstract class HGui {
     public static final Map<Player, Deque<Node>> BACK_STACK = new ConcurrentHashMap<>();
 
     /**
-     * Creates a new HGui without back navigation support.
+     * Creates a new StackableGui without back navigation support.
      *
      * @param player the player who will view this GUI
      */
-    public HGui(@NonNull Player player) {
+    public StackableGui(@NonNull Player player) {
         this(player, false);
         initConstructor(MethodType.methodType(void.class, Player.class), Arrays::asList);
     }
 
     /**
-     * Creates a new HGui with optional back navigation support.
+     * Creates a new StackableGui with optional back navigation support.
      *
      * @param player    the player who will view this GUI
      * @param allowBack whether to enable back navigation to previous GUIs
      */
-    public HGui(@NonNull Player player, boolean allowBack) {
+    public StackableGui(@NonNull Player player, boolean allowBack) {
         this.context = new PackageGuiContext(player);
         this.allowBack = allowBack;
         initConstructor(MethodType.methodType(void.class, Player.class, boolean.class), Arrays::asList);
@@ -178,22 +178,22 @@ public abstract class HGui {
      * Opens this GUI for the player.
      */
     public final void open() {
-        // Get the current HGui from the currently open GUI (if any)
-        HGui fromHGui = null;
+        // Get the current StackableGui from the currently open GUI (if any)
+        StackableGui fromStackableGui = null;
         AbstractGui<?> currentGui = GuiManager.instance().getUserOpenGui(context.getPlayer().getUniqueId());
         if (currentGui != null && currentGui.metadata.containsKey("wrapper")) {
-            fromHGui = (HGui) currentGui.metadata.get("wrapper");
+            fromStackableGui = (StackableGui) currentGui.metadata.get("wrapper");
         }
-        openInternal(false, fromHGui);
+        openInternal(false, fromStackableGui);
     }
 
     /**
      * Internal method to open the GUI.
      *
      * @param isBack   whether this is a back navigation
-     * @param fromHGui the HGui we are navigating from (to push to stack), or null
+     * @param fromStackableGui the StackableGui we are navigating from (to push to stack), or null
      */
-    private void openInternal(boolean isBack, @Nullable HGui fromHGui) {
+    private void openInternal(boolean isBack, @Nullable StackableGui fromStackableGui) {
         AbstractGui<?> g = gui();
         if (g == null) {
             return;
@@ -202,10 +202,10 @@ public abstract class HGui {
         g.setPlayer(context.getPlayer());
         context.gui(g);
 
-        // Push the fromHGui to stack if provided and not back navigation
-        if (!isBack && fromHGui != null && fromHGui.constructorHandle != null && allowBack) {
+        // Push the fromStackableGui to stack if provided and not back navigation
+        if (!isBack && fromStackableGui != null && fromStackableGui.constructorHandle != null && allowBack) {
             Deque<Node> stack = BACK_STACK.computeIfAbsent(context.getPlayer(), k -> new ArrayDeque<>());
-            stack.push(new Node(fromHGui.constructorHandle, fromHGui.newInstanceValuesFunction, fromHGui.context.getMetadata()));
+            stack.push(new Node(fromStackableGui.constructorHandle, fromStackableGui.newInstanceValuesFunction, fromStackableGui.context.getMetadata()));
         }
 
         // Store reference to this wrapper
@@ -240,14 +240,14 @@ public abstract class HGui {
             try {
                 // Pop and rebuild the previous GUI
                 Node prev = stack.pop();
-                HGui prevGui = rebuildGui(prev, player);
+                StackableGui prevGui = rebuildGui(prev, player);
 
                 // Set navigation context (for page state preservation)
                 prevGui.from = this;
                 prevGui.fromGui = g;
                 prevGui.context.getMetadata().putAll(prev.metadata);
 
-                // Open the previous GUI (isBack=true, no fromHGui needed)
+                // Open the previous GUI (isBack=true, no fromStackableGui needed)
                 prevGui.openInternal(true, null);
             } catch (Throwable e) {
                 throw new RuntimeException("Failed to navigate back", e);
@@ -258,15 +258,15 @@ public abstract class HGui {
     /**
      * Rebuilds a GUI from a stack node.
      */
-    private HGui rebuildGui(Node node, Player player) throws Throwable {
+    private StackableGui rebuildGui(Node node, Player player) throws Throwable {
         MethodHandle handle = node.methodHandle;
         BiFunction<Player, Boolean, List<Object>> argsFunc = node.newInstanceValuesFunction;
 
         if (argsFunc != null) {
             List<Object> args = argsFunc.apply(player, true);
-            return (HGui) handle.invokeWithArguments(args);
+            return (StackableGui) handle.invokeWithArguments(args);
         } else {
-            return (HGui) handle.invoke(player, true);
+            return (StackableGui) handle.invoke(player, true);
         }
     }
 
@@ -293,12 +293,12 @@ public abstract class HGui {
     }
 
     /**
-     * Returns the previous HGui in the navigation history.
+     * Returns the previous StackableGui in the navigation history.
      *
-     * @return the previous HGui, or null if this is the first GUI
+     * @return the previous StackableGui, or null if this is the first GUI
      */
     @Nullable
-    protected HGui from() {
+    protected StackableGui from() {
         return from;
     }
 

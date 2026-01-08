@@ -1,7 +1,7 @@
 package me.huanmeng.gui.example.shop;
 
 import me.huanmeng.gui.AbstractGui;
-import me.huanmeng.gui.HGui;
+import me.huanmeng.gui.StackableGui;
 import me.huanmeng.gui.button.Button;
 import me.huanmeng.gui.impl.GuiCustom;
 import me.huanmeng.gui.slot.Slot;
@@ -20,7 +20,7 @@ import java.util.Arrays;
  *
  * Allows players to choose customization options.
  */
-public class PurchaseWizardGui extends HGui {
+public class PurchaseWizardGui extends StackableGui {
 
     private final ShopItem.PurchaseConfig purchaseConfig;
 

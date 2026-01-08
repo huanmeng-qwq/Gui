@@ -1,7 +1,7 @@
 package me.huanmeng.gui.example.shop;
 
 import me.huanmeng.gui.AbstractGui;
-import me.huanmeng.gui.HGui;
+import me.huanmeng.gui.StackableGui;
 import me.huanmeng.gui.button.Button;
 import me.huanmeng.gui.impl.GuiCustom;
 import me.huanmeng.gui.slot.Slot;
@@ -20,7 +20,7 @@ import java.util.List;
  *
  * Navigation: Main Shop → Category → [Item Details] → Purchase Wizard
  */
-public class ItemDetailGui extends HGui {
+public class ItemDetailGui extends StackableGui {
 
     private final ShopItem item;
 

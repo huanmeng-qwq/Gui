@@ -1,7 +1,7 @@
 package me.huanmeng.gui.example.shop;
 
 import me.huanmeng.gui.AbstractGui;
-import me.huanmeng.gui.HGui;
+import me.huanmeng.gui.StackableGui;
 import me.huanmeng.gui.button.Button;
 import me.huanmeng.gui.impl.GuiCustom;
 import me.huanmeng.gui.slot.Slot;
@@ -25,7 +25,7 @@ import java.util.Map;
  * The deepest point in the navigation tree (6 levels).
  * Demonstrates complete stack-based navigation from start to finish.
  */
-public class TransactionSummaryGui extends HGui {
+public class TransactionSummaryGui extends StackableGui {
 
     private final ShopItem.PurchaseConfig purchaseConfig;
 

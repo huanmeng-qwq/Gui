@@ -1,7 +1,7 @@
 package me.huanmeng.gui.example.shop;
 
 import me.huanmeng.gui.AbstractGui;
-import me.huanmeng.gui.HGui;
+import me.huanmeng.gui.StackableGui;
 import me.huanmeng.gui.button.Button;
 import me.huanmeng.gui.impl.GuiCustom;
 import me.huanmeng.gui.slot.Slot;
@@ -28,7 +28,7 @@ import java.util.Map;
  * - Mutable configuration through navigation
  * - Deep nesting (5 levels)
  */
-public class EnchantmentSelectorGui extends HGui {
+public class EnchantmentSelectorGui extends StackableGui {
 
     private final ShopItem.PurchaseConfig baseConfig;
     private final Map<Enchantment, Integer> selectedEnchantments;

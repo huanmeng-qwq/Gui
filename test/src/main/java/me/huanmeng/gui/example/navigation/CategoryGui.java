@@ -2,7 +2,7 @@ package me.huanmeng.gui.example.navigation;
 
 import me.huanmeng.gui.button.Button;
 import me.huanmeng.gui.AbstractGui;
-import me.huanmeng.gui.HGui;
+import me.huanmeng.gui.StackableGui;
 import me.huanmeng.gui.impl.GuiCustom;
 import me.huanmeng.gui.slot.Slot;
 import org.bukkit.Material;
@@ -22,7 +22,7 @@ import java.util.List;
  * - Creating dynamic content based on category
  * - Multi-level navigation (Main → Category → Detail)
  */
-public class CategoryGui extends HGui {
+public class CategoryGui extends StackableGui {
 
     private final String categoryName;
 
@@ -63,7 +63,7 @@ public class CategoryGui extends HGui {
             }));
         }
 
-        // Back button (optional - HGui provides automatic back functionality)
+        // Back button (optional - StackableGui provides automatic back functionality)
         ItemStack backItem = createItem(
             Material.ARROW,
             "§c§lBack to Main Menu",

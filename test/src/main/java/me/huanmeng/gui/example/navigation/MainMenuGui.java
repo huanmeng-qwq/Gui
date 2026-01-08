@@ -2,7 +2,7 @@ package me.huanmeng.gui.example.navigation;
 
 import me.huanmeng.gui.button.Button;
 import me.huanmeng.gui.AbstractGui;
-import me.huanmeng.gui.HGui;
+import me.huanmeng.gui.StackableGui;
 import me.huanmeng.gui.impl.GuiCustom;
 import me.huanmeng.gui.slot.Slot;
 import org.bukkit.Material;
@@ -20,7 +20,7 @@ import java.util.Arrays;
  * - Opening child GUIs with back navigation enabled
  * - Button click handling
  */
-public class MainMenuGui extends HGui {
+public class MainMenuGui extends StackableGui {
 
     public MainMenuGui(Player player, boolean allowBack) {
         super(player, allowBack);

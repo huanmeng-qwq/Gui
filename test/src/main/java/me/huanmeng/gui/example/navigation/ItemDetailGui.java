@@ -2,7 +2,7 @@ package me.huanmeng.gui.example.navigation;
 
 import me.huanmeng.gui.button.Button;
 import me.huanmeng.gui.AbstractGui;
-import me.huanmeng.gui.HGui;
+import me.huanmeng.gui.StackableGui;
 import me.huanmeng.gui.impl.GuiCustom;
 import me.huanmeng.gui.slot.Slot;
 import org.bukkit.Material;
@@ -21,7 +21,7 @@ import java.util.Arrays;
  * - Complete navigation chain with proper back functionality
  * - Stack-based navigation working correctly through all levels
  */
-public class ItemDetailGui extends HGui {
+public class ItemDetailGui extends StackableGui {
 
     private final CategoryGui.ItemData itemData;
 
