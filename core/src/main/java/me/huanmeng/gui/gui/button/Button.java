@@ -1,9 +1,7 @@
 package me.huanmeng.gui.gui.button;
 
-import me.huanmeng.gui.gui.button.function.PlayerClickCancelInterface;
 import me.huanmeng.gui.gui.button.function.PlayerClickInterface;
 import me.huanmeng.gui.gui.button.function.PlayerItemInterface;
-import me.huanmeng.gui.gui.button.function.PlayerSimpleCancelInterface;
 import me.huanmeng.gui.gui.enums.Result;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,7 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -181,85 +178,6 @@ public interface Button {
         return ofPlayerClick(item, Result.CANCEL, clickable);
     }
 
-
-    /**
-     * Creates a clickable button with a dynamic item provider and click handler.
-     *
-     * @param item the item provider that supplies the ItemStack based on the viewing player
-     * @param cls the class type (unused, for API compatibility)
-     * @param clickable the click handler that processes click events
-     * @param <T> the type of click interface
-     * @return a new clickable Button
-     * @deprecated Scheduled for removal in version 2.6.0. Use {@link #of(PlayerItemInterface, PlayerClickInterface)} instead.
-     */
-    @ApiStatus.ScheduledForRemoval(inVersion = "2.6.0")
-    @Deprecated
-    @Contract(value = "null, !null, null -> new", pure = true)
-    static <@NonNull T extends PlayerClickInterface> Button of(PlayerItemInterface item, Class<T> cls, T clickable) {
-        return new BaseButton(item, clickable);
-    }
-
-    /**
-     * Creates a clickable button with a static ItemStack and click handler.
-     *
-     * @param item the ItemStack to display
-     * @param cls the class type (unused, for API compatibility)
-     * @param clickable the click handler that processes click events
-     * @param <T> the type of click interface
-     * @return a new clickable Button
-     * @deprecated Scheduled for removal in version 2.6.0. Use {@link #of(ItemStack, PlayerClickInterface)} instead.
-     */
-    @ApiStatus.ScheduledForRemoval(inVersion = "2.6.0")
-    @Deprecated
-    @Contract(value = "null, !null, null -> new", pure = true)
-    static <@NonNull T extends PlayerClickInterface> Button of(ItemStack item, Class<T> cls, T clickable) {
-        return new BaseButton(PlayerItemInterface.of(item), clickable);
-    }
-
-    /**
-     * Creates a clickable button with a dynamic item provider and cancel-based click handler.
-     *
-     * @param item the item provider that supplies the ItemStack based on the viewing player
-     * @param clickable the click handler that automatically cancels events
-     * @return a new clickable Button
-     * @deprecated Scheduled for removal in version 2.6.0. Use {@link #of(PlayerItemInterface, PlayerClickInterface)} instead.
-     */
-    @ApiStatus.ScheduledForRemoval(inVersion = "2.6.0")
-    @Deprecated
-    @Contract(value = "null, null -> new", pure = true)
-    static Button of(PlayerItemInterface item, PlayerClickCancelInterface clickable) {
-        return new BaseButton(item, clickable);
-    }
-
-    /**
-     * Creates a clickable button with a dynamic item provider and simple cancel-based click handler.
-     *
-     * @param item the item provider that supplies the ItemStack based on the viewing player
-     * @param playerSimpleCancelInterface the click handler that automatically cancels events
-     * @return a new clickable Button
-     * @deprecated Scheduled for removal in version 2.6.0. Use {@link #of(PlayerItemInterface, PlayerClickInterface)} instead.
-     */
-    @ApiStatus.ScheduledForRemoval(inVersion = "2.6.0")
-    @Deprecated
-    @Contract(value = "_, _ -> new", pure = true)
-    static Button of(PlayerItemInterface item, PlayerSimpleCancelInterface playerSimpleCancelInterface) {
-        return new BaseButton(item, playerSimpleCancelInterface);
-    }
-
-    /**
-     * Creates a clickable button with a static ItemStack and simple cancel-based click handler.
-     *
-     * @param item the ItemStack to display
-     * @param playerSimpleCancelInterface the click handler that automatically cancels events
-     * @return a new clickable Button
-     * @deprecated Scheduled for removal in version 2.6.0. Use {@link #of(ItemStack, PlayerClickInterface)} instead.
-     */
-    @ApiStatus.ScheduledForRemoval(inVersion = "2.6.0")
-    @Deprecated
-    @Contract(value = "_, _ -> new", pure = true)
-    static Button of(ItemStack item, PlayerSimpleCancelInterface playerSimpleCancelInterface) {
-        return new BaseButton(PlayerItemInterface.of(item), playerSimpleCancelInterface);
-    }
 
     /**
      * Creates a button from an implementation that provides both item display and click handling.
