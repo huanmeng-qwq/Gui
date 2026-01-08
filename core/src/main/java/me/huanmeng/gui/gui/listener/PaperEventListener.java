@@ -63,8 +63,7 @@ public class PaperEventListener implements Listener {
             if (reason == REASON_OPEN_NEW) {
                 return;
             }
-        } catch (Throwable ex) {
-            throw new RuntimeException(ex);
+        } catch (Throwable ignored) {
         }
         listenerAdapter.onInventoryClose(e);
     }
