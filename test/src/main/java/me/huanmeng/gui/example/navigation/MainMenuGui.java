@@ -39,7 +39,7 @@ public class MainMenuGui extends StackableGui {
             "§7Click to browse weapons",
             "§aSupports back navigation!"
         );
-        gui.draw().set(Slot.of(11), Button.of(weaponsItem, click -> {
+        gui.draw().set(Slot.of(11), Button.ofPlayerClick(weaponsItem, p -> {
             // Open weapons category with back navigation enabled
             new CategoryGui(context.getPlayer(), true, "Weapons").open();
         }));
@@ -51,7 +51,7 @@ public class MainMenuGui extends StackableGui {
             "§7Click to browse tools",
             "§aSupports back navigation!"
         );
-        gui.draw().set(Slot.of(13), Button.of(toolsItem, click -> {
+        gui.draw().set(Slot.of(13), Button.ofPlayerClick(toolsItem, p -> {
             // Open tools category with back navigation enabled
             new CategoryGui(context.getPlayer(), true, "Tools").open();
         }));
@@ -63,7 +63,7 @@ public class MainMenuGui extends StackableGui {
             "§7Click to browse food items",
             "§aSupports back navigation!"
         );
-        gui.draw().set(Slot.of(15), Button.of(foodItem, click -> {
+        gui.draw().set(Slot.of(15), Button.ofPlayerClick(foodItem, p -> {
             // Open food category with back navigation enabled
             new CategoryGui(context.getPlayer(), true, "Food").open();
         }));
