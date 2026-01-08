@@ -83,7 +83,7 @@ public class ItemDetailGui extends HGui {
             "§7Click to purchase this item",
             "§6Price: §f100 coins"
         );
-        gui.draw().set(Slot.of(15), Button.of(purchaseItem, click -> {
+        gui.draw().set(Slot.of(15), Button.ofPlayerClick(purchaseItem, p -> {
             context.getPlayer().sendMessage("§aPurchased " + itemData.name + "!");
             gui.close();
         }));
@@ -94,9 +94,7 @@ public class ItemDetailGui extends HGui {
             "§c§lBack to Category",
             "§7Click to return"
         );
-        gui.draw().set(Slot.of(22), Button.of(backItem, click -> {
-            gui.back();
-        }));
+        gui.draw().set(Slot.of(22), Button.ofPlayerClick(backItem, p -> gui.back()));
 
         return gui;
     }

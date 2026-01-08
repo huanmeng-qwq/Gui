@@ -57,7 +57,7 @@ public class CategoryGui extends HGui {
                 "§aClick to view details"
             );
 
-            gui.draw().set(Slot.of(10 + i), Button.of(displayItem, click -> {
+            gui.draw().set(Slot.of(10 + i), Button.ofPlayerClick(displayItem, p -> {
                 // Open detail page for this item
                 new ItemDetailGui(context.getPlayer(), true, itemData).open();
             }));
@@ -69,7 +69,7 @@ public class CategoryGui extends HGui {
             "§c§lBack to Main Menu",
             "§7Click to return"
         );
-        gui.draw().set(Slot.of(31), Button.of(backItem, click -> {
+        gui.draw().set(Slot.of(31), Button.ofPlayerClick(backItem, p -> {
             // Use the built-in back functionality
             gui.back();
         }));
