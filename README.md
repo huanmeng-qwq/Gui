@@ -21,7 +21,6 @@ Lightweight Inventory API for Bukkit(Paper/Spigot) plugins, with 1.8.8 to 1.21 s
 
 ## Features
 * Works with all versions from 1.8.8 to 1.21.x
-* Very small (around 3k lines of code with the JavaDoc) and no dependencies
 * Easy to use
 * Kotlin DSL
 * [Adventure](https://github.com/KyoriPowered/adventure) components support
