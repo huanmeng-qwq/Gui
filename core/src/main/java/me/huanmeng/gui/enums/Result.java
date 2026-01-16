@@ -1,7 +1,7 @@
 package me.huanmeng.gui.enums;
 
 import me.huanmeng.gui.AbstractGui;
-import me.huanmeng.gui.GuiButton;
+import me.huanmeng.gui.SlottedButton;
 import me.huanmeng.gui.button.ClickData;
 import me.huanmeng.gui.interfaces.CustomResultHandler;
 import me.huanmeng.gui.slot.Slot;
@@ -224,7 +224,7 @@ public class Result {
          * @return the result from the forwarded button's click handler, or {@link #ALLOW} if no button exists
          */
         public Result forwardClick(@NonNull ClickData clickData) {
-            GuiButton forwardButton = clickData.gui.getButton(forward);
+            SlottedButton forwardButton = clickData.gui.getButton(forward);
             if (forwardButton == null) {
                 return Result.ALLOW;
             }

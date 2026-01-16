@@ -1,7 +1,7 @@
 package me.huanmeng.gui.slot;
 
 import me.huanmeng.gui.AbstractGui;
-import me.huanmeng.gui.GuiButton;
+import me.huanmeng.gui.SlottedButton;
 import me.huanmeng.gui.SlotUtil;
 import me.huanmeng.gui.button.Button;
 import me.huanmeng.gui.button.ClickData;
@@ -285,7 +285,7 @@ public interface Slot {
      */
     @Nullable
     default ItemStack getShowingItem(@NonNull AbstractGui<?> gui, @NonNull Player player) {
-        GuiButton button = gui.getButton(this);
+        SlottedButton button = gui.getButton(this);
         if (button == null) return null;
         return button.getButton().getShowItem(player);
     }

@@ -92,19 +92,19 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      * Default priority button set
      */
     @NonNull
-    protected Set<GuiButton> buttons = new HashSet<>(10);
+    protected Set<SlottedButton> buttons = new HashSet<>(10);
 
     /**
      * Higher priority buttons than the default set (dynamically attached)
      */
     @NonNull
-    protected Set<GuiButton> attachedButtons = new HashSet<>(10);
+    protected Set<SlottedButton> attachedButtons = new HashSet<>(10);
 
     /**
      * Highest priority buttons for internal modifications
      */
     @NonNull
-    protected Set<GuiButton> editButtons = new HashSet<>(10);
+    protected Set<SlottedButton> editButtons = new HashSet<>(10);
 
     /**
      * Cached inventory instance
@@ -598,7 +598,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      * @return The set of buttons to fill
      */
     @NonNull
-    protected Set<GuiButton> getFillItems() {
+    protected Set<SlottedButton> getFillItems() {
         return buttons;
     }
 
@@ -608,7 +608,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      * @return The set of attached buttons
      */
     @NonNull
-    public Set<GuiButton> getAttachedItems() {
+    public Set<SlottedButton> getAttachedItems() {
         return attachedButtons;
     }
 
@@ -620,7 +620,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      * @return This GUI instance for method chaining
      */
     @NonNull
-    public G addAttachedButton(@NonNull GuiButton button) {
+    public G addAttachedButton(@NonNull SlottedButton button) {
         attachedButtons.remove(button);
         attachedButtons.add(button);
         return self();
@@ -634,10 +634,10 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      * @param button The button to set, or null to clear the slot
      */
     protected void setButton(@NonNull Slot slot, @Nullable Button button) {
-        GuiButton guiButton = new GuiButton(slot, button);
-        buttons.remove(guiButton);
-        attachedButtons.remove(guiButton);
-        editButtons.add(guiButton);
+        SlottedButton slottedButton = new SlottedButton(slot, button);
+        buttons.remove(slottedButton);
+        attachedButtons.remove(slottedButton);
+        editButtons.add(slottedButton);
     }
 
     /**
@@ -649,7 +649,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      * @return The button at the index, or null if none found
      */
     @Nullable
-    public GuiButton getButton(int index, Predicate<GuiButton> predicate) {
+    public SlottedButton getButton(int index, Predicate<SlottedButton> predicate) {
         return editButtons
                 .stream()
                 .filter(predicate)
@@ -678,7 +678,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      * @param index The inventory slot index
      * @return The button at the index, or null if none found
      */
-    public GuiButton getButton(int index) {
+    public SlottedButton getButton(int index) {
         return getButton(index, t -> true);
     }
 
@@ -688,7 +688,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      * @param slot The slot position
      * @return The button at the slot, or null if none found
      */
-    public GuiButton getButton(Slot slot) {
+    public SlottedButton getButton(Slot slot) {
         return getButton(slot.getIndex(), btn -> btn.isPlayerInventory() == slot.isPlayer());
     }
 
@@ -745,32 +745,32 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
                 player.getInventory().clear();
             }
         }
-        Set<GuiButton> fillItems = getFillItems();
+        Set<SlottedButton> fillItems = getFillItems();
         fillItems.removeAll(editButtons);
         buttons.addAll(fillItems);
-        for (GuiButton guiButton : fillItems) {
-            if (check(guiButton)) {
-                Button button = guiButton.getButton();
-                setItem(inventory, guiButton, button.getShowItem(player));
+        for (SlottedButton slottedButton : fillItems) {
+            if (check(slottedButton)) {
+                Button button = slottedButton.getButton();
+                setItem(inventory, slottedButton, button.getShowItem(player));
             }
         }
 
-        Set<GuiButton> attachedItems = new HashSet<>(getAttachedItems());
+        Set<SlottedButton> attachedItems = new HashSet<>(getAttachedItems());
         attachedItems.removeAll(editButtons);
-        for (GuiButton guiButton : attachedItems) {
-            if (check(guiButton)) {
-                Button button = guiButton.getButton();
-                setItem(inventory, guiButton, button.getShowItem(player));
+        for (SlottedButton slottedButton : attachedItems) {
+            if (check(slottedButton)) {
+                Button button = slottedButton.getButton();
+                setItem(inventory, slottedButton, button.getShowItem(player));
             }
         }
 
-        for (GuiButton guiButton : editButtons) {
-            if (check(guiButton)) {
-                Button button = guiButton.getButton();
+        for (SlottedButton slottedButton : editButtons) {
+            if (check(slottedButton)) {
+                Button button = slottedButton.getButton();
                 if (button != null) {
-                    setItem(inventory, guiButton, button.getShowItem(player));
+                    setItem(inventory, slottedButton, button.getShowItem(player));
                 } else {
-                    setItem(inventory, guiButton, null);
+                    setItem(inventory, slottedButton, null);
                 }
             }
         }
@@ -778,18 +778,18 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     }
 
     /**
-     * Sets an item in the inventory at the position specified by the GuiButton.
+     * Sets an item in the inventory at the position specified by the SlottedButton.
      * Delegates to the {@link me.huanmeng.gui.interfaces.GuiHandler} for actual item placement.
      *
      * @param inventory The inventory to modify
-     * @param guiButton The button defining the slot position
+     * @param slottedButton The button defining the slot position
      * @param itemStack The ItemStack to place, or null to clear
      */
-    private void setItem(@NotNull Inventory inventory, GuiButton guiButton, ItemStack itemStack) {
-        if (!guiButton.isPlayerInventory()) {
-            manager.guiHandler().onSetItem(this, inventory, guiButton, itemStack);
+    private void setItem(@NotNull Inventory inventory, SlottedButton slottedButton, ItemStack itemStack) {
+        if (!slottedButton.isPlayerInventory()) {
+            manager.guiHandler().onSetItem(this, inventory, slottedButton, itemStack);
         } else if (enablePlayerInventory) {
-            manager.guiHandler().onSetItem(this, player.getInventory(), guiButton, itemStack);
+            manager.guiHandler().onSetItem(this, player.getInventory(), slottedButton, itemStack);
         }
     }
 
@@ -807,7 +807,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             return self();
         }
         for (Slot slot : slots.slots(self())) {
-            GuiButton button = getButton(slot);
+            SlottedButton button = getButton(slot);
             // Ignore it directly, there is no button in the first place, so there is no need for refresh
             if (button == null) {
                 continue;
@@ -821,11 +821,11 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      * Checks if a button can be placed for the current player.
      * Delegates to the button's placement condition.
      *
-     * @param guiButton The button to check
+     * @param slottedButton The button to check
      * @return true if the button can be placed, false otherwise
      */
-    protected final boolean check(@NonNull GuiButton guiButton) {
-        return guiButton.canPlace(player);
+    protected final boolean check(@NonNull SlottedButton slottedButton) {
+        return slottedButton.canPlace(player);
     }
 
     /**
@@ -861,7 +861,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      * @param e         The click event
      * @return true if the click should be processed, false to ignore it
      */
-    public boolean allowClick(@NonNull Player player, @NonNull GuiButton button, @NonNull ClickType clickType,
+    public boolean allowClick(@NonNull Player player, @NonNull SlottedButton button, @NonNull ClickType clickType,
                               @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slot, int hotBar,
                               @NonNull InventoryClickEvent e) {
         if (guiClick != null) {
@@ -905,17 +905,17 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
                 processingClickEvent = false;
                 return;
             }
-            GuiButton guiButton = manager.guiHandler().queryClickButton(e, this);
-            if (guiButton == null) {
-                guiButton = getButton(slot, btn -> !btn.isPlayerInventory());
+            SlottedButton slottedButton = manager.guiHandler().queryClickButton(e, this);
+            if (slottedButton == null) {
+                slottedButton = getButton(slot, btn -> !btn.isPlayerInventory());
             }
-            if (guiButton != null) {
-                if (!allowClick(player, guiButton, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e)) {
+            if (slottedButton != null) {
+                if (!allowClick(player, slottedButton, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e)) {
                     processingClickEvent = false;
                     return;
                 }
-                ClickData clickData = new ClickData(player, this, guiButton.getSlot(), null, guiButton.getButton(), e, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton());
-                Result result = guiButton.onClick(clickData);
+                ClickData clickData = new ClickData(player, this, slottedButton.getSlot(), null, slottedButton.getButton(), e, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton());
+                Result result = slottedButton.onClick(clickData);
                 if (result == null) {
                     result = Result.CANCEL;
                 }
@@ -952,17 +952,17 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
                     processingClickEvent = false;
                     return;
                 }
-                GuiButton guiButton = manager.guiHandler().queryClickButton(e, this);
-                if (guiButton == null) {
-                    guiButton = getButton(slot, GuiButton::isPlayerInventory);
+                SlottedButton slottedButton = manager.guiHandler().queryClickButton(e, this);
+                if (slottedButton == null) {
+                    slottedButton = getButton(slot, SlottedButton::isPlayerInventory);
                 }
-                if (guiButton != null) {
-                    if (!allowClick(player, guiButton, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e)) {
+                if (slottedButton != null) {
+                    if (!allowClick(player, slottedButton, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton(), e)) {
                         processingClickEvent = false;
                         return;
                     }
-                    ClickData clickData = new ClickData(player, this, guiButton.getSlot(), null, guiButton.getButton(), e, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton());
-                    Result result = guiButton.onClick(clickData);
+                    ClickData clickData = new ClickData(player, this, slottedButton.getSlot(), null, slottedButton.getButton(), e, e.getClick(), e.getAction(), e.getSlotType(), slot, e.getHotbarButton());
+                    Result result = slottedButton.onClick(clickData);
                     if (result == null) {
                         result = Result.CANCEL;
                     }

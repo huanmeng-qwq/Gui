@@ -18,14 +18,14 @@ import java.util.Objects;
  * is placed in the player's inventory or the GUI inventory.
  *
  * <p>
- * GuiButton instances are immutable in terms of their slot position, but the button and slot
+ * SlottedButton instances are immutable in terms of their slot position, but the button and slot
  * can be replaced using setter methods.
  *
  *
  * @author huanmeng_qwq
  * @since 1.0
  */
-public final class GuiButton {
+public final class SlottedButton {
 
     /**
      * The slot where this button is positioned.
@@ -45,7 +45,7 @@ public final class GuiButton {
     private boolean isPlayerInventory;
 
     /**
-     * Constructs a new GuiButton with the specified slot and button.
+     * Constructs a new SlottedButton with the specified slot and button.
      * <p>
      * If the button is null, it will be replaced with an empty button.
      * </p>
@@ -53,7 +53,7 @@ public final class GuiButton {
      * @param slot the slot position
      * @param button the button implementation, or null for an empty button
      */
-    public GuiButton(@NonNull Slot slot, @Nullable Button button) {
+    public SlottedButton(@NonNull Slot slot, @Nullable Button button) {
         this.slot = slot;
         this.button = button == null ? Button.empty() : button;
         this.isPlayerInventory = this.slot.isPlayer();
@@ -116,6 +116,7 @@ public final class GuiButton {
      */
     public void setSlot(@NonNull Slot slot) {
         this.slot = slot;
+        this.isPlayerInventory = slot.isPlayer();
     }
 
     /**
@@ -149,7 +150,7 @@ public final class GuiButton {
     /**
      * Checks equality based on slot and inventory type.
      * <p>
-     * Two GuiButtons are considered equal if they have the same slot and both are
+     * Two SlottedButtons are considered equal if they have the same slot and both are
      * (or are not) in the player's inventory. The button implementation is not considered.
      * </p>
      *
@@ -159,8 +160,8 @@ public final class GuiButton {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        GuiButton guiButton = (GuiButton) o;
-        return isPlayerInventory == guiButton.isPlayerInventory && Objects.equals(slot, guiButton.slot);
+        SlottedButton slottedButton = (SlottedButton) o;
+        return isPlayerInventory == slottedButton.isPlayerInventory && Objects.equals(slot, slottedButton.slot);
     }
 
     /**

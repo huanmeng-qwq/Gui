@@ -1,7 +1,7 @@
 package me.huanmeng.gui.draw;
 
 import me.huanmeng.gui.AbstractGui;
-import me.huanmeng.gui.GuiButton;
+import me.huanmeng.gui.SlottedButton;
 import me.huanmeng.gui.button.Button;
 import me.huanmeng.gui.slot.Slot;
 import me.huanmeng.gui.slot.Slots;
@@ -174,7 +174,7 @@ public class GuiDraw<G extends AbstractGui<G>> {
      */
     @NonNull
     public GuiDraw<G> set(@NonNull Slot slot, @Nullable Button button) {
-        gui.addAttachedButton(new GuiButton(slot, button));
+        gui.addAttachedButton(new SlottedButton(slot, button));
         return self();
     }
 

@@ -1,7 +1,7 @@
 package me.huanmeng.gui.interfaces;
 
 import me.huanmeng.gui.AbstractGui;
-import me.huanmeng.gui.GuiButton;
+import me.huanmeng.gui.SlottedButton;
 import me.huanmeng.gui.util.item.ItemBuilder;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -42,7 +42,7 @@ public interface GuiHandler {
      * <b>Example Custom Implementation:</b>
      * <pre>{@code
      * @Override
-     * public void onSetItem(AbstractGui<?> gui, Inventory inventory, GuiButton button, ItemStack itemStack) {
+     * public void onSetItem(AbstractGui<?> gui, Inventory inventory, SlottedButton button, ItemStack itemStack) {
      *     if (itemStack != null) {
      *         // Add enchantment glow to all items
      *         itemStack = new ItemBuilder(itemStack).glow(true).build();
@@ -57,7 +57,7 @@ public interface GuiHandler {
      * @param button    the button whose item is being placed, never null
      * @param itemStack the ItemStack to place, or null to clear the slot
      */
-    void onSetItem(@NonNull AbstractGui<?> gui, @NonNull Inventory inventory, @NonNull GuiButton button, @Nullable ItemStack itemStack);
+    void onSetItem(@NonNull AbstractGui<?> gui, @NonNull Inventory inventory, @NonNull SlottedButton button, @Nullable ItemStack itemStack);
 
     /**
      * Queries which button was clicked based on the inventory click event.
@@ -77,7 +77,7 @@ public interface GuiHandler {
      * @return the button that was clicked, or {@code null} to use default lookup behavior
      */
     @Nullable
-    default GuiButton queryClickButton(@NonNull InventoryClickEvent e, AbstractGui<?> gui) {
+    default SlottedButton queryClickButton(@NonNull InventoryClickEvent e, AbstractGui<?> gui) {
         return null;
     }
 
@@ -96,7 +96,7 @@ public interface GuiHandler {
     class GuiHandlerDefaultImpl implements GuiHandler {
 
         @Override
-        public void onSetItem(@NonNull AbstractGui<?> gui, @NonNull Inventory inventory, @NonNull GuiButton button, @Nullable ItemStack itemStack) {
+        public void onSetItem(@NonNull AbstractGui<?> gui, @NonNull Inventory inventory, @NonNull SlottedButton button, @Nullable ItemStack itemStack) {
             int index = button.getIndex();
             if (itemStack == null) {
                 inventory.setItem(index, null);

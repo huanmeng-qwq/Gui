@@ -1,6 +1,6 @@
 package me.huanmeng.gui.interfaces;
 
-import me.huanmeng.gui.GuiButton;
+import me.huanmeng.gui.SlottedButton;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
@@ -20,7 +20,7 @@ import org.jspecify.annotations.NonNull;
  * <pre>{@code
  * public class MyGui extends AbstractGui<MyGui> implements GuiClick {
  *     @Override
- *     public boolean allowClick(Player player, GuiButton button, ClickType clickType,
+ *     public boolean allowClick(Player player, SlottedButton button, ClickType clickType,
  *                               InventoryAction action, InventoryType.SlotType slotType,
  *                               int slot, int hotBar, InventoryClickEvent e) {
  *         // Only allow left clicks
@@ -36,7 +36,7 @@ import org.jspecify.annotations.NonNull;
  *
  * @author huanmeng_qwq
  * @since 1.0
- * @see GuiButton
+ * @see SlottedButton
  * @see InventoryClickEvent
  */
 public interface GuiClick {
@@ -58,7 +58,7 @@ public interface GuiClick {
      * @param e         the underlying Bukkit inventory click event, never null
      * @return {@code true} to allow the click to be processed, {@code false} to cancel it
      */
-    boolean allowClick(@NonNull Player player, @NonNull GuiButton button, @NonNull ClickType clickType,
+    boolean allowClick(@NonNull Player player, @NonNull SlottedButton button, @NonNull ClickType clickType,
                        @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slot,
                        int hotBar, @NonNull InventoryClickEvent e);
 }

@@ -1,6 +1,6 @@
 package me.huanmeng.gui.impl;
 
-import me.huanmeng.gui.GuiButton;
+import me.huanmeng.gui.SlottedButton;
 import me.huanmeng.gui.button.Button;
 import me.huanmeng.gui.impl.page.PageArea;
 import me.huanmeng.gui.impl.page.PageButton;
@@ -122,17 +122,17 @@ public abstract class AbstractGuiPage<G extends AbstractGuiPage<@NonNull G>> ext
      * populating to ensure clean state.
      *
      *
-     * @return a set of GuiButton instances representing all items and controls to display
+     * @return a set of SlottedButton instances representing all items and controls to display
      * @throws IllegalArgumentException if no player is set
      */
     @Override
     @NonNull
-    protected Set<GuiButton> getFillItems() {
+    protected Set<SlottedButton> getFillItems() {
         if (player == null) {
             throw new IllegalArgumentException("player is null");
         }
         buttons.clear();
-        Set<GuiButton> buttons = new HashSet<>();
+        Set<SlottedButton> buttons = new HashSet<>();
         for (PageArea pageArea : pageAreas) {
             refresh(pageArea.slots());
             List<Button> buttonList = pageArea.getCurrentItems();
@@ -142,7 +142,7 @@ public abstract class AbstractGuiPage<G extends AbstractGuiPage<@NonNull G>> ext
                     break;
                 }
                 Slot slot = slots.remove(0);
-                buttons.add(new GuiButton(slot, button));
+                buttons.add(new SlottedButton(slot, button));
             }
             PageSetting pageSetting = pageArea.pageSetting();
             if (pageSetting != null) {
@@ -151,7 +151,7 @@ public abstract class AbstractGuiPage<G extends AbstractGuiPage<@NonNull G>> ext
                     Slot slot = pageButton.slot().slot(line, pageArea, this);
                     editButtons.removeIf(button -> button.getSlot().equals(slot));
                     if (pageButton.condition().isAllow(pageArea.currentPage(), pageArea.getMaxPage(), pageArea, pageButton, player)) {
-                        editButtons.add(new GuiButton(slot, pageButton));
+                        editButtons.add(new SlottedButton(slot, pageButton));
                     }
                 }
             }
