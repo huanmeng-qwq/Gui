@@ -12,6 +12,7 @@ import java.util.function.Consumer;
  * Gui<br>
  *
  * @author huanmeng_qwq
+ * @since 1.0
  */
 public class SchedulerAsync implements Scheduler {
 

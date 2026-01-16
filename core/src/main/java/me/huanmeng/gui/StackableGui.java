@@ -56,7 +56,7 @@ import org.jspecify.annotations.Nullable;
  * }</pre>
  *
  * @author huanmeng_qwq
- * @since 2023/3/17
+ * @since 1.0
  */
 @SuppressWarnings({"unused"})
 public abstract class StackableGui {

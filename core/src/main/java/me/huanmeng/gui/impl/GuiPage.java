@@ -39,7 +39,7 @@ import java.util.List;
  *
  *
  * @author huanmeng_qwq
- * @since 2023/3/17
+ * @since 1.0
  * @see AbstractGuiPage
  * @see PageArea
  * @see PageSetting

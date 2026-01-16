@@ -41,7 +41,7 @@ import org.jspecify.annotations.NonNull;
  * }</pre>
  *
  * @author huanmeng_qwq
- * @since 2023/3/17
+ * @since 1.0
  * @see CustomResultHandler
  */
 public class Result {

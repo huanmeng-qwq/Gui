@@ -41,7 +41,7 @@ import org.jspecify.annotations.NonNull;
  *
  *
  * @author huanmeng_qwq
- * @since 2024/12/28
+ * @since 2.4.0
  * @see AbstractGuiPage
  * @see GuiPage
  * @see me.huanmeng.gui.impl.page.PageArea

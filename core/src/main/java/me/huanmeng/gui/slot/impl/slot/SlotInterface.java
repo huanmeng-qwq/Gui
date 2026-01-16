@@ -13,6 +13,7 @@ import org.jspecify.annotations.NonNull;
  * Gui<br>
  *
  * @author huanmeng_qwq
+ * @since 1.0
  */
 @SuppressWarnings("unused")
 public class SlotInterface extends SlotImpl {

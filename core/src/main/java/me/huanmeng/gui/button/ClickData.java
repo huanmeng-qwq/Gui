@@ -22,7 +22,7 @@ import org.jspecify.annotations.Nullable;
  *
  *
  * @author huanmeng_qwq
- * @since 2023/3/17
+ * @since 2.4.3
  */
 public class ClickData {
     /**

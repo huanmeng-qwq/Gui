@@ -23,7 +23,7 @@ import org.bukkit.event.server.PluginDisableEvent;
  *
  *
  * @author huanmeng_qwq
- * @since 2023/6/16
+ * @since 2.0.1
  * @see BukkitEventListener
  * @see PaperEventListener
  */

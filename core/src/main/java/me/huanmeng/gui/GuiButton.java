@@ -23,7 +23,7 @@ import java.util.Objects;
  *
  *
  * @author huanmeng_qwq
- * @since 2023/3/17
+ * @since 1.0
  */
 public final class GuiButton {
 

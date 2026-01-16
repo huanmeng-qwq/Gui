@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
  * Gui<br>
  *
  * @author huanmeng_qwq
+ * @since 1.0
  */
 public final class ItemUtil {
     private static MethodHandle displayName;

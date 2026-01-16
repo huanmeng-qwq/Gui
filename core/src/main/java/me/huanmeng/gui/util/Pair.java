@@ -10,7 +10,7 @@ package me.huanmeng.gui.util;
  * @param <A> the type of the first element
  * @param <B> the type of the second element
  * @author huanmeng_qwq
- * @since 2023/7/16
+ * @since 2.1.1
  */
 public class Pair<A, B> {
     /**

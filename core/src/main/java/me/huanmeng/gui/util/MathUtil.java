@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
  * and calculating slot arrays for rectangular areas in inventory GUIs.
  *
  * @author huanmeng_qwq
- * @since 2023/8/24
+ * @since 1.0
  */
 public final class MathUtil {
     /**

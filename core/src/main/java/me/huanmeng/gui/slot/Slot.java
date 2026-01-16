@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Contract;
  * </ul>
  *
  * @author huanmeng_qwq
- * @since 2023/3/17
+ * @since 1.0
  */
 @SuppressWarnings("rawtypes")
 public interface Slot {

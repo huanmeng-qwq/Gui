@@ -37,7 +37,7 @@ import java.util.List;
  *
  * @param <T> the type of elements being paginated
  * @author huanmeng_qwq
- * @since 2023/3/17
+ * @since 1.0
  */
 @SuppressWarnings("unused")
 public class Pagination<@NonNull T> {

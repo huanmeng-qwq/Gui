@@ -26,7 +26,7 @@ import org.jspecify.annotations.Nullable;
  *
  *
  * @author huanmeng_qwq
- * @since 2023/11/19
+ * @since 2.2.0
  * @see GuiHandlerDefaultImpl
  * @see AbstractGui
  */

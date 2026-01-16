@@ -17,7 +17,7 @@ import java.util.function.Supplier;
  *
  * @param <T> the type of value supplied
  * @author huanmeng_qwq
- * @since 2023/6/4
+ * @since 1.3.3
  */
 public class FreezeSupplier<T> implements Supplier<T> {
     /**

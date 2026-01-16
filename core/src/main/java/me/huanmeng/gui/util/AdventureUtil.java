@@ -40,6 +40,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
  *
  *
  * @author huanmeng_qwq
+ * @since 2.5.0
  * @see Component
  * @see net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
  * @see net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer

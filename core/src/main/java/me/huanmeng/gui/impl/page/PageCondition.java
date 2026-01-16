@@ -9,6 +9,7 @@ import org.jspecify.annotations.NonNull;
  * Gui<br>
  *
  * @author huanmeng_qwq
+ * @since 1.3.3
  */
 @FunctionalInterface
 public interface PageCondition {

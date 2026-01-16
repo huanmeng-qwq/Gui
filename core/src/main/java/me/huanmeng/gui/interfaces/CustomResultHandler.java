@@ -10,6 +10,7 @@ import org.jspecify.annotations.NonNull;
  * Bukkit-Gui-pom<br>
  *
  * @author huanmeng_qwq
+ * @since 2.3.0
  */
 public interface CustomResultHandler {
     <G extends AbstractGui<G>>

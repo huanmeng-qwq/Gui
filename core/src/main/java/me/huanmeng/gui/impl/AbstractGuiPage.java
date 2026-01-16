@@ -41,7 +41,7 @@ import org.jspecify.annotations.NonNull;
  *
  * @param <G> the concrete GUI type for fluent method chaining
  * @author huanmeng_qwq
- * @since 2024/12/28
+ * @since 2.4.0
  * @see AbstractGuiCustom
  * @see GuiPage
  * @see CustomGuiPage

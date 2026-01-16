@@ -30,7 +30,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @param <T> the type of elements to process
  * @author huanmeng_qwq
- * @since 2023/3/17
+ * @since 1.0
  * @see Pagination#printPage(int, IPaginationExecutor)
  */
 @FunctionalInterface

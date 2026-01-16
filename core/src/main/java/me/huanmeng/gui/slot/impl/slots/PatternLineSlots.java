@@ -15,6 +15,7 @@ import java.util.function.Function;
  * Gui<br>
  *
  * @author huanmeng_qwq
+ * @since 1.0
  */
 public class PatternLineSlots implements Slots {
     @NonNull

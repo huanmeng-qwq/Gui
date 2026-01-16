@@ -20,7 +20,7 @@ import java.util.Objects;
  * interactions.
  *
  * @author huanmeng_qwq
- * @since 2024/12/28
+ * @since 2.4.0
  */
 public class PlayerSlots implements Slots {
     /**

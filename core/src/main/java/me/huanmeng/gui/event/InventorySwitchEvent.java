@@ -12,6 +12,7 @@ import org.jspecify.annotations.NonNull;
  * Gui<br>
  *
  * @author huanmeng_qwq
+ * @since 1.1
  */
 @SuppressWarnings("unused")
 public class InventorySwitchEvent extends InventoryClickEvent {

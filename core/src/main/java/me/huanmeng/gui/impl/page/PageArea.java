@@ -22,7 +22,7 @@ import java.util.List;
  *
  *
  * @author huanmeng_qwq
- * @since 2024/12/28
+ * @since 2.4.0
  */
 public class PageArea {
     /**

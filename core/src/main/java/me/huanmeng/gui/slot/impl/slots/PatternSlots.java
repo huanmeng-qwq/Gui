@@ -14,6 +14,7 @@ import java.util.List;
  * Gui<br>
  *
  * @author huanmeng_qwq
+ * @since 1.0
  */
 public class PatternSlots implements Slots {
     @NonNull

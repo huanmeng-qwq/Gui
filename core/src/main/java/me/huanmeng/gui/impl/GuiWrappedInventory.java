@@ -34,7 +34,7 @@ import org.jspecify.annotations.NonNull;
  *
  *
  * @author huanmeng_qwq
- * @since 2023/6/19
+ * @since 1.1.2
  * @see AbstractGuiCustom
  * @see GuiCustom
  */

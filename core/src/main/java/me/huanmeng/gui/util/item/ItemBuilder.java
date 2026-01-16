@@ -44,7 +44,7 @@ import org.bukkit.potion.PotionEffect;
  * }</pre>
  *
  * @author huanmeng_qwq
- * @since 2023/8/24
+ * @since 1.0
  */
 public class ItemBuilder {
 

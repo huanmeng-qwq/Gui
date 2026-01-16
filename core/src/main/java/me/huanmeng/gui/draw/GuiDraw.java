@@ -38,7 +38,7 @@ import java.util.List;
  *
  * @param <G> the type of AbstractGui being drawn to
  * @author huanmeng_qwq
- * @since 2023/3/17
+ * @since 1.0
  */
 @SuppressWarnings("unused")
 public class GuiDraw<G extends AbstractGui<G>> {

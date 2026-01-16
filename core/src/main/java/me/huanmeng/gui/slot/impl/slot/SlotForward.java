@@ -16,6 +16,7 @@ import java.util.Objects;
  * Bukkit-Gui-pom<br>
  *
  * @author huanmeng_qwq
+ * @since 2.3.0
  */
 public class SlotForward implements Slot {
     protected final Slot self;

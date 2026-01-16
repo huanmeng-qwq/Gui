@@ -42,7 +42,7 @@ import java.util.function.Consumer;
  *
  *
  * @author huanmeng_qwq
- * @since 2023/3/17
+ * @since 1.0
  * @see Schedulers
  * @see Task
  */

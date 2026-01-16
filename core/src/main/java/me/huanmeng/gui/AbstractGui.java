@@ -72,7 +72,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <G> Self-bounded generic type for method chaining with the correct subclass type
  * @author huanmeng_qwq
- * @since 2023/3/17
+ * @since 1.0
  */
 @SuppressWarnings("ALL")
 public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> implements GuiTick {

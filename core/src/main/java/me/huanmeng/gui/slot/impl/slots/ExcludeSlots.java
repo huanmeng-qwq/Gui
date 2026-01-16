@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
  * Gui<br>
  *
  * @author huanmeng_qwq
+ * @since 1.0
  */
 public class ExcludeSlots implements Slots {
     @Nullable

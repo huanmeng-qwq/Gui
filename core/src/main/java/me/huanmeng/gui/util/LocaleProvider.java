@@ -11,6 +11,13 @@ import java.util.Locale;
 import java.util.function.Function;
 
 // https://github.com/MegavexNetwork/scoreboard-library/blob/5f89a47798d142502b169c63d4690ccbcf5ef1ac/commons/src/main/java/net/megavex/scoreboardlibrary/implementation/commons/LocaleProvider.java
+
+/**
+ * Utility class for retrieving player locale information across different Bukkit/Paper versions.
+ *
+ * @author huanmeng_qwq
+ * @since 2.5.1
+ */
 public final class LocaleProvider {
   private static final Locale DEFAULT_LOCALE = Locale.US;
   private static final Function<Player, Locale> provider = get();

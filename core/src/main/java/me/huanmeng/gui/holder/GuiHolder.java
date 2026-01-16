@@ -35,7 +35,7 @@ import org.jspecify.annotations.NonNull;
  *
  * @param <G> the type of AbstractGui this holder manages
  * @author huanmeng_qwq
- * @since 2023/3/17
+ * @since 1.0
  */
 public class GuiHolder<@NonNull G extends AbstractGui<G>> implements InventoryHolder {
     /**

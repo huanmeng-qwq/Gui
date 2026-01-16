@@ -9,6 +9,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Utility class for creating Bukkit inventories with Adventure component support.
+ *
+ * @author huanmeng_qwq
+ * @since 2.5.0
+ */
 public class InventoryUtil {
     public static MethodHandle componentCreateChest;
     public static MethodHandle componentCreateType;

@@ -26,6 +26,7 @@ import java.util.Objects;
  * context that this is a player inventory slot.
  *
  * @author huanmeng_qwq
+ * @since 2.4.0
  */
 public class PlayerSlot implements Slot {
     /**

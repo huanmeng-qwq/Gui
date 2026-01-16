@@ -9,6 +9,7 @@ import org.jspecify.annotations.NonNull;
  * Gui<br>
  *
  * @author huanmeng_qwq
+ * @since 1.0
  */
 @FunctionalInterface
 public interface ButtonClickInterface {

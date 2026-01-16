@@ -13,6 +13,7 @@ import java.util.Arrays;
  * Gui<br>
  *
  * @author huanmeng_qwq
+ * @since 1.0
  */
 public class ArraySlots implements Slots {
     @NonNull
