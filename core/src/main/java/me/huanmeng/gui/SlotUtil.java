@@ -5,65 +5,85 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import java.util.Collection;
 
 /**
- * 2023/3/17<br>
- * Gui<br>
+ * Utility class for slot position calculations in Minecraft inventory GUIs.
+ * <p>
+ * This class provides static methods for converting between row/column coordinates
+ * and Bukkit's slot indices, as well as calculating the recommended number of rows
+ * for a given number of items.
+ * <p>
+ * Slot indices in Bukkit inventories are 0-based and increment left-to-right, top-to-bottom:
+ * <pre>
+ * Row 1: [0] [1] [2] [3] [4] [5] [6] [7] [8]
+ * Row 2: [9] [10][11][12][13][14][15][16][17]
+ * Row 3: [18][19][20][21][22][23][24][25][26]
+ * </pre>
  *
  * @author huanmeng_qwq
+ * @since 2023/3/17
  */
 @SuppressWarnings("unused")
 public class SlotUtil {
     /**
-     * 以1开始计算
-     * 比如3,5 对应箱子的第3行第5格 = 22
+     * Converts row and column coordinates to a Bukkit slot index.
+     * <p>
+     * Both row and column are 1-based (starting from 1, not 0).
+     * For example, row 3 and column 5 corresponds to slot 22 in a chest inventory.
      *
-     * @param row    行
-     * @param column 列
-     * @return bukkit中的slot(0开始)
+     * @param row    the row number (1-based, where 1 is the top row)
+     * @param column the column number (1-based, where 1 is the leftmost column)
+     * @return the Bukkit slot index (0-based)
      */
     public static int getSlot(int row, int column) {
         return (row * 9) - (column == 9 ? 1 : 10 - column);
     }
 
     /**
-     * 通过slot计算行
+     * Calculates the row number from a slot index.
+     * <p>
+     * The returned row number is 1-based (first row is 1).
      *
-     * @param slot slot
-     * @return 行
+     * @param slot the Bukkit slot index (0-based)
+     * @return the row number (1-based)
      */
     public static int getRow(int slot) {
         return (slot + 9) / 9;
     }
 
     /**
-     * 通过slot计算列
+     * Calculates the column number from a slot index.
+     * <p>
+     * The returned column number is 1-based (first column is 1).
      *
-     * @param slot slot
-     * @return 列
+     * @param slot the Bukkit slot index (0-based)
+     * @return the column number (1-based, range 1-9)
      */
     public static int getColumn(int slot) {
         return (slot % 9) + 1;
     }
 
     /**
-     * 通过集合数量建议行数
+     * Calculates the recommended number of rows needed to display a collection of items.
      * <p>
-     * 对{@link #getLine(int)}的封装
+     * This is a convenience wrapper for {@link #getLine(int)} that accepts a collection.
      *
-     * @param items 集合
+     * @param items the collection of items to display
+     * @return the recommended number of rows (minimum 1)
      */
     public static int getLine(@NonNull Collection<?> items) {
         return getLine(items.size());
     }
 
     /**
-     * 通过数量建议行数
+     * Calculates the recommended number of rows needed to display a given number of items.
      * <p>
-     * 设计该方法的主要目的是用于
-     * 有的时候需要将某个list的内容
-     * 放到gui中, 则可以使用list#size
-     * 经行计算gui所需的行数
+     * This method is useful when creating GUIs that need to dynamically size based on
+     * the number of items to display. Each row in a chest inventory has 9 slots.
+     * <p>
+     * Example: 10 items would require 2 rows, 18 items would require 2 rows,
+     * 19 items would require 3 rows.
      *
-     * @param size 数量
+     * @param size the number of items to display
+     * @return the recommended number of rows (minimum 1 for size > 0)
      */
     public static int getLine(int size) {
         return (size % 9 == 0 ? size : size + 9) / 9;

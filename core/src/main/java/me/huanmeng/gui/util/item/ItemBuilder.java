@@ -27,64 +27,154 @@ import org.bukkit.map.MapView;
 import org.bukkit.potion.PotionEffect;
 
 /**
- * 2023/8/24<br>
- * Gui<br>
+ * A fluent builder class for creating and modifying Bukkit {@link ItemStack} objects.
+ * <p>
+ * ItemBuilder provides a convenient chainable API for constructing ItemStacks with various
+ * properties such as display names, lore, enchantments, item flags, and specialized metadata
+ * for items like skulls, leather armor, banners, and potions.
+ * <p>
+ * <b>Usage Example:</b>
+ * <pre>{@code
+ * ItemStack item = new ItemBuilder(Material.DIAMOND_SWORD)
+ *     .setName("&6Legendary Sword")
+ *     .addLoreLine("&7A powerful weapon")
+ *     .addEnchant(Enchantment.DAMAGE_ALL, 5)
+ *     .setUnbreakable()
+ *     .build();
+ * }</pre>
  *
  * @author huanmeng_qwq
+ * @since 2023/8/24
  */
 public class ItemBuilder {
 
+    /**
+     * The ItemStack being built.
+     */
     private ItemStack is;
 
+    /**
+     * Creates a new ItemBuilder by cloning an existing ItemStack.
+     *
+     * @param is the ItemStack to clone and modify
+     */
     public ItemBuilder(ItemStack is) {
         this.is = is.clone();
     }
 
+    /**
+     * Creates a new ItemBuilder from an existing ItemStack with a display name.
+     *
+     * @param is   the ItemStack to use
+     * @param name the display name to set
+     */
     public ItemBuilder(ItemStack is, String name) {
         this.is = is;
         setName(name);
     }
 
+    /**
+     * Creates a new ItemBuilder with the specified material.
+     *
+     * @param m the material type
+     */
     public ItemBuilder(Material m) {
         is = new ItemStack(m);
     }
 
+    /**
+     * Creates a new ItemBuilder with the specified material and display name.
+     *
+     * @param m    the material type
+     * @param name the display name to set
+     */
     public ItemBuilder(Material m, String name) {
         is = new ItemStack(m);
         setName(name);
     }
 
+    /**
+     * Creates a new ItemBuilder with the specified material and amount.
+     *
+     * @param m      the material type
+     * @param amount the stack amount
+     */
     public ItemBuilder(Material m, int amount) {
         is = new ItemStack(m, amount);
     }
 
+    /**
+     * Creates a new ItemBuilder with the specified material, amount, and durability.
+     *
+     * @param m          the material type
+     * @param amount     the stack amount
+     * @param durability the durability/damage value
+     */
     public ItemBuilder(Material m, int amount, byte durability) {
         is = new ItemStack(m, amount, durability);
     }
 
+    /**
+     * Creates a new ItemBuilder with the specified material, amount, and durability.
+     *
+     * @param type       the material type
+     * @param amount     the stack amount
+     * @param durability the durability/damage value
+     */
     public ItemBuilder(Material type, int amount, short durability) {
         is = new ItemStack(type, amount, durability);
     }
 
+    /**
+     * Creates a clone of this ItemBuilder.
+     *
+     * @return a new ItemBuilder with a cloned ItemStack
+     */
     public ItemBuilder clone() {
         return new ItemBuilder(is);
     }
 
+    /**
+     * Sets the durability (damage) value of the item.
+     *
+     * @param dur the durability value
+     * @return this builder for chaining
+     */
     public ItemBuilder setDurability(short dur) {
         is.setDurability(dur);
         return this;
     }
 
+    /**
+     * Sets the durability (damage) value of the item.
+     *
+     * @param dur the durability value
+     * @return this builder for chaining
+     */
     public ItemBuilder setDurability(int dur) {
         is.setDurability((short) dur);
         return this;
     }
 
+    /**
+     * Sets the stack amount of the item.
+     *
+     * @param amount the stack amount
+     * @return this builder for chaining
+     */
     public ItemBuilder setAmount(int amount) {
         is.setAmount(amount);
         return this;
     }
 
+    /**
+     * Sets the display name of the item with color code translation.
+     * <p>
+     * Color codes using '&amp;' will be translated to Minecraft color codes.
+     *
+     * @param str the display name (supports '&amp;' color codes)
+     * @return this builder for chaining
+     */
     public ItemBuilder setName(String str) {
         String name = str;
         ItemMeta im = is.getItemMeta();
@@ -100,16 +190,34 @@ public class ItemBuilder {
         return this;
     }
 
+    /**
+     * Sets the display name of the item using an Adventure Component.
+     *
+     * @param component the Adventure Component to use as the display name
+     * @return this builder for chaining
+     */
     public ItemBuilder setName(Component component) {
         ItemUtil.setName(is, component);
         return this;
     }
 
+    /**
+     * Sets the lore of the item using Adventure Components.
+     *
+     * @param lores the list of Adventure Components to use as lore lines
+     * @return this builder for chaining
+     */
     public ItemBuilder addLore(List<Component> lores) {
         ItemUtil.setLore(is, lores);
         return this;
     }
 
+    /**
+     * Sets the display name of the item without color code translation.
+     *
+     * @param name the display name (raw, no color code translation)
+     * @return this builder for chaining
+     */
     public ItemBuilder setNameUnColor(String name) {
         ItemMeta im = is.getItemMeta();
         if (name != null && name.isEmpty()) {
