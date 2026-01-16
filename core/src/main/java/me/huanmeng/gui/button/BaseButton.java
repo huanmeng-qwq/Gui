@@ -1,6 +1,6 @@
 package me.huanmeng.gui.button;
 
-import me.huanmeng.gui.button.function.PlayerClickInterface;
+import me.huanmeng.gui.button.function.ClickHandler;
 import me.huanmeng.gui.button.function.ItemProvider;
 import me.huanmeng.gui.enums.Result;
 import org.bukkit.entity.Player;
@@ -12,12 +12,12 @@ import org.jspecify.annotations.Nullable;
  * The base implementation of the {@link Button} interface.
  * <p>
  * This class provides a simple button implementation that delegates item display to a
- * {@link ItemProvider} and click handling to a {@link PlayerClickInterface}.
+ * {@link ItemProvider} and click handling to a {@link ClickHandler}.
  * It serves as the foundation for most button types in the GUI system.
  *
  * <p>
- * Both the item provider and click interface are optional (nullable). If the item provider
- * is null, the button displays no item. If the click interface is null, clicks are cancelled
+ * Both the item provider and click handler are optional (nullable). If the item provider
+ * is null, the button displays no item. If the click handler is null, clicks are cancelled
  * with no additional behavior.
  *
  *
@@ -32,20 +32,20 @@ public class BaseButton implements Button {
     private final ItemProvider itemProvider;
 
     /**
-     * The interface handling click events, or null if no special click handling is needed.
+     * The handler for click events, or null if no special click handling is needed.
      */
     @Nullable
-    private final PlayerClickInterface playerClickInterface;
+    private final ClickHandler clickHandler;
 
     /**
-     * Constructs a new BaseButton with the specified item provider and click interface.
+     * Constructs a new BaseButton with the specified item provider and click handler.
      *
      * @param itemProvider the provider supplying the item to display, or null
-     * @param playerClickInterface the interface handling clicks, or null
+     * @param clickHandler the handler for clicks, or null
      */
-    public BaseButton(@Nullable ItemProvider itemProvider, @Nullable PlayerClickInterface playerClickInterface) {
+    public BaseButton(@Nullable ItemProvider itemProvider, @Nullable ClickHandler clickHandler) {
         this.itemProvider = itemProvider;
-        this.playerClickInterface = playerClickInterface;
+        this.clickHandler = clickHandler;
     }
 
     /**
@@ -66,14 +66,14 @@ public class BaseButton implements Button {
     /**
      * {@inheritDoc}
      * <p>
-     * Delegates to the click interface if present, otherwise returns {@link Result#CANCEL}.
+     * Delegates to the click handler if present, otherwise returns {@link Result#CANCEL}.
      * </p>
      */
     @Override
     public @NonNull Result onClick(@NonNull ClickData clickData) {
-        if (playerClickInterface == null) {
+        if (clickHandler == null) {
             return Result.CANCEL;
         }
-        return playerClickInterface.onClick(clickData);
+        return clickHandler.onClick(clickData);
     }
 }

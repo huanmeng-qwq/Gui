@@ -1,6 +1,6 @@
 package me.huanmeng.gui.button;
 
-import me.huanmeng.gui.button.function.PlayerClickInterface;
+import me.huanmeng.gui.button.function.ClickHandler;
 import me.huanmeng.gui.button.function.ItemProvider;
 import me.huanmeng.gui.enums.Result;
 import java.util.Arrays;
@@ -103,7 +103,7 @@ public interface Button {
      * @return a new clickable Button
      */
     @Contract(value = "_,_ -> new", pure = true)
-    static Button of(ItemStack item, PlayerClickInterface clickable) {
+    static Button of(ItemStack item, ClickHandler clickable) {
         return new BaseButton(ItemProvider.of(item), clickable);
     }
 
@@ -115,7 +115,7 @@ public interface Button {
      * @return a new clickable Button
      */
     @Contract(value = "_, _ -> new", pure = true)
-    static Button of(ItemProvider item, PlayerClickInterface clickable) {
+    static Button of(ItemProvider item, ClickHandler clickable) {
         return new BaseButton(item, clickable);
     }
 
@@ -132,7 +132,7 @@ public interface Button {
      */
     @Contract(value = "null, !null, !null -> new", pure = true)
     static Button ofPlayerClick(ItemProvider item, Result result, Consumer<Player> clickable) {
-        return new BaseButton(item, PlayerClickInterface.handlePlayerClick(result, clickable));
+        return new BaseButton(item, ClickHandler.handlePlayerClick(result, clickable));
     }
 
     /**
@@ -160,7 +160,7 @@ public interface Button {
      */
     @Contract(value = "null, !null, !null -> new", pure = true)
     static Button ofPlayerClick(ItemStack item, Result result, Consumer<Player> clickable) {
-        return new BaseButton(ItemProvider.of(item), PlayerClickInterface.handlePlayerClick(result, clickable));
+        return new BaseButton(ItemProvider.of(item), ClickHandler.handlePlayerClick(result, clickable));
     }
 
     /**
@@ -183,7 +183,7 @@ public interface Button {
      * Creates a button from an implementation that provides both item display and click handling.
      * <p>
      * This method is useful when you have a single class that implements both {@link ItemProvider}
-     * and {@link PlayerClickInterface}.
+     * and {@link ClickHandler}.
      * </p>
      *
      * @param impl the implementation providing both item display and click handling
@@ -191,7 +191,7 @@ public interface Button {
      * @return a new Button
      */
     @Contract(value = "null -> new", pure = true)
-    static <@NonNull IMPL extends ItemProvider & PlayerClickInterface> Button ofInstance(IMPL impl) {
+    static <@NonNull IMPL extends ItemProvider & ClickHandler> Button ofInstance(IMPL impl) {
         return new BaseButton(impl, impl);
     }
 
@@ -206,7 +206,7 @@ public interface Button {
      * @return a list of Buttons
      */
     @NonNull
-    static <@NonNull IMPL extends ItemProvider & PlayerClickInterface> List<Button> ofInstances(@NonNull Collection<@NonNull IMPL> impl) {
+    static <@NonNull IMPL extends ItemProvider & ClickHandler> List<Button> ofInstances(@NonNull Collection<@NonNull IMPL> impl) {
         return impl.stream().map(Button::ofInstance).collect(Collectors.toList());
     }
 
@@ -221,7 +221,7 @@ public interface Button {
      * @return a list of Buttons
      */
     @SafeVarargs
-    static <@NonNull IMPL extends ItemProvider & PlayerClickInterface> List<Button> ofInstancesArray(@NonNull IMPL... impl) {
+    static <@NonNull IMPL extends ItemProvider & ClickHandler> List<Button> ofInstancesArray(@NonNull IMPL... impl) {
         return Arrays.stream(impl).map(Button::ofInstance).collect(Collectors.toList());
     }
 
@@ -284,7 +284,7 @@ public interface Button {
      * @return a list of clickable Buttons
      */
     @NonNull
-    static <@NonNull IMPL extends ItemProvider & PlayerClickInterface>
+    static <@NonNull IMPL extends ItemProvider & ClickHandler>
     List<@NonNull Button> ofItemStacksInstances(@NonNull Collection<@Nullable ItemStack> itemStacks, @NonNull Function<@Nullable ItemStack, @NonNull IMPL> map) {
         return itemStacks.stream().map(map).map(Button::ofInstance).collect(Collectors.toList());
     }

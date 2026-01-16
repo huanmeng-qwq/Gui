@@ -27,7 +27,7 @@ import org.jspecify.annotations.NonNull;
  * @since 1.0
  */
 @FunctionalInterface
-public interface PlayerClickInterface {
+public interface ClickHandler {
 
     /**
      * Handles a button click event.
@@ -41,9 +41,9 @@ public interface PlayerClickInterface {
      * Creates a click handler that always returns the specified result with no additional logic.
      *
      * @param result the result to return
-     * @return a PlayerClickInterface that returns the specified result
+     * @return a ClickHandler that returns the specified result
      */
-    static PlayerClickInterface of(Result result) {
+    static ClickHandler of(Result result) {
         return new DefaultClickHandler(result);
     }
 
@@ -52,9 +52,9 @@ public interface PlayerClickInterface {
      *
      * @param result the result to return after executing the consumer
      * @param clickDataConsumer the consumer to execute with the click data
-     * @return a PlayerClickInterface that executes the consumer and returns the result
+     * @return a ClickHandler that executes the consumer and returns the result
      */
-    static PlayerClickInterface of(Result result, Consumer<ClickData> clickDataConsumer) {
+    static ClickHandler of(Result result, Consumer<ClickData> clickDataConsumer) {
         return new DefaultClickHandler(result, clickDataConsumer);
     }
 
@@ -67,17 +67,17 @@ public interface PlayerClickInterface {
      *
      * @param result the result to return after executing the consumer
      * @param clickDataConsumer the consumer to execute with the player
-     * @return a PlayerClickInterface that executes the consumer and returns the result
+     * @return a ClickHandler that executes the consumer and returns the result
      */
-    static PlayerClickInterface handlePlayerClick(Result result, Consumer<Player> clickDataConsumer) {
+    static ClickHandler handlePlayerClick(Result result, Consumer<Player> clickDataConsumer) {
         return new DefaultClickHandler(result, clickData -> clickDataConsumer.accept(clickData.player));
     }
 
     /**
-     * Default implementation of PlayerClickInterface that executes an optional consumer
+     * Default implementation of ClickHandler that executes an optional consumer
      * and returns a specified result.
      */
-    class DefaultClickHandler implements PlayerClickInterface {
+    class DefaultClickHandler implements ClickHandler {
         /**
          * Optional consumer to execute on click.
          */
