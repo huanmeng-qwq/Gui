@@ -20,7 +20,7 @@ import org.jspecify.annotations.Nullable;
  * @since 1.0
  */
 @FunctionalInterface
-public interface PlayerItemInterface {
+public interface ItemProvider {
     /**
      * Gets the ItemStack to display for the specified player.
      * <p>
@@ -42,16 +42,16 @@ public interface PlayerItemInterface {
      * </p>
      *
      * @param itemStack the ItemStack to always return
-     * @return a PlayerItemInterface that returns the specified ItemStack
+     * @return an ItemProvider that returns the specified ItemStack
      */
-    static PlayerItemInterface of(ItemStack itemStack) {
+    static ItemProvider of(ItemStack itemStack) {
         return new StaticItemProvider(itemStack);
     }
 
     /**
      * A simple implementation that always returns the same ItemStack.
      */
-    class StaticItemProvider implements PlayerItemInterface {
+    class StaticItemProvider implements ItemProvider {
         /**
          * The ItemStack to return.
          */

@@ -1,7 +1,7 @@
 package me.huanmeng.gui.button;
 
 import me.huanmeng.gui.button.function.PlayerClickInterface;
-import me.huanmeng.gui.button.function.PlayerItemInterface;
+import me.huanmeng.gui.button.function.ItemProvider;
 import me.huanmeng.gui.enums.Result;
 import java.util.Arrays;
 import java.util.Collection;
@@ -76,7 +76,7 @@ public interface Button {
      * @return a new display-only Button
      */
     @Contract(value = "!null -> new", pure = true)
-    static Button of(PlayerItemInterface item) {
+    static Button of(ItemProvider item) {
         return new BaseButton(item, null);
     }
 
@@ -92,7 +92,7 @@ public interface Button {
      */
     @Contract(value = "_ -> new", pure = true)
     static Button of(ItemStack item) {
-        return new BaseButton(PlayerItemInterface.of(item), null);
+        return new BaseButton(ItemProvider.of(item), null);
     }
 
     /**
@@ -104,7 +104,7 @@ public interface Button {
      */
     @Contract(value = "_,_ -> new", pure = true)
     static Button of(ItemStack item, PlayerClickInterface clickable) {
-        return new BaseButton(PlayerItemInterface.of(item), clickable);
+        return new BaseButton(ItemProvider.of(item), clickable);
     }
 
     /**
@@ -115,7 +115,7 @@ public interface Button {
      * @return a new clickable Button
      */
     @Contract(value = "_, _ -> new", pure = true)
-    static Button of(PlayerItemInterface item, PlayerClickInterface clickable) {
+    static Button of(ItemProvider item, PlayerClickInterface clickable) {
         return new BaseButton(item, clickable);
     }
 
@@ -131,7 +131,7 @@ public interface Button {
      * @return a new clickable Button
      */
     @Contract(value = "null, !null, !null -> new", pure = true)
-    static Button ofPlayerClick(PlayerItemInterface item, Result result, Consumer<Player> clickable) {
+    static Button ofPlayerClick(ItemProvider item, Result result, Consumer<Player> clickable) {
         return new BaseButton(item, PlayerClickInterface.handlePlayerClick(result, clickable));
     }
 
@@ -146,7 +146,7 @@ public interface Button {
      * @return a new clickable Button
      */
     @Contract(value = "null, !null, -> new", pure = true)
-    static Button ofPlayerClick(PlayerItemInterface item, Consumer<Player> clickable) {
+    static Button ofPlayerClick(ItemProvider item, Consumer<Player> clickable) {
         return ofPlayerClick(item, Result.CANCEL, clickable);
     }
 
@@ -160,7 +160,7 @@ public interface Button {
      */
     @Contract(value = "null, !null, !null -> new", pure = true)
     static Button ofPlayerClick(ItemStack item, Result result, Consumer<Player> clickable) {
-        return new BaseButton(PlayerItemInterface.of(item), PlayerClickInterface.handlePlayerClick(result, clickable));
+        return new BaseButton(ItemProvider.of(item), PlayerClickInterface.handlePlayerClick(result, clickable));
     }
 
     /**
@@ -182,7 +182,7 @@ public interface Button {
     /**
      * Creates a button from an implementation that provides both item display and click handling.
      * <p>
-     * This method is useful when you have a single class that implements both {@link PlayerItemInterface}
+     * This method is useful when you have a single class that implements both {@link ItemProvider}
      * and {@link PlayerClickInterface}.
      * </p>
      *
@@ -191,7 +191,7 @@ public interface Button {
      * @return a new Button
      */
     @Contract(value = "null -> new", pure = true)
-    static <@NonNull IMPL extends PlayerItemInterface & PlayerClickInterface> Button ofInstance(IMPL impl) {
+    static <@NonNull IMPL extends ItemProvider & PlayerClickInterface> Button ofInstance(IMPL impl) {
         return new BaseButton(impl, impl);
     }
 
@@ -206,7 +206,7 @@ public interface Button {
      * @return a list of Buttons
      */
     @NonNull
-    static <@NonNull IMPL extends PlayerItemInterface & PlayerClickInterface> List<Button> ofInstances(@NonNull Collection<@NonNull IMPL> impl) {
+    static <@NonNull IMPL extends ItemProvider & PlayerClickInterface> List<Button> ofInstances(@NonNull Collection<@NonNull IMPL> impl) {
         return impl.stream().map(Button::ofInstance).collect(Collectors.toList());
     }
 
@@ -221,7 +221,7 @@ public interface Button {
      * @return a list of Buttons
      */
     @SafeVarargs
-    static <@NonNull IMPL extends PlayerItemInterface & PlayerClickInterface> List<Button> ofInstancesArray(@NonNull IMPL... impl) {
+    static <@NonNull IMPL extends ItemProvider & PlayerClickInterface> List<Button> ofInstancesArray(@NonNull IMPL... impl) {
         return Arrays.stream(impl).map(Button::ofInstance).collect(Collectors.toList());
     }
 
@@ -249,11 +249,11 @@ public interface Button {
      * </p>
      *
      * @param itemStacks the collection of ItemStacks to convert
-     * @param map the function that maps each ItemStack to a PlayerItemInterface
+     * @param map the function that maps each ItemStack to an ItemProvider
      * @return a list of display-only Buttons
      */
     @NonNull
-    static List<@NonNull Button> ofItemStacks(@NonNull Collection<@Nullable ItemStack> itemStacks, @NonNull Function<@Nullable ItemStack, @NonNull PlayerItemInterface> map) {
+    static List<@NonNull Button> ofItemStacks(@NonNull Collection<@Nullable ItemStack> itemStacks, @NonNull Function<@Nullable ItemStack, @NonNull ItemProvider> map) {
         return itemStacks.stream().map(map).map(Button::of).collect(Collectors.toList());
     }
 
@@ -268,7 +268,7 @@ public interface Button {
      */
     @NonNull
     static List<@NonNull Button> ofItemStacks(@NonNull Collection<@Nullable ItemStack> itemStacks) {
-        return itemStacks.stream().map(e -> (PlayerItemInterface) player -> e).map(Button::of).collect(Collectors.toList());
+        return itemStacks.stream().map(e -> (ItemProvider) player -> e).map(Button::of).collect(Collectors.toList());
     }
 
     /**
@@ -284,7 +284,7 @@ public interface Button {
      * @return a list of clickable Buttons
      */
     @NonNull
-    static <@NonNull IMPL extends PlayerItemInterface & PlayerClickInterface>
+    static <@NonNull IMPL extends ItemProvider & PlayerClickInterface>
     List<@NonNull Button> ofItemStacksInstances(@NonNull Collection<@Nullable ItemStack> itemStacks, @NonNull Function<@Nullable ItemStack, @NonNull IMPL> map) {
         return itemStacks.stream().map(map).map(Button::ofInstance).collect(Collectors.toList());
     }

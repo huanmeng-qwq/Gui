@@ -1,7 +1,7 @@
 package me.huanmeng.gui.button;
 
 import me.huanmeng.gui.button.function.PlayerClickInterface;
-import me.huanmeng.gui.button.function.PlayerItemInterface;
+import me.huanmeng.gui.button.function.ItemProvider;
 import me.huanmeng.gui.enums.Result;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,11 +12,11 @@ import org.jspecify.annotations.Nullable;
  * The base implementation of the {@link Button} interface.
  * <p>
  * This class provides a simple button implementation that delegates item display to a
- * {@link PlayerItemInterface} and click handling to a {@link PlayerClickInterface}.
+ * {@link ItemProvider} and click handling to a {@link PlayerClickInterface}.
  * It serves as the foundation for most button types in the GUI system.
  *
  * <p>
- * Both the item interface and click interface are optional (nullable). If the item interface
+ * Both the item provider and click interface are optional (nullable). If the item provider
  * is null, the button displays no item. If the click interface is null, clicks are cancelled
  * with no additional behavior.
  *
@@ -26,10 +26,10 @@ import org.jspecify.annotations.Nullable;
  */
 public class BaseButton implements Button {
     /**
-     * The interface providing the ItemStack to display, or null if no item should be displayed.
+     * The provider supplying the ItemStack to display, or null if no item should be displayed.
      */
     @Nullable
-    private final PlayerItemInterface userItemInterface;
+    private final ItemProvider itemProvider;
 
     /**
      * The interface handling click events, or null if no special click handling is needed.
@@ -38,29 +38,29 @@ public class BaseButton implements Button {
     private final PlayerClickInterface playerClickInterface;
 
     /**
-     * Constructs a new BaseButton with the specified item and click interfaces.
+     * Constructs a new BaseButton with the specified item provider and click interface.
      *
-     * @param userItemInterface the interface providing the item to display, or null
+     * @param itemProvider the provider supplying the item to display, or null
      * @param playerClickInterface the interface handling clicks, or null
      */
-    public BaseButton(@Nullable PlayerItemInterface userItemInterface, @Nullable PlayerClickInterface playerClickInterface) {
-        this.userItemInterface = userItemInterface;
+    public BaseButton(@Nullable ItemProvider itemProvider, @Nullable PlayerClickInterface playerClickInterface) {
+        this.itemProvider = itemProvider;
         this.playerClickInterface = playerClickInterface;
     }
 
     /**
      * {@inheritDoc}
      * <p>
-     * Returns the ItemStack from the item interface, or null if no interface is set.
+     * Returns the ItemStack from the item provider, or null if no provider is set.
      * </p>
      */
     @Override
     @Nullable
     public ItemStack getShowItem(@NonNull Player player) {
-        if (userItemInterface == null) {
+        if (itemProvider == null) {
             return null;
         }
-        return userItemInterface.get(player);
+        return itemProvider.get(player);
     }
 
     /**
