@@ -48,15 +48,15 @@ public class AdventureUtil {
     /** The Adventure Component class, loaded via reflection */
     public static Class<?> componentClass;
     /** The ComponentSerializer interface class */
-    private static Class<?> componentSerializerClass;
+    public static Class<?> componentSerializerClass;
     /** The GsonComponentSerializer class */
-    private static Class<?> gsonComponentSerializerClass;
+    public static Class<?> gsonComponentSerializerClass;
     /** Singleton instance of GsonComponentSerializer */
-    private static Object gsonComponentSerializerInstance;
+    public static Object gsonComponentSerializerInstance;
     /** MethodHandle for serializing components to JSON */
-    private static MethodHandle componentSerialize;
+    public static MethodHandle componentSerialize;
     /** MethodHandle for deserializing JSON to components */
-    private static MethodHandle componentDeserialize;
+    public static MethodHandle componentDeserialize;
 
     static {
         try {

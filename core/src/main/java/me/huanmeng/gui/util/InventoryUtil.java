@@ -10,8 +10,8 @@ import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 
 public class InventoryUtil {
-    private static MethodHandle componentCreateChest;
-    private static MethodHandle componentCreateType;
+    public static MethodHandle componentCreateChest;
+    public static MethodHandle componentCreateType;
 
     static {
         try {
@@ -36,7 +36,7 @@ public class InventoryUtil {
         }
     }
 
-    private static @NotNull Inventory createSpigotInventory(@NotNull InventoryHolder holder, InventoryType type, int size, Component titleComponent) {
+    public static @NotNull Inventory createSpigotInventory(@NotNull InventoryHolder holder, InventoryType type, int size, Component titleComponent) {
         final String title = AdventureUtil.toLegacyString(titleComponent);
         if (type == InventoryType.CHEST) {
             return Bukkit.createInventory(holder, size, title);
