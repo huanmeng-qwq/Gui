@@ -19,12 +19,12 @@ import org.jspecify.annotations.Nullable;
  * Example usage:
  * <pre>{@code
  * // Use default arrow buttons for previous/next
- * PageSetting setting = PageSettings.normal(gui);
+ * PageSetting setting = PageSettingFactory.normal(gui);
  *
  * // Use custom buttons
  * Button customPrev = Button.of(...);
  * Button customNext = Button.of(...);
- * PageSetting setting = PageSettings.normal(gui, customPrev, customNext);
+ * PageSetting setting = PageSettingFactory.normal(gui, customPrev, customNext);
  * }</pre>
  *
  *
@@ -34,7 +34,7 @@ import org.jspecify.annotations.Nullable;
  * @see PageButton
  */
 @SuppressWarnings("unused")
-public interface PageSettings {
+public interface PageSettingFactory {
     /**
      * Creates a standard page setting with default previous and next buttons.
      * The buttons display as arrows with default names "Previous Page" and "Next Page".

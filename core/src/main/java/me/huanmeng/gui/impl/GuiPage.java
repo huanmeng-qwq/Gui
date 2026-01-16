@@ -33,7 +33,7 @@ import java.util.List;
  *     "XXXXXXXXX"   // X = control/navigation area
  * );
  * GuiPage gui = new GuiPage(player, items, elementSlots);
- * gui.pageSetting(PageSettings.normal(gui));
+ * gui.pageSetting(PageSettingFactory.normal(gui));
  * gui.openGui();
  * }</pre>
  *
@@ -142,7 +142,7 @@ public class GuiPage extends AbstractGuiPage<GuiPage> {
      * <p>
      * The PageSetting defines the navigation buttons (previous, next, first, last)
      * and their positions in the GUI. You can use predefined settings like
-     * {@code PageSettings.normal(gui)} or create custom configurations.
+     * {@code PageSettingFactory.normal(gui)} or create custom configurations.
      * </p>
      *
      * @param pageSetting the page navigation configuration

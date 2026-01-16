@@ -26,7 +26,7 @@ import org.jspecify.annotations.NonNull;
  *     .slots(Slots.ofPattern("OOOOOOOOO", "OOOOOOOOO"))
  *     .items(itemList)
  *     .elementsPerPage(18)
- *     .pageSetting(PageSettings.normal(gui));
+ *     .pageSetting(PageSettingFactory.normal(gui));
  * gui.pageArea(itemArea);
  *
  * // Create second page area for something else

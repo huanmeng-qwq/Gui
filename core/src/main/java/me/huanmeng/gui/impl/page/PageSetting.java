@@ -20,13 +20,13 @@ import java.util.function.Supplier;
  *
  * <p>
  * Use the {@link Builder} to construct a PageSetting with desired navigation buttons, or
- * use the convenient factory methods in {@link PageSettings} for common configurations.
+ * use the convenient factory methods in {@link PageSettingFactory} for common configurations.
  *
  *
  * @author huanmeng_qwq
  * @since 1.3.3
  * @see PageButton
- * @see PageSettings
+ * @see PageSettingFactory
  */
 @SuppressWarnings("unused")
 public class PageSetting {
