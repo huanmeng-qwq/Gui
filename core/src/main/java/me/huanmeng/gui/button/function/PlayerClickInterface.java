@@ -4,7 +4,7 @@ import me.huanmeng.gui.button.ClickData;
 import me.huanmeng.gui.enums.Result;
 import java.util.function.Consumer;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Functional interface for handling button click events.

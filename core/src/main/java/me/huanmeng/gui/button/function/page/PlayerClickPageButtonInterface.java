@@ -5,7 +5,7 @@ import me.huanmeng.gui.enums.Result;
 import me.huanmeng.gui.impl.AbstractGuiPage;
 import me.huanmeng.gui.impl.page.PageArea;
 import me.huanmeng.gui.impl.page.PageButtonType;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 2023/6/4<br>

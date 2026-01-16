@@ -2,7 +2,7 @@ package me.huanmeng.gui.impl.page;
 
 import me.huanmeng.gui.impl.AbstractGuiPage;
 import me.huanmeng.gui.slot.Slot;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Functional interface that determines the slot position for a page button based on the GUI configuration.

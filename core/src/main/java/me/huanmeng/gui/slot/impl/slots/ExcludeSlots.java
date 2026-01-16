@@ -3,8 +3,8 @@ package me.huanmeng.gui.slot.impl.slots;
 import me.huanmeng.gui.AbstractGui;
 import me.huanmeng.gui.slot.Slot;
 import me.huanmeng.gui.slot.Slots;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;

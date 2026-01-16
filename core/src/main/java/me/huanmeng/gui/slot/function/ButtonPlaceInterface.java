@@ -3,7 +3,7 @@ package me.huanmeng.gui.slot.function;
 import me.huanmeng.gui.button.Button;
 import me.huanmeng.gui.slot.Slot;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 2023/3/17<br>
