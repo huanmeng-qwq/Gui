@@ -397,7 +397,7 @@ public class GuiManager implements ListenerAdapter {
         }
         AbstractGui<?> gui = getUserOpenGui(uuid);
         if (gui != null) {
-            gui.onDarg(e);
+            gui.onDrag(e);
         }
     }
 

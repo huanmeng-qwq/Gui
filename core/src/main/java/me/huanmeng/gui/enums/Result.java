@@ -23,7 +23,7 @@ import org.jspecify.annotations.NonNull;
  *   <li>{@link #CANCEL_CLOSE} - Cancels and closes the GUI</li>
  *   <li>{@link #CLEAR} - Cancels and clears the item stack (temporary until refresh)</li>
  *   <li>{@link #DECREMENT} - Cancels and decreases item amount (temporary until refresh)</li>
- *   <li>{@link #INCREMENTAL} - Cancels and increases item amount (temporary until refresh)</li>
+ *   <li>{@link #INCREMENT} - Cancels and increases item amount (temporary until refresh)</li>
  * </ul>
  *
  * <p><b>Usage Example:</b>
@@ -108,7 +108,15 @@ public class Result {
      * <p>The item amount will be incremented temporarily. Calling {@link AbstractGui#refresh(boolean)}
      * will reset the amount to its original value.
      */
-    public static final Result INCREMENTAL = new Result(CANCEL);
+    public static final Result INCREMENT = new Result(CANCEL);
+
+    /**
+     * Increases the item amount by one.
+     *
+     * @deprecated Use {@link #INCREMENT} instead. This field will be removed in a future version.
+     */
+    @Deprecated
+    public static final Result INCREMENTAL = INCREMENT;
 
     /**
      * Whether the inventory event should be cancelled.

@@ -991,11 +991,8 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             Component message = errorMessage.apply(e.getWhoClicked());
             if (message != null) {
                 GuiManager.sendMessage(e.getWhoClicked(), message);
-            } else {
-                // 如果apply得到的是null?
-                e.getWhoClicked().sendMessage("A inventory error occurred, please contact the administrator.");
             }
-            // 出现错误, 直接关闭, 不做后续的返回parent之类的处理
+            // Error occurred - close immediately without navigating to parent GUI
             e.getWhoClicked().closeInventory();
             e.setCancelled(true);
         }
@@ -1018,7 +1015,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             } else {
                 e.setCurrentItem(null);
             }
-        } else if (result.equals(Result.INCREMENTAL)) {
+        } else if (result.equals(Result.INCREMENT)) {
             itemStack.setAmount(itemStack.getAmount() + 1);
             e.setCurrentItem(itemStack);
         } else if (result.equals(Result.CANCEL_UPDATE)) {
@@ -1035,18 +1032,27 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         }
     }
 
-    public void onDarg(@NonNull InventoryDragEvent e) {
-        // 包装成InventoryClickEvent执行
+    /**
+     * Handles inventory drag events for this GUI.
+     * <p>
+     * Drag events are converted to individual click events for each affected slot,
+     * allowing the standard click handling logic to process them.
+     * </p>
+     *
+     * @param e The inventory drag event
+     */
+    public void onDrag(@NonNull InventoryDragEvent e) {
+        // Convert drag event to individual click events for each affected slot
         for (Map.Entry<Integer, ItemStack> entry : e.getNewItems().entrySet()) {
-            // fake event
+            // Create a fake click event for this slot
             InventoryClickEvent inventoryClickEvent = new InventoryClickEvent(e.getView(), InventoryType.SlotType.CONTAINER, entry.getKey(), ClickType.LEFT, InventoryAction.UNKNOWN);
             ItemStack oldCursor = e.getOldCursor();
             inventoryClickEvent.setCursor(oldCursor);
-            boolean hasCursor = ItemUtil.isAir(oldCursor);
+            boolean hadCursor = !ItemUtil.isAir(oldCursor);
             onClick(inventoryClickEvent);
             if (inventoryClickEvent.isCancelled()) {
                 e.setCancelled(true);
-            } else if (hasCursor) {
+            } else if (hadCursor) {
                 e.setCursor(null);
             }
         }
