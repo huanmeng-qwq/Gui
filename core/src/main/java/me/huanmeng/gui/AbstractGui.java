@@ -751,7 +751,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         for (SlottedButton slottedButton : fillItems) {
             if (check(slottedButton)) {
                 Button button = slottedButton.getButton();
-                setItem(inventory, slottedButton, button.getShowItem(player));
+                setItem(inventory, slottedButton, button.getDisplayItem(player));
             }
         }
 
@@ -760,7 +760,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         for (SlottedButton slottedButton : attachedItems) {
             if (check(slottedButton)) {
                 Button button = slottedButton.getButton();
-                setItem(inventory, slottedButton, button.getShowItem(player));
+                setItem(inventory, slottedButton, button.getDisplayItem(player));
             }
         }
 
@@ -768,7 +768,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             if (check(slottedButton)) {
                 Button button = slottedButton.getButton();
                 if (button != null) {
-                    setItem(inventory, slottedButton, button.getShowItem(player));
+                    setItem(inventory, slottedButton, button.getDisplayItem(player));
                 } else {
                     setItem(inventory, slottedButton, null);
                 }
@@ -812,7 +812,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
             if (button == null) {
                 continue;
             }
-            setItem(cacheInventory, button, button.getButton().getShowItem(player));
+            setItem(cacheInventory, button, button.getButton().getDisplayItem(player));
         }
         return self();
     }

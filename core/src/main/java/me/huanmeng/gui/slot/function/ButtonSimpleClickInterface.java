@@ -7,8 +7,10 @@ import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
 /**
- * 2023/3/17<br>
- * Gui<br>
+ * A simplified click interface that provides only the button and player.
+ * <p>
+ * This interface extends {@link ButtonClickInterface} and provides a default
+ * implementation that extracts the button and player from the click data.
  *
  * @author huanmeng_qwq
  * @since 1.0
@@ -16,7 +18,7 @@ import org.jspecify.annotations.NonNull;
 @FunctionalInterface
 public interface ButtonSimpleClickInterface extends ButtonClickInterface {
     @Override
-    default Result onClick(@NonNull ClickData clickData) {
+    default Result handleClick(@NonNull ClickData clickData) {
         if (clickData.button == null) {
             throw new IllegalArgumentException("button is null");
         }
@@ -24,11 +26,11 @@ public interface ButtonSimpleClickInterface extends ButtonClickInterface {
     }
 
     /**
-     * 点击事件
+     * Handles a click event with simplified parameters.
      *
-     * @param button 按钮
-     * @param player 玩家
-     * @return {@link Result}
+     * @param button the button that was clicked
+     * @param player the player who clicked
+     * @return the result indicating how to handle the event
      */
     @NonNull
     Result onPlayerClick(@NonNull Button button, @NonNull Player player);

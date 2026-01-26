@@ -40,14 +40,14 @@ public class SlotForward implements Slot {
     }
 
     @Override
-    public @NonNull Result onClick(@NonNull ClickData clickData) {
+    public @NonNull Result handleClick(@NonNull ClickData clickData) {
         return Result.forward(forwardSlot);
     }
 
     @Override
-    public boolean tryPlace(@NonNull Button button, @NonNull Player player) {
+    public boolean canPlace(@NonNull Button button, @NonNull Player player) {
         if (this.buttonPlaceInterface == null) return false;
-        return this.buttonPlaceInterface.tryPlace(this, button, player);
+        return this.buttonPlaceInterface.canPlace(this, button, player);
     }
 
     @Override

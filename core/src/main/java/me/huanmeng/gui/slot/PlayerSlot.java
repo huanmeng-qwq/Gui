@@ -64,8 +64,8 @@ public class PlayerSlot implements Slot {
      * @return the result indicating whether to cancel the event
      */
     @Override
-    public @NonNull Result onClick(@NonNull ClickData clickData) {
-        return this.slot.onClick(new ClickData(clickData.player, clickData.gui, slot, this, clickData.button, clickData.event, clickData.click, clickData.action, clickData.slotType, clickData.slotKey, clickData.hotBarKey));
+    public @NonNull Result handleClick(@NonNull ClickData clickData) {
+        return this.slot.handleClick(new ClickData(clickData.player, clickData.gui, slot, this, clickData.button, clickData.event, clickData.click, clickData.action, clickData.slotType, clickData.slotKey, clickData.hotBarKey));
     }
 
     /**
@@ -76,8 +76,8 @@ public class PlayerSlot implements Slot {
      * @return true if the button can be placed, false otherwise
      */
     @Override
-    public boolean tryPlace(@NonNull Button button, @NonNull Player player) {
-        return slot.tryPlace(button, player);
+    public boolean canPlace(@NonNull Button button, @NonNull Player player) {
+        return slot.canPlace(button, player);
     }
 
     /**

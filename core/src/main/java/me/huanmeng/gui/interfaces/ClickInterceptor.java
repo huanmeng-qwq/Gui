@@ -44,7 +44,7 @@ public interface ClickInterceptor {
      * Called before a button click is processed to determine if the click should be allowed.
      * <p>
      * This method is invoked during the click event preprocessing phase, before the button's
-     * {@link me.huanmeng.gui.button.Button#onClick} method is called. Returning {@code false}
+     * {@link me.huanmeng.gui.button.Button#handleClick} method is called. Returning {@code false}
      * will cancel the click event and prevent further processing.
      * </p>
      *

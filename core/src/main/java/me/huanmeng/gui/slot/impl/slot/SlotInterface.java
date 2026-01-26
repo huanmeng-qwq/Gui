@@ -39,7 +39,7 @@ public class SlotInterface extends SlotImpl {
         this.clickInterface = (clickData) -> {
             Button button = clickData.button;
             if (button != null) {
-                return button.onClick(clickData);
+                return button.handleClick(clickData);
             }
             return Result.CANCEL;
         };
@@ -47,12 +47,12 @@ public class SlotInterface extends SlotImpl {
     }
 
     @Override
-    public @NonNull Result onClick(@NonNull ClickData clickData) {
-        return clickInterface.onClick(clickData);
+    public @NonNull Result handleClick(@NonNull ClickData clickData) {
+        return clickInterface.handleClick(clickData);
     }
 
     @Override
-    public boolean tryPlace(@NonNull Button button, @NonNull Player player) {
-        return buttonPlaceInterface.tryPlace(this, button, player);
+    public boolean canPlace(@NonNull Button button, @NonNull Player player) {
+        return buttonPlaceInterface.canPlace(this, button, player);
     }
 }

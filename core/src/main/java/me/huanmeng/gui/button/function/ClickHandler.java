@@ -38,18 +38,6 @@ public interface ClickHandler {
     Result handleClick(@NonNull ClickData clickData);
 
     /**
-     * Handles a button click event.
-     *
-     * @param clickData comprehensive data about the click event
-     * @return the result indicating how to handle the event
-     * @deprecated Use {@link #handleClick(ClickData)} instead
-     */
-    @Deprecated
-    default Result onClick(@NonNull ClickData clickData) {
-        return handleClick(clickData);
-    }
-
-    /**
      * Creates a click handler that always returns the specified result with no additional logic.
      *
      * @param result the result to return

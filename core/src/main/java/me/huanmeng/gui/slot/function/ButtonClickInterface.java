@@ -5,13 +5,18 @@ import me.huanmeng.gui.enums.Result;
 import org.jspecify.annotations.NonNull;
 
 /**
- * 2023/3/17<br>
- * Gui<br>
+ * Functional interface for handling button click events on slots.
  *
  * @author huanmeng_qwq
  * @since 1.0
  */
 @FunctionalInterface
 public interface ButtonClickInterface {
-    Result onClick(@NonNull ClickData clickData);
+    /**
+     * Handles a click event on a slot.
+     *
+     * @param clickData the click event data
+     * @return the result indicating how to handle the event
+     */
+    Result handleClick(@NonNull ClickData clickData);
 }

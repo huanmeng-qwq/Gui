@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Contract;
  * both display-only items and interactive elements in custom inventory GUIs.
  *
  * <p>
- * This is a functional interface whose functional method is {@link #getShowItem(Player)}.
+ * This is a functional interface whose functional method is {@link #getDisplayItem(Player)}.
  *
  *
  * @author huanmeng_qwq
@@ -45,19 +45,6 @@ public interface Button {
     ItemStack getDisplayItem(@NonNull Player player);
 
     /**
-     * Gets the ItemStack to display for this button in the inventory.
-     *
-     * @param player the player viewing the button
-     * @return the ItemStack to display, or null to show no item
-     * @deprecated Use {@link #getDisplayItem(Player)} instead
-     */
-    @Deprecated
-    @Nullable
-    default ItemStack getShowItem(@NonNull Player player) {
-        return getDisplayItem(player);
-    }
-
-    /**
      * An empty button constant that displays no item.
      */
     Button EMPTY = (p) -> null;
@@ -76,20 +63,6 @@ public interface Button {
     default Result handleClick(@NonNull ClickData clickData) {
         return Result.CANCEL;
     }
-
-    /**
-     * Handles click events on this button.
-     *
-     * @param clickData the click event data containing player, GUI, slot, and event information
-     * @return the result indicating whether to cancel the event and whether to update the GUI
-     * @deprecated Use {@link #handleClick(ClickData)} instead
-     */
-    @Deprecated
-    @NonNull
-    default Result onClick(@NonNull ClickData clickData) {
-        return handleClick(clickData);
-    }
-
 
     /**
      * Creates a display-only button with a dynamic item provider.

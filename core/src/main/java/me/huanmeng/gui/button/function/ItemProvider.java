@@ -35,19 +35,6 @@ public interface ItemProvider {
     ItemStack provideItem(@NonNull Player player);
 
     /**
-     * Gets the ItemStack to display for the specified player.
-     *
-     * @param player the player viewing the button
-     * @return the ItemStack to display, or null to show no item
-     * @deprecated Use {@link #provideItem(Player)} instead
-     */
-    @Deprecated
-    @Nullable
-    default ItemStack get(@NonNull Player player) {
-        return provideItem(player);
-    }
-
-    /**
      * Creates a static item provider that always returns the same ItemStack.
      * <p>
      * This is a convenience method for creating simple buttons that show the same

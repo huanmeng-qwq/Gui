@@ -6,8 +6,7 @@ import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
 /**
- * 2023/3/17<br>
- * Gui<br>
+ * Functional interface for determining whether a button can be placed on a slot.
  *
  * @author huanmeng_qwq
  * @since 1.0
@@ -15,14 +14,14 @@ import org.jspecify.annotations.NonNull;
 @FunctionalInterface
 public interface ButtonPlaceInterface {
     /**
-     * 尝试放置
+     * Determines whether a button can be placed on the specified slot.
      *
-     * @param slot   位置
-     * @param button 按钮
-     * @param player 玩家
-     * @return 是否成功
+     * @param slot   the slot where the button would be placed
+     * @param button the button to place
+     * @param player the player for whom the button is being placed
+     * @return true if the button can be placed, false otherwise
      */
-    boolean tryPlace(@NonNull Slot slot, @NonNull Button button, @NonNull Player player);
+    boolean canPlace(@NonNull Slot slot, @NonNull Button button, @NonNull Player player);
 
     ButtonPlaceInterface ALWAYS_TRUE = (slot, button, player) -> true;
     ButtonPlaceInterface ALWAYS_FALSE = (slot, button, player) -> false;
