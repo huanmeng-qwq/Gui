@@ -262,18 +262,18 @@ public class PageButton implements Button {
     }
 
     @Override
-    public @Nullable ItemStack getShowItem(@NonNull Player player) {
+    public @Nullable ItemStack getDisplayItem(@NonNull Player player) {
         if (origin == null) return null;
         if (condition != null) {
             if (!condition.isAllow(pageArea.currentPage(), pageArea.getMaxPage(), pageArea, this, player)) {
                 return null;
             }
         }
-        return origin.getShowItem(player);
+        return origin.getDisplayItem(player);
     }
 
     @Override
-    public @NonNull Result onClick(@NonNull ClickData clickData) {
+    public @NonNull Result handleClick(@NonNull ClickData clickData) {
         InventoryClickEvent e = clickData.event;
         if (ItemUtil.isAir(e.getCurrentItem())) {
             return Result.CANCEL;
@@ -281,7 +281,7 @@ public class PageButton implements Button {
         if (origin == null) {
             return Result.CANCEL;
         }
-        Result result = origin.onClick(clickData);
+        Result result = origin.handleClick(clickData);
         if (playerClickPageButtonInterface == null || types.isEmpty()) {
             return result;
         }

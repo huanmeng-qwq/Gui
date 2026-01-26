@@ -58,7 +58,7 @@ public interface Slot {
     /**
      * Handles click events on this slot.
      * <p>
-     * By default, delegates to the button's onClick handler. Implementations can
+     * By default, delegates to the button's handleClick handler. Implementations can
      * override this to provide custom click behavior.
      *
      * @param clickData the click event data containing player, button, and event information
@@ -66,8 +66,21 @@ public interface Slot {
      * @see Result
      */
     @NonNull
+    default Result handleClick(@NonNull ClickData clickData) {
+        return clickData.button.handleClick(clickData);
+    }
+
+    /**
+     * Handles click events on this slot.
+     *
+     * @param clickData the click event data containing player, button, and event information
+     * @return the result indicating whether to cancel the event
+     * @deprecated Use {@link #handleClick(ClickData)} instead
+     */
+    @Deprecated
+    @NonNull
     default Result onClick(@NonNull ClickData clickData) {
-        return clickData.button.onClick(clickData);
+        return handleClick(clickData);
     }
 
     /**
@@ -80,8 +93,21 @@ public interface Slot {
      * @param player the player for whom the button is being placed
      * @return true if the button can be placed, false otherwise
      */
-    default boolean tryPlace(@NonNull Button button, @NonNull Player player) {
+    default boolean canPlace(@NonNull Button button, @NonNull Player player) {
         return true;
+    }
+
+    /**
+     * Determines whether a {@link Button} can be placed on this slot.
+     *
+     * @param button the button attempting to be placed
+     * @param player the player for whom the button is being placed
+     * @return true if the button can be placed, false otherwise
+     * @deprecated Use {@link #canPlace(Button, Player)} instead
+     */
+    @Deprecated
+    default boolean tryPlace(@NonNull Button button, @NonNull Player player) {
+        return canPlace(button, player);
     }
 
     /**
@@ -284,10 +310,24 @@ public interface Slot {
      * @return the displayed ItemStack, or null if no button is at this slot
      */
     @Nullable
-    default ItemStack getShowingItem(@NonNull AbstractGui<?> gui, @NonNull Player player) {
+    default ItemStack getDisplayItem(@NonNull AbstractGui<?> gui, @NonNull Player player) {
         SlottedButton button = gui.getButton(this);
         if (button == null) return null;
-        return button.getButton().getShowItem(player);
+        return button.getButton().getDisplayItem(player);
+    }
+
+    /**
+     * Gets the ItemStack currently displayed in this slot for a specific player.
+     *
+     * @param gui the GUI containing this slot
+     * @param player the player viewing the GUI
+     * @return the displayed ItemStack, or null if no button is at this slot
+     * @deprecated Use {@link #getDisplayItem(AbstractGui, Player)} instead
+     */
+    @Deprecated
+    @Nullable
+    default ItemStack getShowingItem(@NonNull AbstractGui<?> gui, @NonNull Player player) {
+        return getDisplayItem(gui, player);
     }
 
     /**

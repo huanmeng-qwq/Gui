@@ -430,10 +430,10 @@ fun spacerButton(displayName: String = " ", block: ButtonDsl.() -> Unit): Button
 fun Button.withClick(result: Result? = null, block: (Player) -> Unit): Button {
     val originalButton = this
     return buildButton {
-        item { player -> originalButton.getShowItem(player) }
+        item { player -> originalButton.getDisplayItem(player) }
         click = ClickHandler { clickData ->
             block(clickData.player)
-            result ?: originalButton.onClick(clickData)
+            result ?: originalButton.handleClick(clickData)
         }
     }
 }
@@ -479,7 +479,7 @@ fun Button.andThen(block: (Player) -> Unit): Button {
  */
 fun Button.withClickData(result: Result = Result.CANCEL_UPDATE, block: (ClickData) -> Unit): Button {
     return buildButton {
-        item { player -> this@withClickData.getShowItem(player) }
+        item { player -> this@withClickData.getDisplayItem(player) }
         click = ClickHandler { clickData ->
             block(clickData)
             result
@@ -501,7 +501,7 @@ fun Button.withClickData(result: Result = Result.CANCEL_UPDATE, block: (ClickDat
  */
 fun Button.withoutClick(): Button {
     return buildButton {
-        item { player -> this@withoutClick.getShowItem(player) }
+        item { player -> this@withoutClick.getDisplayItem(player) }
         cancelClick { /* Do nothing */ }
     }
 }

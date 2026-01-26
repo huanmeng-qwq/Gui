@@ -22,7 +22,7 @@ import org.jspecify.annotations.Nullable;
 @FunctionalInterface
 public interface ItemProvider {
     /**
-     * Gets the ItemStack to display for the specified player.
+     * Provides the ItemStack to display for the specified player.
      * <p>
      * This method is called when the GUI needs to render the button. Implementations
      * can return different items based on player permissions, state, or preferences.
@@ -32,7 +32,20 @@ public interface ItemProvider {
      * @return the ItemStack to display, or null to show no item
      */
     @Nullable
-    ItemStack get(@NonNull Player player);
+    ItemStack provideItem(@NonNull Player player);
+
+    /**
+     * Gets the ItemStack to display for the specified player.
+     *
+     * @param player the player viewing the button
+     * @return the ItemStack to display, or null to show no item
+     * @deprecated Use {@link #provideItem(Player)} instead
+     */
+    @Deprecated
+    @Nullable
+    default ItemStack get(@NonNull Player player) {
+        return provideItem(player);
+    }
 
     /**
      * Creates a static item provider that always returns the same ItemStack.
@@ -74,7 +87,7 @@ public interface ItemProvider {
          * </p>
          */
         @Override
-        public @Nullable ItemStack get(@NonNull Player player) {
+        public @Nullable ItemStack provideItem(@NonNull Player player) {
             return this.itemStack;
         }
     }

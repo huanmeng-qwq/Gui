@@ -70,8 +70,21 @@ public final class SlottedButton {
      * @return the result indicating how to handle the event
      */
     @NonNull
+    public Result handleClick(@NonNull ClickData clickData) {
+        return slot.handleClick(clickData);
+    }
+
+    /**
+     * Handles click events on this button.
+     *
+     * @param clickData the click event data
+     * @return the result indicating how to handle the event
+     * @deprecated Use {@link #handleClick(ClickData)} instead
+     */
+    @Deprecated
+    @NonNull
     public Result onClick(@NonNull ClickData clickData) {
-        return slot.onClick(clickData);
+        return handleClick(clickData);
     }
 
     /**
@@ -93,7 +106,7 @@ public final class SlottedButton {
      * @return true if the button can be placed, false otherwise
      */
     public boolean canPlace(Player player) {
-        return slot.tryPlace(getButton(), player);
+        return slot.canPlace(getButton(), player);
     }
 
     /**

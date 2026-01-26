@@ -35,7 +35,19 @@ public interface ClickHandler {
      * @param clickData comprehensive data about the click event
      * @return the result indicating how to handle the event
      */
-    Result onClick(@NonNull ClickData clickData);
+    Result handleClick(@NonNull ClickData clickData);
+
+    /**
+     * Handles a button click event.
+     *
+     * @param clickData comprehensive data about the click event
+     * @return the result indicating how to handle the event
+     * @deprecated Use {@link #handleClick(ClickData)} instead
+     */
+    @Deprecated
+    default Result onClick(@NonNull ClickData clickData) {
+        return handleClick(clickData);
+    }
 
     /**
      * Creates a click handler that always returns the specified result with no additional logic.
@@ -115,7 +127,7 @@ public interface ClickHandler {
          * </p>
          */
         @Override
-        public Result onClick(@NonNull ClickData clickData) {
+        public Result handleClick(@NonNull ClickData clickData) {
             if (clickConsumer != null) {
                 clickConsumer.accept(clickData);
             }

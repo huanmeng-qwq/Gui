@@ -42,7 +42,20 @@ public interface Button {
      * @return the ItemStack to display, or null to show no item
      */
     @Nullable
-    ItemStack getShowItem(@NonNull Player player);
+    ItemStack getDisplayItem(@NonNull Player player);
+
+    /**
+     * Gets the ItemStack to display for this button in the inventory.
+     *
+     * @param player the player viewing the button
+     * @return the ItemStack to display, or null to show no item
+     * @deprecated Use {@link #getDisplayItem(Player)} instead
+     */
+    @Deprecated
+    @Nullable
+    default ItemStack getShowItem(@NonNull Player player) {
+        return getDisplayItem(player);
+    }
 
     /**
      * An empty button constant that displays no item.
@@ -60,8 +73,21 @@ public interface Button {
      * @return the result indicating whether to cancel the event and whether to update the GUI
      */
     @NonNull
-    default Result onClick(@NonNull ClickData clickData) {
+    default Result handleClick(@NonNull ClickData clickData) {
         return Result.CANCEL;
+    }
+
+    /**
+     * Handles click events on this button.
+     *
+     * @param clickData the click event data containing player, GUI, slot, and event information
+     * @return the result indicating whether to cancel the event and whether to update the GUI
+     * @deprecated Use {@link #handleClick(ClickData)} instead
+     */
+    @Deprecated
+    @NonNull
+    default Result onClick(@NonNull ClickData clickData) {
+        return handleClick(clickData);
     }
 
 

@@ -56,11 +56,11 @@ public class BaseButton implements Button {
      */
     @Override
     @Nullable
-    public ItemStack getShowItem(@NonNull Player player) {
+    public ItemStack getDisplayItem(@NonNull Player player) {
         if (itemProvider == null) {
             return null;
         }
-        return itemProvider.get(player);
+        return itemProvider.provideItem(player);
     }
 
     /**
@@ -70,10 +70,10 @@ public class BaseButton implements Button {
      * </p>
      */
     @Override
-    public @NonNull Result onClick(@NonNull ClickData clickData) {
+    public @NonNull Result handleClick(@NonNull ClickData clickData) {
         if (clickHandler == null) {
             return Result.CANCEL;
         }
-        return clickHandler.onClick(clickData);
+        return clickHandler.handleClick(clickData);
     }
 }
