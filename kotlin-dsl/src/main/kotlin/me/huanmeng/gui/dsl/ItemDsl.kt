@@ -2,7 +2,7 @@ package me.huanmeng.gui.dsl
 
 import me.huanmeng.gui.button.Button
 import me.huanmeng.gui.button.ClickData
-import me.huanmeng.gui.button.function.PlayerClickInterface
+import me.huanmeng.gui.button.function.ClickHandler
 import me.huanmeng.gui.enums.Result
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -30,9 +30,9 @@ import org.bukkit.inventory.ItemStack
 fun ItemStack.onClick(result: Result = Result.CANCEL, block: (ClickData.() -> Unit)): Button {
     return buildButton {
         item = this@onClick
-        click = PlayerClickInterface {
-            block.invoke(it)
-            return@PlayerClickInterface result
+        click = ClickHandler { clickData ->
+            block.invoke(clickData)
+            return@ClickHandler result
         }
     }
 }
@@ -62,7 +62,7 @@ fun ItemStack.onClick(result: Result = Result.CANCEL, block: (ClickData.() -> Un
 fun ItemStack.onPlayerClick(result: Result = Result.CANCEL_UPDATE, block: (Player) -> Unit): Button {
     return buildButton {
         item = this@onPlayerClick
-        click = PlayerClickInterface { clickData ->
+        click = ClickHandler { clickData ->
             block(clickData.player)
             result
         }
@@ -431,7 +431,7 @@ fun Button.withClick(result: Result? = null, block: (Player) -> Unit): Button {
     val originalButton = this
     return buildButton {
         item { player -> originalButton.getShowItem(player) }
-        click = PlayerClickInterface { clickData ->
+        click = ClickHandler { clickData ->
             block(clickData.player)
             result ?: originalButton.onClick(clickData)
         }
@@ -480,7 +480,7 @@ fun Button.andThen(block: (Player) -> Unit): Button {
 fun Button.withClickData(result: Result = Result.CANCEL_UPDATE, block: (ClickData) -> Unit): Button {
     return buildButton {
         item { player -> this@withClickData.getShowItem(player) }
-        click = PlayerClickInterface { clickData ->
+        click = ClickHandler { clickData ->
             block(clickData)
             result
         }

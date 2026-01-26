@@ -18,7 +18,7 @@ import org.jspecify.annotations.NonNull;
  * <p>
  * <b>Usage Example:</b>
  * <pre>{@code
- * public class MyGui extends AbstractGui<MyGui> implements GuiClick {
+ * public class MyGui extends AbstractGui<MyGui> implements ClickInterceptor {
  *     @Override
  *     public boolean allowClick(Player player, SlottedButton button, ClickType clickType,
  *                               InventoryAction action, InventoryType.SlotType slotType,
@@ -39,7 +39,7 @@ import org.jspecify.annotations.NonNull;
  * @see SlottedButton
  * @see InventoryClickEvent
  */
-public interface GuiClick {
+public interface ClickInterceptor {
     /**
      * Called before a button click is processed to determine if the click should be allowed.
      * <p>

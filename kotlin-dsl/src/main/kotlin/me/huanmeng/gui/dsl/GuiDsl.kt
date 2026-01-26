@@ -3,7 +3,7 @@
 package me.huanmeng.gui.dsl
 
 import me.huanmeng.gui.AbstractGui
-import me.huanmeng.gui.GuiButton
+import me.huanmeng.gui.SlottedButton
 import me.huanmeng.gui.button.Button
 import me.huanmeng.gui.draw.GuiDraw
 import me.huanmeng.gui.impl.AbstractGuiCustom
@@ -13,7 +13,7 @@ import me.huanmeng.gui.impl.GuiPage
 import me.huanmeng.gui.impl.page.PageButton
 import me.huanmeng.gui.impl.page.PageButtonTypes
 import me.huanmeng.gui.impl.page.PageSetting
-import me.huanmeng.gui.impl.page.PageSettings
+import me.huanmeng.gui.impl.page.PageSettingFactory
 import me.huanmeng.gui.impl.page.PageSlot
 import me.huanmeng.gui.slot.Slot
 import me.huanmeng.gui.slot.Slots
@@ -161,7 +161,7 @@ fun AbstractGuiCustom<*>.buttons(lambda: ButtonList.() -> Unit) {
     val arrayList = ButtonList()
     lambda(arrayList)
     arrayList.forEachIndexed { index, btn ->
-        addAttachedButton(GuiButton(buildSlot(index), btn))
+        addAttachedButton(SlottedButton(buildSlot(index), btn))
     }
 }
 
@@ -216,7 +216,7 @@ fun GuiPage.pageSetting(lambda: () -> PageSetting) {
 /**
  * Applies the default page setting to a [GuiPage].
  *
- * This uses [PageSettings.normal] to configure standard navigation buttons
+ * This uses [PageSettingFactory.normal] to configure standard navigation buttons
  * (previous, next, first, last) at common positions.
  *
  * Example:
@@ -224,10 +224,10 @@ fun GuiPage.pageSetting(lambda: () -> PageSetting) {
  * gui.simplePageSetting()
  * ```
  *
- * @see PageSettings.normal
+ * @see PageSettingFactory.normal
  */
 fun GuiPage.simplePageSetting() {
-    pageSetting(PageSettings.normal(this))
+    pageSetting(PageSettingFactory.normal(this))
 }
 /* end */
 
@@ -892,7 +892,7 @@ fun GuiPage.simpleNavigation(
     previousSlot: Int = 45,
     nextSlot: Int = 53
 ) {
-    pageSetting(PageSettings.normal(this).apply {
+    pageSetting(PageSettingFactory.normal(this).apply {
         pageButtons().clear()
         pageButtons().add {
             PageButton.builder(this@simpleNavigation)

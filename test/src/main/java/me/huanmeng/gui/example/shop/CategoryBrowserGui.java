@@ -4,7 +4,7 @@ import me.huanmeng.gui.AbstractGui;
 import me.huanmeng.gui.StackableGui;
 import me.huanmeng.gui.button.Button;
 import me.huanmeng.gui.impl.GuiPage;
-import me.huanmeng.gui.impl.page.PageSettings;
+import me.huanmeng.gui.impl.page.PageSettingFactory;
 import me.huanmeng.gui.slot.Slot;
 import me.huanmeng.gui.slot.Slots;
 import me.huanmeng.gui.slot.impl.slots.PatternSlots;
@@ -72,7 +72,7 @@ public class CategoryBrowserGui extends StackableGui {
         gui.title("§6" + category.getDisplayName() + " §7(Page %page%/%maxPage%)");
 
         // Configure page navigation
-        gui.pageSetting(PageSettings.normal(gui));
+        gui.pageSetting(PageSettingFactory.normal(gui));
 
         // Add back button
         ItemStack backItem = createItem(

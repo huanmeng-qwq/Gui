@@ -7,9 +7,9 @@ import me.huanmeng.gui.draw.GuiDraw;
 import me.huanmeng.gui.enums.Result;
 import me.huanmeng.gui.holder.GuiHolder;
 import me.huanmeng.gui.interfaces.CustomResultHandler;
-import me.huanmeng.gui.interfaces.GuiBottomClick;
-import me.huanmeng.gui.interfaces.GuiClick;
-import me.huanmeng.gui.interfaces.GuiEmptyItemClick;
+import me.huanmeng.gui.interfaces.PlayerInventoryClickHandler;
+import me.huanmeng.gui.interfaces.ClickInterceptor;
+import me.huanmeng.gui.interfaces.EmptySlotClickHandler;
 import me.huanmeng.gui.interfaces.GuiTick;
 import me.huanmeng.gui.slot.Slot;
 import me.huanmeng.gui.slot.Slots;
@@ -209,22 +209,22 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     protected boolean tickRefresh = true;
 
     /**
-     * Custom click handler for the GUI
+     * Custom click interceptor for the GUI
      */
     @Nullable
-    protected GuiClick guiClick;
+    protected ClickInterceptor clickInterceptor;
 
     /**
      * Handler for clicks on empty slots
      */
     @Nullable
-    protected GuiEmptyItemClick guiEmptyItemClick;
+    protected EmptySlotClickHandler emptySlotClickHandler;
 
     /**
      * Handler for clicks in the bottom inventory (player inventory)
      */
     @Nullable
-    protected GuiBottomClick guiBottomClick;
+    protected PlayerInventoryClickHandler playerInventoryClickHandler;
 
     /**
      * Callback to execute when the GUI is closed
@@ -849,7 +849,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
 
     /**
      * Checks if a click should be allowed for a specific button.
-     * Delegates to the custom {@link GuiClick} handler if configured.
+     * Delegates to the custom {@link ClickInterceptor} handler if configured.
      *
      * @param player    The player who clicked
      * @param button    The button that was clicked
@@ -864,8 +864,8 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
     public boolean allowClick(@NonNull Player player, @NonNull SlottedButton button, @NonNull ClickType clickType,
                               @NonNull InventoryAction action, InventoryType.@NonNull SlotType slotType, int slot, int hotBar,
                               @NonNull InventoryClickEvent e) {
-        if (guiClick != null) {
-            return guiClick.allowClick(player, button, clickType, action, slotType, slot, hotBar, e);
+        if (clickInterceptor != null) {
+            return clickInterceptor.allowClick(player, button, clickType, action, slotType, slot, hotBar, e);
         }
         return true;
     }
@@ -927,8 +927,8 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
                 if (e.getHotbarButton() >= 0 && cancelMoveHotBarItemToSelf && Objects.equals(e.getClickedInventory(), e.getView().getTopInventory())) {
                     e.setCancelled(true);
                 }
-                if (guiEmptyItemClick != null) {
-                    if (guiEmptyItemClick.onClickEmptyButton(player, slot, e.getClick(), e.getAction(), e.getSlotType(), e.getHotbarButton(), e)) {
+                if (emptySlotClickHandler != null) {
+                    if (emptySlotClickHandler.onEmptySlotClick(player, slot, e.getClick(), e.getAction(), e.getSlotType(), e.getHotbarButton(), e)) {
                         e.setCancelled(true);
                     }
                 }
@@ -971,8 +971,8 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
                     }
                     processResult(result, clickData);
                 } else if (ItemUtil.isAir(e.getCurrentItem())) {
-                    if (guiEmptyItemClick != null) {
-                        if (guiEmptyItemClick.onClickEmptyButton(player, slot, e.getClick(), e.getAction(), e.getSlotType(), e.getHotbarButton(), e)) {
+                    if (emptySlotClickHandler != null) {
+                        if (emptySlotClickHandler.onEmptySlotClick(player, slot, e.getClick(), e.getAction(), e.getSlotType(), e.getHotbarButton(), e)) {
                             e.setCancelled(true);
                         }
                     }
@@ -982,8 +982,8 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
                 }
             }
 
-            if (guiBottomClick != null) {
-                if (guiBottomClick.onClickBottom(player, view.getBottomInventory(), e.getClick(), e.getAction(), e.getSlotType(), e.getHotbarButton(), e)) {
+            if (playerInventoryClickHandler != null) {
+                if (playerInventoryClickHandler.onPlayerInventoryClick(player, view.getBottomInventory(), e.getClick(), e.getAction(), e.getSlotType(), e.getHotbarButton(), e)) {
                     e.setCancelled(true);
                 }
             }
@@ -1080,8 +1080,8 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
 
     @NonNull
     @CanIgnoreReturnValue
-    public G guiClick(@NonNull GuiClick guiClick) {
-        this.guiClick = guiClick;
+    public G clickInterceptor(@NonNull ClickInterceptor clickInterceptor) {
+        this.clickInterceptor = clickInterceptor;
         return self();
     }
 
@@ -1112,14 +1112,14 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
 
     @NonNull
     @CanIgnoreReturnValue
-    public G guiEmptyItemClick(@NonNull GuiEmptyItemClick guiEmptyItemClick) {
-        this.guiEmptyItemClick = guiEmptyItemClick;
+    public G emptySlotClickHandler(@NonNull EmptySlotClickHandler emptySlotClickHandler) {
+        this.emptySlotClickHandler = emptySlotClickHandler;
         return self();
     }
 
     @CanIgnoreReturnValue
-    public G guiBottomClick(@NonNull GuiBottomClick guiBottomClick) {
-        this.guiBottomClick = guiBottomClick;
+    public G playerInventoryClickHandler(@NonNull PlayerInventoryClickHandler playerInventoryClickHandler) {
+        this.playerInventoryClickHandler = playerInventoryClickHandler;
         return self();
     }
 
@@ -1220,9 +1220,9 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
         gui.tickles = tickles;
         gui.intervalTick = intervalTick;
         gui.tickRefresh = tickRefresh;
-        gui.guiClick = guiClick;
-        gui.guiEmptyItemClick = guiEmptyItemClick;
-        gui.guiBottomClick = guiBottomClick;
+        gui.clickInterceptor = clickInterceptor;
+        gui.emptySlotClickHandler = emptySlotClickHandler;
+        gui.playerInventoryClickHandler = playerInventoryClickHandler;
         gui.whenClose = whenClose;
         gui.errorMessage = errorMessage;
         gui.allowReopen = allowReopen;

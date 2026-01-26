@@ -4,8 +4,8 @@ package me.huanmeng.gui.dsl
 
 import me.huanmeng.gui.button.Button
 import me.huanmeng.gui.button.ClickData
-import me.huanmeng.gui.button.function.PlayerClickInterface
-import me.huanmeng.gui.button.function.PlayerItemInterface
+import me.huanmeng.gui.button.function.ClickHandler
+import me.huanmeng.gui.button.function.ItemProvider
 import me.huanmeng.gui.enums.Result
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -85,13 +85,13 @@ class ButtonDsl {
      * The item supplier that determines what ItemStack to display.
      * Can be set directly or via [item] property/function.
      */
-    var showingItem: PlayerItemInterface? = null
+    var showingItem: ItemProvider? = null
 
     /**
      * The click handler for this button.
      * Configure via helper functions like [cancelClick], [updateClick], or [clickHandler].
      */
-    var click: PlayerClickInterface? = null
+    var click: ClickHandler? = null
 
     /**
      * The result behavior when using [clickHandler].
@@ -107,7 +107,7 @@ class ButtonDsl {
      */
     var item: ItemStack? = null
         set(value) {
-            showingItem = PlayerItemInterface { value }
+            showingItem = ItemProvider { value }
             field = value
         }
 
@@ -118,7 +118,7 @@ class ButtonDsl {
      * @param lambda Function that takes a player and returns the ItemStack to display (can be null)
      */
     fun item(lambda: (player: Player) -> ItemStack?) {
-        showingItem = PlayerItemInterface(lambda)
+        showingItem = ItemProvider(lambda)
     }
 
     /**
@@ -129,7 +129,7 @@ class ButtonDsl {
      * @see Result.CANCEL
      */
     fun cancelClick(lambda: (player: Player) -> Unit) {
-        click = PlayerClickInterface.handlePlayerClick(Result.CANCEL, lambda)
+        click = ClickHandler.handlePlayerClick(Result.CANCEL, lambda)
     }
 
     /**
@@ -140,7 +140,7 @@ class ButtonDsl {
      * @see Result.CANCEL_UPDATE
      */
     fun updateClick(lambda: (player: Player) -> Unit) {
-        click = PlayerClickInterface.handlePlayerClick(Result.CANCEL_UPDATE, lambda)
+        click = ClickHandler.handlePlayerClick(Result.CANCEL_UPDATE, lambda)
     }
 
     /**
@@ -151,7 +151,7 @@ class ButtonDsl {
      * @see Result.CANCEL_UPDATE_ALL
      */
     fun updateAllClick(lambda: (player: Player) -> Unit) {
-        click = PlayerClickInterface.handlePlayerClick(Result.CANCEL_UPDATE_ALL, lambda)
+        click = ClickHandler.handlePlayerClick(Result.CANCEL_UPDATE_ALL, lambda)
     }
 
     /**
@@ -189,7 +189,7 @@ class ButtonDsl {
      * @throws IllegalArgumentException if result is not set before calling this
      */
     fun clickHandler(block: (ClickData) -> Unit) {
-        click = PlayerClickInterface.of(result ?: throw IllegalArgumentException("Result must be set before clickHandler. Call canceling(), updating(), or updatingAll() first."), block)
+        click = ClickHandler.of(result ?: throw IllegalArgumentException("Result must be set before clickHandler. Call canceling(), updating(), or updatingAll() first."), block)
     }
 }
 

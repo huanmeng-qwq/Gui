@@ -18,11 +18,11 @@ import org.jspecify.annotations.NonNull;
  * <p>
  * <b>Usage Example:</b>
  * <pre>{@code
- * public class MyGui extends AbstractGui<MyGui> implements GuiEmptyItemClick {
+ * public class MyGui extends AbstractGui<MyGui> implements EmptySlotClickHandler {
  *     @Override
- *     public boolean onClickEmptyButton(Player player, int slot, ClickType clickType,
- *                                       InventoryAction action, InventoryType.SlotType slotType,
- *                                       int hotBar, InventoryClickEvent e) {
+ *     public boolean onEmptySlotClick(Player player, int slot, ClickType clickType,
+ *                                     InventoryAction action, InventoryType.SlotType slotType,
+ *                                     int hotBar, InventoryClickEvent e) {
  *         player.sendMessage("You clicked an empty slot at position: " + slot);
  *         return true; // Cancel the event to prevent item placement
  *     }
@@ -34,7 +34,7 @@ import org.jspecify.annotations.NonNull;
  * @since 1.0
  * @see AbstractGui#cancelClickOther
  */
-public interface GuiEmptyItemClick {
+public interface EmptySlotClickHandler {
     /**
      * Called when a player clicks on an empty slot (a slot without a button) in the GUI.
      * <p>
@@ -52,6 +52,6 @@ public interface GuiEmptyItemClick {
      * @param e         the underlying Bukkit inventory click event, never null
      * @return {@code true} to cancel the event, {@code false} to allow normal processing
      */
-    boolean onClickEmptyButton(@NonNull Player player, int slot, @NonNull ClickType clickType, @NonNull InventoryAction action,
-                               InventoryType.@NonNull SlotType slotType, int hotBar, @NonNull InventoryClickEvent e);
+    boolean onEmptySlotClick(@NonNull Player player, int slot, @NonNull ClickType clickType, @NonNull InventoryAction action,
+                             InventoryType.@NonNull SlotType slotType, int hotBar, @NonNull InventoryClickEvent e);
 }
