@@ -46,7 +46,7 @@ Lightweight Inventory API for Bukkit(Paper/Spigot) plugins, with 1.8.8 to 1.21 s
             <configuration>
                 <relocations>
                     <relocation>
-                        <pattern>me.huanmeng.gui.guime.huanmeng.gui.gui</pattern>
+                        <pattern>me.huanmeng.gui.gui</pattern>
                         <!-- Replace 'com.yourpackage' with the package of your plugin ! -->
                         <shadedPattern>com.yourpackage.gui</shadedPattern>
                     </relocation>
