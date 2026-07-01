@@ -20,7 +20,7 @@ Lightweight Inventory API for Bukkit(Paper/Spigot) plugins, with 1.8.8 to 26.x s
 - [Bugs & issues report](https://github.com/huanmeng-qwq/Gui/issues)
 
 ## Features
-* Works with all versions from 1.8.8 to 1.21.x
+* Works with all versions from 1.8.8 to 26.x
 * Easy to use
 * Kotlin DSL
 * Paper support
