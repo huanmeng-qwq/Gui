@@ -8,6 +8,7 @@ dependencies {
     compileOnly(libs.adventure.text.serializer.gson)
     compileOnly(libs.adventure.platform.api)
     compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT")
+//    compileOnly("org.spigotmc:spigot-api:26.2-R0.1-SNAPSHOT")
 }
 
 tasks.compileJava {

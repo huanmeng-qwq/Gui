@@ -403,7 +403,12 @@ public class ItemBuilder {
     }
 
     public ItemBuilder glow() {
-        return addEnchant(Enchantment.DURABILITY, 1).addFlag(ItemFlag.HIDE_ENCHANTS);
+        Enchantment legacyEnchantment = Enchantment.getByName("DURABILITY");
+        Enchantment ench = Enchantment.getByName("unbreaking");
+        if (legacyEnchantment == null && ench == null) {
+            return this;
+        }
+        return addEnchant(ench != null ? ench : legacyEnchantment, 1).addFlag(ItemFlag.HIDE_ENCHANTS);
     }
 
     public void line() {

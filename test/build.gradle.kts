@@ -9,7 +9,7 @@ dependencies {
     implementation(project(":bukkit-gui"))
 
     // Spigot API
-    compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:26.2-R0.1-SNAPSHOT")
 
     // Adventure for modern component support
     val usePaper = true
@@ -19,12 +19,16 @@ dependencies {
     adventureLibrary(libs.adventure.text.serializer.legacy)
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
 tasks {
     runServer {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.21.11")
+        minecraftVersion("26.2")
         standardInput = System.`in`
     }
 }
