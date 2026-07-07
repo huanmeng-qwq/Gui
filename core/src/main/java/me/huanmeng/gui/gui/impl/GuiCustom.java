@@ -1,7 +1,7 @@
 package me.huanmeng.gui.gui.impl;
 
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A basic custom GUI implementation with fixed slots and buttons.

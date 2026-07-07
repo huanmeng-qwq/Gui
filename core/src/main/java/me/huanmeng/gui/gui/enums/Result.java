@@ -6,7 +6,7 @@ import me.huanmeng.gui.gui.button.ClickData;
 import me.huanmeng.gui.gui.interfaces.CustomResultHandler;
 import me.huanmeng.gui.gui.slot.Slot;
 import org.bukkit.event.Cancellable;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents the result of a button click, determining how the inventory event should be handled.

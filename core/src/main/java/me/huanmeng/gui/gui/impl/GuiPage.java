@@ -6,8 +6,8 @@ import me.huanmeng.gui.gui.impl.page.PageSetting;
 import me.huanmeng.gui.gui.slot.Slots;
 import me.huanmeng.gui.page.Pagination;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 

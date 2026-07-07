@@ -2,7 +2,7 @@ package me.huanmeng.gui.scheduler;
 
 import me.huanmeng.gui.gui.GuiManager;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
 import java.util.function.Consumer;

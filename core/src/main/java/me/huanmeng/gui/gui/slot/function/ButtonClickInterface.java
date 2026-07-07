@@ -2,7 +2,7 @@ package me.huanmeng.gui.gui.slot.function;
 
 import me.huanmeng.gui.gui.button.ClickData;
 import me.huanmeng.gui.gui.enums.Result;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 2023/3/17<br>

@@ -6,8 +6,8 @@ import me.huanmeng.gui.gui.impl.AbstractGuiPage;
 import me.huanmeng.gui.gui.impl.GuiPage;
 import me.huanmeng.gui.util.item.ItemBuilder;
 import org.bukkit.Material;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Factory interface providing convenient methods to create common {@link PageSetting} configurations.

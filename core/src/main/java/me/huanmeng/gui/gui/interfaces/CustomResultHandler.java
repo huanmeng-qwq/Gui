@@ -3,7 +3,7 @@ package me.huanmeng.gui.gui.interfaces;
 import me.huanmeng.gui.gui.AbstractGui;
 import me.huanmeng.gui.gui.button.ClickData;
 import me.huanmeng.gui.gui.enums.Result;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 2024/12/7<br>

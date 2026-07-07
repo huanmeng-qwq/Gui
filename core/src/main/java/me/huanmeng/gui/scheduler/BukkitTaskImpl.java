@@ -2,8 +2,8 @@ package me.huanmeng.gui.scheduler;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * 2023/3/17<br>

@@ -1,7 +1,7 @@
 package me.huanmeng.gui.gui.slot;
 
 import me.huanmeng.gui.gui.AbstractGui;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;

@@ -6,8 +6,8 @@ import me.huanmeng.gui.gui.enums.Result;
 import me.huanmeng.gui.gui.slot.Slot;
 import me.huanmeng.gui.gui.slot.function.ButtonPlaceInterface;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 

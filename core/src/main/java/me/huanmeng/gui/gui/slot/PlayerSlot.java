@@ -4,7 +4,7 @@ import me.huanmeng.gui.gui.button.Button;
 import me.huanmeng.gui.gui.button.ClickData;
 import me.huanmeng.gui.gui.enums.Result;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

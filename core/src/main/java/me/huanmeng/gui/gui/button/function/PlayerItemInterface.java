@@ -2,8 +2,8 @@ package me.huanmeng.gui.gui.button.function;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Functional interface for providing ItemStacks to display in button slots.

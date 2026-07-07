@@ -3,8 +3,8 @@ package me.huanmeng.gui.gui;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * 2023/3/17<br>

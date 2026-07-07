@@ -45,9 +45,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Abstract base class for all GUI implementations in the library.
@@ -785,7 +784,7 @@ public abstract class AbstractGui<@NonNull G extends AbstractGui<@NonNull G>> im
      * @param guiButton The button defining the slot position
      * @param itemStack The ItemStack to place, or null to clear
      */
-    private void setItem(@NotNull Inventory inventory, GuiButton guiButton, ItemStack itemStack) {
+    private void setItem(@NonNull Inventory inventory, GuiButton guiButton, ItemStack itemStack) {
         if (!guiButton.isPlayerInventory()) {
             manager.guiHandler().onSetItem(this, inventory, guiButton, itemStack);
         } else if (enablePlayerInventory) {

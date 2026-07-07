@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import me.huanmeng.gui.gui.button.Button;
 import me.huanmeng.gui.gui.impl.GuiPage;
 import me.huanmeng.gui.func.FreezeSupplier;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;

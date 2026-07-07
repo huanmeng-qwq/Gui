@@ -1,7 +1,7 @@
 package me.huanmeng.gui.gui.impl;
 
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * An advanced paginated GUI implementation that supports multiple independent page areas.

@@ -15,7 +15,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Abstract base class for paginated GUI implementations.

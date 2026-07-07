@@ -6,7 +6,7 @@ import me.huanmeng.gui.gui.enums.Result;
 import me.huanmeng.gui.gui.slot.function.ButtonClickInterface;
 import me.huanmeng.gui.gui.slot.function.ButtonPlaceInterface;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 2023/3/17<br>

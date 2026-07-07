@@ -1,7 +1,7 @@
 package me.huanmeng.gui.gui.interfaces;
 
 import me.huanmeng.gui.scheduler.Scheduler;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface for GUIs that support scheduled tick-based updates.

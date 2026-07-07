@@ -2,7 +2,7 @@ package me.huanmeng.gui.gui.impl.page;
 
 import me.huanmeng.gui.gui.button.Button;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 2023/6/4<br>

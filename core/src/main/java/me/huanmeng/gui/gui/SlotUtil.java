@@ -1,6 +1,6 @@
 package me.huanmeng.gui.gui;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Collection;
 

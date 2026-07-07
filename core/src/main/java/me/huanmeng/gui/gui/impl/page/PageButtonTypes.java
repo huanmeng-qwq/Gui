@@ -2,8 +2,8 @@ package me.huanmeng.gui.gui.impl.page;
 
 import me.huanmeng.gui.gui.slot.Slot;
 import org.bukkit.event.inventory.ClickType;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 /**

@@ -6,8 +6,8 @@ import me.huanmeng.gui.gui.button.Button;
 import me.huanmeng.gui.gui.slot.Slot;
 import me.huanmeng.gui.gui.slot.Slots;
 import me.huanmeng.gui.util.MathUtil;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 

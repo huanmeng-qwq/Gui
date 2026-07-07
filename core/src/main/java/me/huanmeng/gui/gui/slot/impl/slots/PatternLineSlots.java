@@ -4,7 +4,7 @@ import com.google.common.primitives.Chars;
 import me.huanmeng.gui.gui.AbstractGui;
 import me.huanmeng.gui.gui.slot.Slot;
 import me.huanmeng.gui.gui.slot.Slots;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;

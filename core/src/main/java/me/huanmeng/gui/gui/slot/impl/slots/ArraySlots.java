@@ -4,7 +4,7 @@ import me.huanmeng.gui.gui.AbstractGui;
 import me.huanmeng.gui.gui.slot.Slot;
 import me.huanmeng.gui.gui.slot.Slots;
 import me.huanmeng.gui.gui.slot.function.ButtonPlaceInterface;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Arrays;
 

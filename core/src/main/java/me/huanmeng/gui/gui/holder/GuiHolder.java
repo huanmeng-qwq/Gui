@@ -4,7 +4,7 @@ import me.huanmeng.gui.gui.AbstractGui;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Custom inventory holder implementation that associates a Bukkit inventory with a GUI instance.

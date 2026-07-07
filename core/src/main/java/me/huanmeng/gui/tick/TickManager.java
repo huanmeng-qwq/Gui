@@ -2,7 +2,7 @@ package me.huanmeng.gui.tick;
 
 import me.huanmeng.gui.scheduler.Scheduler;
 import me.huanmeng.gui.scheduler.Schedulers;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 2023/3/17<br>

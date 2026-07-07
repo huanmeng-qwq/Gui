@@ -1,7 +1,7 @@
 package me.huanmeng.gui.page;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Functional interface for processing individual elements during pagination printing.
