@@ -163,7 +163,7 @@ public class GuiManager implements ListenerAdapter {
         }
         this.plugin = plugin;
         this.audiences = player -> player instanceof Audience ? (Audience) player : null;
-        metrics = new Metrics(plugin, 18670, "2.6.1");
+        metrics = new Metrics(plugin, 18670, "2.6.2");
         if (registerListener) {
             try {
                 Class.forName("org.bukkit.event.inventory.InventoryCloseEvent$Reason");
@@ -340,7 +340,10 @@ public class GuiManager implements ListenerAdapter {
             }
         }
         if (swapOffhand) {
-            player.getInventory().setItemInOffHand(player.getInventory().getItemInOffHand());
+            Schedulers.sync().runLater(() -> {
+                player.getInventory().setItemInOffHand(player.getInventory().getItemInOffHand());
+                player.updateInventory();
+            }, 1);
         }
     }
 

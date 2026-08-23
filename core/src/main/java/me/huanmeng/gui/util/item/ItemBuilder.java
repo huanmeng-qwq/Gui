@@ -14,6 +14,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.banner.Pattern;
+import org.bukkit.block.banner.PatternType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -488,7 +489,19 @@ public class ItemBuilder {
 
     public ItemBuilder setBannerBaseColor(DyeColor color) {
         BannerMeta bannerMeta = (BannerMeta) is.getItemMeta();
-        bannerMeta.setBaseColor(color);
+        try {
+            if (setBannerColorMethod != null) {
+                setBannerColorMethod.bindTo(bannerMeta).invoke(color);
+            } else {
+                if (bannerMeta.numberOfPatterns() <= 0) {
+                    bannerMeta.addPattern(new Pattern(color, PatternType.BASE));
+                } else {
+                    final Pattern pattern = bannerMeta.getPattern(0);
+                    bannerMeta.setPattern(0, new Pattern(color, pattern.getPattern()));
+                }
+            }
+        } catch (Throwable ignored) {
+        }
         is.setItemMeta(bannerMeta);
         return this;
     }
@@ -498,7 +511,12 @@ public class ItemBuilder {
     }
 
     public ItemBuilder glow() {
-        return addEnchant(Enchantment.DURABILITY, 1).addFlag(ItemFlag.HIDE_ENCHANTS);
+        Enchantment legacyEnchantment = Enchantment.getByName("DURABILITY");
+        Enchantment ench = Enchantment.getByName("unbreaking");
+        if (legacyEnchantment == null && ench == null) {
+            return this;
+        }
+        return addEnchant(ench != null ? ench : legacyEnchantment, 1).addFlag(ItemFlag.HIDE_ENCHANTS);
     }
 
     public void line() {
@@ -519,6 +537,8 @@ public class ItemBuilder {
 
     private static MethodHandle getPlayerProfileMethod;
     private static MethodHandle setPlayerProfileMethod;
+
+    private static MethodHandle setBannerColorMethod;
 
     static {
         try {
@@ -550,6 +570,12 @@ public class ItemBuilder {
             setPlayerProfileMethod = MethodHandles.lookup().unreflect(SkullMeta.class.getDeclaredMethod("setOwnerProfile", playerProfileClass));
         } catch (Exception e) {
             setPlayerProfileMethod = null;
+        }
+
+        try {
+            setBannerColorMethod = MethodHandles.lookup().unreflect(BannerMeta.class.getDeclaredMethod("setBaseColor", DyeColor.class));
+        } catch (Exception e) {
+            setBannerColorMethod = null;
         }
     }
 

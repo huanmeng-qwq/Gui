@@ -13,14 +13,14 @@
 ![Last-Commit](https://img.shields.io/github/last-commit/huanmeng-qwq/Gui?style=plastic)
 </div>
 
-Lightweight Inventory API for Bukkit(Paper/Spigot) plugins, with 1.8.8 to 1.21 support.
+Lightweight Inventory API for Bukkit(Paper/Spigot) plugins, with 1.8.8 to 26.x support.
 
 ### Useful links
 - [Documentation](https://github.com/huanmeng-qwq/Gui/wiki)
 - [Bugs & issues report](https://github.com/huanmeng-qwq/Gui/issues)
 
 ## Features
-* Works with all versions from 1.8.8 to 1.21.x
+* Works with all versions from 1.8.8 to 26.x
 * Easy to use
 * Kotlin DSL
 * Paper support
@@ -46,7 +46,7 @@ Lightweight Inventory API for Bukkit(Paper/Spigot) plugins, with 1.8.8 to 1.21 s
             <configuration>
                 <relocations>
                     <relocation>
-                        <pattern>me.huanmeng.gui.guime.huanmeng.gui.gui</pattern>
+                        <pattern>me.huanmeng.gui.gui</pattern>
                         <!-- Replace 'com.yourpackage' with the package of your plugin ! -->
                         <shadedPattern>com.yourpackage.gui</shadedPattern>
                     </relocation>
@@ -60,7 +60,7 @@ Lightweight Inventory API for Bukkit(Paper/Spigot) plugins, with 1.8.8 to 1.21 s
     <dependency>
         <groupId>com.huanmeng-qwq</groupId>
         <artifactId>bukkit-gui</artifactId>
-        <version>2.6.1</version>
+        <version>2.6.2</version>
     </dependency>
 
     <!--Kotlin DSL-->
@@ -68,7 +68,7 @@ Lightweight Inventory API for Bukkit(Paper/Spigot) plugins, with 1.8.8 to 1.21 s
     <dependency>
         <groupId>com.huanmeng-qwq</groupId>
         <artifactId>bukkit-gui-kotlin-dsl</artifactId>
-        <version>2.6.1</version>
+        <version>2.6.2</version>
     </dependency>
 </dependencies>
 ```
@@ -86,9 +86,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.huanmeng-qwq:bukkit-gui:2.6.1'
+    implementation 'com.huanmeng-qwq:bukkit-gui:2.6.2'
     // Kotlin DSL
-    implementation 'com.huanmeng-qwq:bukkit-gui-kotlin-dsl:2.6.1'
+    implementation 'com.huanmeng-qwq:bukkit-gui-kotlin-dsl:2.6.2'
 }
 
 shadowJar {
