@@ -341,7 +341,10 @@ public class GuiManager implements ListenerAdapter {
             }
         }
         if (swapOffhand) {
-            player.getInventory().setItemInOffHand(player.getInventory().getItemInOffHand());
+            Schedulers.sync().runLater(() -> {
+                player.getInventory().setItemInOffHand(player.getInventory().getItemInOffHand());
+                player.updateInventory();
+            }, 1);
         }
     }
 
