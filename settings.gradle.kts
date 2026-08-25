@@ -3,9 +3,25 @@ plugins {
 }
 
 rootProject.name = "Gui"
+include(":common-api")
+include(":common-impl")
+include(":bukkit-api")
+include(":bukkit-impl")
 include(":bukkit-gui")
 include(":bukkit-gui-kotlin-dsl")
 include(":bukkit-gui-example")
+project(":common-api").apply {
+    projectDir = file("common-api")
+}
+project(":common-impl").apply {
+    projectDir = file("common-impl")
+}
+project(":bukkit-api").apply {
+    projectDir = file("bukkit-api")
+}
+project(":bukkit-impl").apply {
+    projectDir = file("bukkit-impl")
+}
 project(":bukkit-gui").apply {
     projectDir = file("core")
 }
