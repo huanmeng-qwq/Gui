@@ -48,10 +48,6 @@ public interface BukkitGui extends Gui, InventoryHolder {
 
     BukkitButton buttonAt(Slot slot);
 
-    BukkitInteractionPolicy interactionPolicy();
-
-    void interactionPolicy(BukkitInteractionPolicy policy);
-
     boolean cancelEmptyClicks();
 
     boolean cancelBottomClicks();

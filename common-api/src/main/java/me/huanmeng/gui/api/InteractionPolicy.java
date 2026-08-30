@@ -1,15 +1,15 @@
-package me.huanmeng.gui.bukkit.api;
+package me.huanmeng.gui.api;
 
-public final class BukkitInteractionPolicy {
+public final class InteractionPolicy {
     private final boolean cancelEmptyClicks;
     private final boolean cancelBottomClicks;
     private final boolean cancelMoveToGui;
     private final boolean cancelHotbarSwap;
     private final boolean cancelOffhandSwap;
 
-    public BukkitInteractionPolicy(boolean cancelEmptyClicks, boolean cancelBottomClicks,
-                                   boolean cancelMoveToGui, boolean cancelHotbarSwap,
-                                   boolean cancelOffhandSwap) {
+    public InteractionPolicy(boolean cancelEmptyClicks, boolean cancelBottomClicks,
+                             boolean cancelMoveToGui, boolean cancelHotbarSwap,
+                             boolean cancelOffhandSwap) {
         this.cancelEmptyClicks = cancelEmptyClicks;
         this.cancelBottomClicks = cancelBottomClicks;
         this.cancelMoveToGui = cancelMoveToGui;
@@ -17,8 +17,8 @@ public final class BukkitInteractionPolicy {
         this.cancelOffhandSwap = cancelOffhandSwap;
     }
 
-    public static BukkitInteractionPolicy defaults() {
-        return new BukkitInteractionPolicy(true, true, true, true, true);
+    public static InteractionPolicy defaults() {
+        return new InteractionPolicy(true, true, true, true, true);
     }
 
     public boolean cancelEmptyClicks() {

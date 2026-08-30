@@ -24,6 +24,10 @@ public interface Gui extends GuiContext {
 
     boolean close(Viewer viewer);
 
+    InteractionPolicy interactionPolicy();
+
+    void interactionPolicy(InteractionPolicy policy);
+
     Button buttonAt(int slot);
 
     Button buttonAt(Slot slot);

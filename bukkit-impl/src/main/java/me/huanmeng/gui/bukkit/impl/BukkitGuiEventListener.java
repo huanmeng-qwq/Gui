@@ -7,8 +7,9 @@ import me.huanmeng.gui.api.layout.Slot;
 import me.huanmeng.gui.bukkit.api.BukkitButton;
 import me.huanmeng.gui.bukkit.api.BukkitClickContext;
 import me.huanmeng.gui.bukkit.api.BukkitGui;
-import me.huanmeng.gui.bukkit.api.BukkitInteractionPolicy;
+import me.huanmeng.gui.api.InteractionPolicy;
 import me.huanmeng.gui.bukkit.api.BukkitViewer;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,36 +28,76 @@ final class BukkitGuiEventListener implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        BukkitGui gui = guiFor(event.getView().getTopInventory());
+        if (!(event.getWhoClicked() instanceof Player)) return;
+
+        Inventory topInventory = event.getView().getTopInventory();
+        BukkitGui gui = guiFor(topInventory);
         if (gui == null || runtime.isClosed()) return;
-        BukkitInteractionPolicy policy = gui.interactionPolicy();
-        if (event.getClickedInventory() == event.getView().getBottomInventory()) {
-            if (policy.cancelBottomClicks() || (policy.cancelMoveToGui() && event.isShiftClick())) {
+
+        try {
+            InteractionPolicy policy = gui.interactionPolicy();
+            Inventory clickedInventory = event.getClickedInventory();
+            if (clickedInventory == null) {
+                if (policy.cancelEmptyClicks()) event.setCancelled(true);
+                return;
+            }
+            if (clickedInventory == event.getView().getBottomInventory()) {
+                if (policy.cancelBottomClicks()
+                        || (policy.cancelMoveToGui() && event.isShiftClick())) {
+                    event.setCancelled(true);
+                }
+                return;
+            }
+            if (clickedInventory != topInventory) return;
+
+            int rawSlot = event.getRawSlot();
+            if (rawSlot < 0 || rawSlot >= topInventory.getSize()) {
+                event.setCancelled(true);
+                return;
+            }
+
+            Button button = gui.buttonAt(rawSlot);
+            if (button != null) {
+                ClickResult result = button.click(new ClickContext(gui, event));
+                if (result == null) result = ClickResult.CANCEL;
+                if (result == ClickResult.ALLOW) {
+                    event.setCancelled(false);
+                } else if (result.isCancelEvent()) {
+                    event.setCancelled(true);
+                }
+                if (result == ClickResult.REFRESH && gui instanceof DefaultBukkitGui) {
+                    ((DefaultBukkitGui) gui).refreshInventory();
+                } else if (result == ClickResult.CLOSE) {
+                    event.getWhoClicked().closeInventory();
+                }
+            } else if (isAir(event.getCurrentItem())) {
+                if (event.getHotbarButton() >= 0 && policy.cancelHotbarSwap()) {
+                    event.setCancelled(true);
+                }
+                if (policy.cancelEmptyClicks()) event.setCancelled(true);
+            } else {
                 event.setCancelled(true);
             }
-            return;
+
+            String clickName = event.getClick().name();
+            boolean offhandSwap = "SWAP_OFFHAND".equals(clickName)
+                    || "HOTBAR_MOVE_AND_READD".equals(clickName);
+            boolean collectToCursor = "COLLECT_TO_CURSOR".equals(event.getAction().name());
+            if ((offhandSwap && policy.cancelOffhandSwap())
+                    || (collectToCursor && policy.cancelMoveToGui())
+                    || (!isAir(event.getCursor()) && policy.cancelMoveToGui())) {
+                event.setCancelled(true);
+            }
+        } catch (Throwable error) {
+            runtime.plugin().getLogger().log(java.util.logging.Level.SEVERE,
+                    "An error occurred while processing the click event", error);
+            event.getWhoClicked().closeInventory();
+            event.getWhoClicked().sendMessage("§cAn error occurred while processing your click request!");
         }
-        String clickName = event.getClick().name();
-        if ((event.getHotbarButton() >= 0 && policy.cancelHotbarSwap())
-                || ("SWAP_OFFHAND".equals(clickName) && policy.cancelOffhandSwap())
-                || ("COLLECT_TO_CURSOR".equals(event.getAction().name()) && policy.cancelMoveToGui())) {
-            event.setCancelled(true);
-            return;
-        }
-        if (event.getRawSlot() < 0 || event.getRawSlot() >= event.getView().getTopInventory().getSize()) return;
-        Button button = gui.buttonAt(event.getRawSlot());
-        if (button == null) {
-            if (gui.cancelEmptyClicks()) event.setCancelled(true);
-            return;
-        }
-        ClickResult result = button.click(new ClickContext(gui, event));
-        if (result.isCancelEvent()) {
-            event.setCancelled(true);
-        }
-        if (result == ClickResult.REFRESH && gui instanceof DefaultBukkitGui) {
-            ((DefaultBukkitGui) gui).refreshInventory();
-        }
-        if (result == ClickResult.CLOSE) event.getWhoClicked().closeInventory();
+    }
+
+    private static boolean isAir(org.bukkit.inventory.ItemStack item) {
+        return item == null || item.getType() == Material.AIR;
     }
 
     @EventHandler

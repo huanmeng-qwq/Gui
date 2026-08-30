@@ -11,7 +11,7 @@ import me.huanmeng.gui.api.layout.Slot;
 import me.huanmeng.gui.api.render.RenderPlan;
 import me.huanmeng.gui.bukkit.api.BukkitButton;
 import me.huanmeng.gui.bukkit.api.BukkitGui;
-import me.huanmeng.gui.bukkit.api.BukkitInteractionPolicy;
+import me.huanmeng.gui.api.InteractionPolicy;
 import me.huanmeng.gui.bukkit.api.BukkitViewer;
 import me.huanmeng.gui.impl.edit.SerialGuiEditExecutor;
 import me.huanmeng.gui.impl.model.MutableGuiModel;
@@ -45,8 +45,8 @@ final class DefaultBukkitGui implements BukkitGui {
     private volatile SerialGuiEditExecutor editExecutor;
     private volatile Player configuredPlayer;
     private volatile String title = "";
-    private volatile BukkitInteractionPolicy interactionPolicy =
-            BukkitInteractionPolicy.defaults();
+    private volatile InteractionPolicy interactionPolicy =
+            InteractionPolicy.defaults();
 
     DefaultBukkitGui(DefaultBukkitGuiRuntime runtime, GuiScheduler scheduler, Runnable onDisposed) {
         this.runtime = runtime;
@@ -210,12 +210,12 @@ final class DefaultBukkitGui implements BukkitGui {
     }
 
     @Override
-    public BukkitInteractionPolicy interactionPolicy() {
+    public InteractionPolicy interactionPolicy() {
         return interactionPolicy;
     }
 
     @Override
-    public void interactionPolicy(BukkitInteractionPolicy policy) {
+    public void interactionPolicy(InteractionPolicy policy) {
         if (policy == null) throw new NullPointerException("policy");
         this.interactionPolicy = policy;
     }
